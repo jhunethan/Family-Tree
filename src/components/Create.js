@@ -1,31 +1,106 @@
 import React, { useState } from "react";
 import "../css/Create.css";
 import Axios from "axios";
+import * as $ from "jquery";
 
 function Create(props) {
-  const [pid, setPid] = useState("");
-  const [generation, setGeneration] = useState("");
-  const [name, setName] = useState("");
-  const [birthdate, setBirthdate] = useState("");
+  const [sendNode, setsendNode] = useState({
+    pid: 0,
+    generation: "",
+    name: "",
+    birthdate: "",
+    parent: "",
+    partner: "",
+    parentNode: "",
+    isPartner: 0,
+  });
+  var node = {
+    pid: 0,
+    generation: "",
+    name: "",
+    birthdate: "",
+    parent: "",
+    partner: "",
+    parentNode: "",
+    isPartner: 0,
+  };
+
+  const switchRadioInit = () => {
+    props.switchRadioC();
+  };
 
   const inputChangedHandler = () => {
-    props.update();
+    node.parentNode = document.getElementById("parentInputC").value;
+    let pid,
+      isPartner = 0;
+    if (props.radiocheckedC === true) {
+      node.parent = node.parentNode;
+    } else {
+      node.partner = node.parentNode;
+      isPartner = 1;
+    }
+    try {
+      pid = props.getPID(node.parentNode);
+    } catch {
+      pid = 0;
+    }
+
+    setsendNode({
+      generation: document.getElementById("genInputC").value,
+      name: document.getElementById("nameInputC").value,
+      birthdate: document.getElementById("birthdateInputC").value,
+      pid: pid,
+      isPartner: isPartner,
+      parent: node.parent,
+      partner: node.partner,
+    });
+  };
+
+  const whitespace = (str) => {
+    if (str === undefined) return "";
+    return $.trim(str);
+  };
+
+  const successAdd = () =>{
+    try {
+      document.getElementsByClassName("Create")[0].style.display = "none";
+      document.getElementById("Modal").style.display = "none";
+    } catch {}
+
+    setTimeout(() => {
+      props.update();
+    }, 200);
+  }
+
+  const validation = () => {
+    let nameinput = document.getElementById("nameInputC");
+    if (whitespace(nameinput.value) !== "") {
+      setsendNode(node);
+      return true;
+    } else {
+      //empty, apply error styles
+      nameinput.style.borderBottomColor = "red";
+      nameinput.placeholder = "Name can not be empty";
+    }
   };
 
   const submit = () => {
-    Axios.post("http://localhost:5000/api/insert", {
-      pid: pid,
-      generation: generation,
-      name: name,
-      birthdate: birthdate,
-    }).then(() => {
-      alert("successful insert");
-      props.update();
-      try {
-        document.getElementsByClassName("Create")[0].style.display = "none";
-        document.getElementById("Modal").style.display = "none";
-      } catch {}
-    });
+    if (node.isPartner === 0) {
+      node.parent = node.parentNode;
+    }
+
+    console.log(props.radiocheckedC);
+    console.log(sendNode);
+    if (validation()) {
+      Axios.post("https://lay-family-tree.herokuapp.com/api/insert", {
+        pid: sendNode.pid,
+        generation: sendNode.generation,
+        name: sendNode.name,
+        birthdate: sendNode.birthdate,
+        parent: sendNode.parent,
+        partner: sendNode.partner,
+      }).then(successAdd());
+    }
   };
 
   return (
@@ -35,25 +110,21 @@ function Create(props) {
       <p type="Generation">
         <input
           id="genInputC"
-          onChange={(e) => {
-            setGeneration(e.target.value);
-          }}
+          onChange={inputChangedHandler}
           onKeyUp={(event) => {
             if (event.key === "Enter") {
               // Cancel the default action, if needed
               event.preventDefault();
               // Focus on next element
-              document.getElementById("nameinputC").focus();
+              document.getElementById("nameInputC").focus();
             }
           }}
         />
       </p>
       <p type="Name:">
         <input
-          id="nameinputC"
-          onChange={(e) => {
-            setName(e.target.value);
-          }}
+          id="nameInputC"
+          onChange={inputChangedHandler}
           onKeyUp={(event) => {
             if (event.key === "Enter") {
               // Cancel the default action, if needed
@@ -66,10 +137,9 @@ function Create(props) {
       </p>
       <p type="Date of Birth">
         <input
+          type="date"
           id="birthdateInputC"
-          onChange={(e) => {
-            setBirthdate(e.target.value);
-          }}
+          onChange={inputChangedHandler}
           placeholder="YYYY-MM-DD"
           onKeyUp={(event) => {
             if (event.key === "Enter") {
@@ -89,9 +159,7 @@ function Create(props) {
           id="parentInputC"
           placeholder="Name of Parent/ Partner"
           list="parentSearchDataList"
-          onChange={(e) => {
-            setPid(e.target.value);
-          }}
+          onChange={inputChangedHandler}
           onKeyUp={(event) => {
             if (event.key === "Enter") {
               // Cancel the default action, if needed
@@ -104,28 +172,21 @@ function Create(props) {
         <datalist id="parentSearchDataList"></datalist>
       </p>
 
-      <div className="radio-toggles">
+      <div className="radio-togglesC">
+        <p>Child</p>
         <input
-          onClick={props.switchRadioC}
-          onChange={inputChangedHandler}
-          type="radio"
-          id="option-1"
-          name="radio-optionsC"
-          checked={props.radiocheckedC}
-          value="child"
-        />
-        <label htmlFor="option-1">Child</label>
-        <input
-          onClick={props.switchRadioC}
-          onChange={inputChangedHandler}
-          type="radio"
-          id="option-2"
+          type="checkbox"
+          id="toggle-slide"
+          onClick={switchRadioInit}
+          onChange={() => {
+            console.log("Changed Radio!");
+            inputChangedHandler();
+          }}
           name="radio-optionsC"
           checked={!props.radiocheckedC}
-          value="partner"
+          value="child"
         />
-        <label htmlFor="option-2">Partner</label>
-        <div className="slide-itemC"></div>
+        <p> Partner</p>
       </div>
       <button type="button" id="save" onClick={submit}>
         Save Changes

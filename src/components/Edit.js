@@ -3,7 +3,6 @@ import "../css/Edit.css";
 import Axios from "axios";
 
 export default function Edit(props) {
-  
   const [changed, setChanged] = useState(false);
   const [nodeInput, setNodeInput] = useState({
     id: 0,
@@ -18,7 +17,7 @@ export default function Edit(props) {
 
   var inputChangedHandler = () => {
     let isPartner = false;
-    let partner, parent;
+    let partner, parent, pid;
     getRadioVal("option-1", "option-2") === "partner"
       ? (isPartner = 1)
       : (isPartner = 0);
@@ -30,12 +29,18 @@ export default function Edit(props) {
       parent = document.getElementById("parentInput").value;
     }
 
+    try {
+      pid = props.getPID(document.getElementById("parentInput").value);
+    } catch {
+      pid = 0;
+    }
+
     setNodeInput({
       id: props.nodedata.id,
       generation: document.getElementById("genInput").value,
       name: document.getElementById("name").value,
       birthdate: document.getElementById("birthdate").value,
-      pid: document.getElementById("parentInput").value,
+      pid: pid,
       isPartner: isPartner,
       parent: parent,
       partner: partner,
@@ -103,7 +108,8 @@ export default function Edit(props) {
     console.log(`changed=${changed}  checkParent=${check}`);
     if (changed === true && check) {
       //save
-      Axios.put("http://localhost:5000/api/update", {
+      console.log(nodeInput)
+      Axios.put("https://lay-family-tree.herokuapp.com/api/update", {
         id: nodeInput.id,
         generation: nodeInput.generation,
         name: nodeInput.name,
@@ -137,7 +143,7 @@ export default function Edit(props) {
 
     if (userValidation.value === "confirm") {
       //delete node
-      Axios.post("http://localhost:5000/api/delete", {
+      Axios.post("https://lay-family-tree.herokuapp.com/api/delete", {
         id: props.nodedata.id,
       });
 
@@ -253,7 +259,7 @@ export default function Edit(props) {
             type="radio"
             id="option-2"
             name="radio-options"
-            checked={!(props.radiochecked)}
+            checked={!props.radiochecked}
             value="partner"
           />
           <label htmlFor="option-2">Partner</label>

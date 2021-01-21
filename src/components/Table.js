@@ -11,6 +11,7 @@ export default function Table() {
   const [tableData, setTableData] = useState([]);
   const [nodestate, setNodestate] = useState(0);
   var [radiochecked, setRadiochecked] = useState(true);
+  var [radiocheckedC, setRadiocheckedC] = useState(true);
   var currentNode = {
     id: 0,
     generation: "",
@@ -23,8 +24,12 @@ export default function Table() {
     setRadiochecked(!radiochecked);
   };
 
+  const switchRadioC = () => {
+    setRadiocheckedC(!radiocheckedC);
+  };
+
   useEffect(() => {
-    Axios.get("http://localhost:5000/api/get").then((result) => {
+    Axios.get("https://lay-family-tree.herokuapp.com/api/get").then((result) => {
       setTableData(result.data);
     });
   }, [update]);
@@ -39,7 +44,7 @@ export default function Table() {
     document.getElementById("name").value = node.name;
     document.getElementById("birthdate").value = node.birthdate;
     let pval;
-    (node.isPartner===0) ? pval = node.parent : pval = node.partner;
+    node.isPartner === 0 ? (pval = node.parent) : (pval = node.partner);
     document.getElementById("parentInput").value = pval;
   };
 
@@ -48,6 +53,42 @@ export default function Table() {
       if (tableData[i].id === idKey) {
         return tableData[i];
       }
+    }
+  };
+
+  const getPID = (nameKey) => {
+    let node;
+    for (var i = 0; i < tableData.length; i++) {
+      if (tableData[i].name === nameKey) {
+        node = tableData[i];
+      }
+    }
+    return node.id;
+  };
+
+  const resetCreateFields = () => {
+    let str = "";
+    let datalistarr = [];
+    let list = document.getElementById("parentSearchDataList");
+    //populate parentSearchDataList
+    for (const x of tableData) {
+      datalistarr.push(x.name);
+    }
+    for (var i = 0; i < datalistarr.length; ++i) {
+      str += '<option value="' + datalistarr[i] + '" />';
+    }
+    list.innerHTML = str;
+    try {
+      document.getElementsByClassName("Create")[0].style.display = "block";
+      document.getElementById("Modal").style.display = "block";
+      document.getElementById("nameInputC").style.borderBottomColor = "#bebed2";
+      document.getElementById("nameInputC").placeholder = "";
+      document.getElementById("nameInputC").value = "";
+      document.getElementById("genInputC").value = "";
+      document.getElementById("birthdateInputC").value = "";
+      document.getElementById("parentInputC").value = "";
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -82,7 +123,7 @@ export default function Table() {
       currentNode = node;
       setNodestate(node);
 
-      (node.isPartner) ? setRadiochecked(false) : setRadiochecked(true);
+      node.isPartner ? setRadiochecked(false) : setRadiochecked(true);
 
       //sort out edit menu
       populateEditFields(currentNode);
@@ -109,16 +150,7 @@ export default function Table() {
             </p>
           </div>
           <div className="right">
-            <button
-              id="createNew"
-              onClick={() => {
-                try {
-                  document.getElementsByClassName("Create")[0].style.display =
-                    "block";
-                  document.getElementById("Modal").style.display = "block";
-                } catch {}
-              }}
-            >
+            <button id="createNew" onClick={resetCreateFields}>
               New Family Member
             </button>
           </div>
@@ -129,11 +161,15 @@ export default function Table() {
       </div>
       <Modal close={closePopups} />
       <Create
+        getPID={getPID}
+        switchRadioC={switchRadioC}
+        radiocheckedC={radiocheckedC}
         update={() => {
           updateTable();
         }}
       />
       <Edit
+        getPID={getPID}
         radiochecked={radiochecked}
         switchRadio={switchRadio}
         data={tableData}
