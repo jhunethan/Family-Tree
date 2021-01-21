@@ -19,7 +19,7 @@ export default function Table() {
   };
 
   useEffect(() => {
-    Axios.get("http://localhost:3001/api/get").then((result) => {
+    Axios.get("https://lay-family-tree.herokuapp.com//api/get").then((result) => {
       setTableData(result.data);
     });
   }, [update]);
