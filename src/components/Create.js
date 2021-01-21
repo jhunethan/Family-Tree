@@ -8,8 +8,12 @@ function Create(props) {
   const [name, setName] = useState("");
   const [birthdate, setBirthdate] = useState("");
 
+  const inputChangedHandler = () => {
+    props.update();
+  };
+
   const submit = () => {
-    Axios.post("https://lay-family-tree.herokuapp.com/api/insert", {
+    Axios.post("http://localhost:5000/api/insert", {
       pid: pid,
       generation: generation,
       name: name,
@@ -19,65 +23,125 @@ function Create(props) {
       props.update();
       try {
         document.getElementsByClassName("Create")[0].style.display = "none";
-        document.getElementById("exitCatch").style.display = "none";
+        document.getElementById("Modal").style.display = "none";
       } catch {}
     });
   };
 
   return (
     <div className="Create">
-      <button
-        className="createexit"
-        onClick={() => {
-          try {
-            document.getElementsByClassName("Create")[0].style.display = "none";
-            document.getElementById("exitCatch").style.display = "none";
-          } catch {}
-        }}
-      >
-        X
-      </button>
-      <h1>Create New Entry</h1>
+      <h2>Add New</h2>
 
-      <form className="form">
-        <label>Generation</label>
+      <p type="Generation">
         <input
-          autoComplete="off"
-          type="text"
-          name="generationInput"
+          id="genInputC"
           onChange={(e) => {
             setGeneration(e.target.value);
           }}
+          onKeyUp={(event) => {
+            if (event.key === "Enter") {
+              // Cancel the default action, if needed
+              event.preventDefault();
+              // Focus on next element
+              document.getElementById("nameinputC").focus();
+            }
+          }}
         />
-        <label>Name</label>
+      </p>
+      <p type="Name:">
         <input
-          autoComplete="off"
-          type="text"
-          name="nameInput"
+          id="nameinputC"
           onChange={(e) => {
             setName(e.target.value);
           }}
+          onKeyUp={(event) => {
+            if (event.key === "Enter") {
+              // Cancel the default action, if needed
+              event.preventDefault();
+              // Focus on next element
+              document.getElementById("birthdateInputC").focus();
+            }
+          }}
         />
-        <label>Birthdate</label>
+      </p>
+      <p type="Date of Birth">
         <input
-          type="date"
-          name="birthdateInput"
+          id="birthdateInputC"
           onChange={(e) => {
             setBirthdate(e.target.value);
           }}
+          placeholder="YYYY-MM-DD"
+          onKeyUp={(event) => {
+            if (event.key === "Enter") {
+              // Cancel the default action, if needed
+              event.preventDefault();
+              // Focus on next element
+              document.getElementById("parentInputC").focus();
+            }
+          }}
         />
-        <label>Parent</label>
+      </p>
+
+      {/* Search for parent autocomplete */}
+
+      <p type="Parent/Partner">
         <input
-          type="text"
-          name="pidInput"
+          id="parentInputC"
+          placeholder="Name of Parent/ Partner"
+          list="parentSearchDataList"
           onChange={(e) => {
             setPid(e.target.value);
           }}
+          onKeyUp={(event) => {
+            if (event.key === "Enter") {
+              // Cancel the default action, if needed
+              event.preventDefault();
+              // Focus on next element
+              submit();
+            }
+          }}
+        ></input>
+        <datalist id="parentSearchDataList"></datalist>
+      </p>
+
+      <div className="radio-toggles">
+        <input
+          onClick={props.switchRadioC}
+          onChange={inputChangedHandler}
+          type="radio"
+          id="option-1"
+          name="radio-optionsC"
+          checked={props.radiocheckedC}
+          value="child"
         />
-        <button type="button" onClick={submit}>
-          Submit
-        </button>
-      </form>
+        <label htmlFor="option-1">Child</label>
+        <input
+          onClick={props.switchRadioC}
+          onChange={inputChangedHandler}
+          type="radio"
+          id="option-2"
+          name="radio-optionsC"
+          checked={!props.radiocheckedC}
+          value="partner"
+        />
+        <label htmlFor="option-2">Partner</label>
+        <div className="slide-itemC"></div>
+      </div>
+      <button type="button" id="save" onClick={submit}>
+        Save Changes
+      </button>
+      <button
+        type="button"
+        id="cancel"
+        onClick={() => {
+          try {
+            document.getElementsByClassName("Create")[0].style.display = "none";
+            document.getElementById("Modal").style.display = "none";
+          } catch {}
+        }}
+      >
+        Cancel
+      </button>
     </div>
   );
 }

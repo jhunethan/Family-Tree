@@ -2,14 +2,15 @@ import React, { useState, useEffect } from "react";
 import Axios from "axios";
 import { ReactTable } from "./React-Table-Components/ReactTable";
 import Create from "./Create.js";
-import ExitCatch from "./ExitCatch";
-import EditContainer from "./EditContainer";
+import Modal from "./Modal";
+import Edit from "./Edit";
 
 export default function Table() {
   // eslint-disable-next-line
   const [update, setUpdate] = useState(0);
   const [tableData, setTableData] = useState([]);
   const [nodestate, setNodestate] = useState(0);
+  var [radiochecked, setRadiochecked] = useState(true);
   var currentNode = {
     id: 0,
     generation: "",
@@ -18,8 +19,12 @@ export default function Table() {
     pid: 0,
   };
 
+  const switchRadio = () => {
+    setRadiochecked(!radiochecked);
+  };
+
   useEffect(() => {
-    Axios.get("https://lay-family-tree.herokuapp.com/api/get").then((result) => {
+    Axios.get("http://localhost:5000/api/get").then((result) => {
       setTableData(result.data);
     });
   }, [update]);
@@ -33,30 +38,56 @@ export default function Table() {
     document.getElementById("genInput").value = node.generation;
     document.getElementById("name").value = node.name;
     document.getElementById("birthdate").value = node.birthdate;
-    document.getElementById("parentInput").value = node.pid;
+    let pval;
+    (node.isPartner===0) ? pval = node.parent : pval = node.partner;
+    document.getElementById("parentInput").value = pval;
+  };
+
+  const getNode = (idKey) => {
+    for (var i = 0; i < tableData.length; i++) {
+      if (tableData[i].id === idKey) {
+        return tableData[i];
+      }
+    }
   };
 
   const openNode = (row) => {
     let children = row.children;
 
+    let str = "";
+    let datalistarr = [];
+    let list = document.getElementById("parentSearchDataList");
+    //populate parentSearchDataList
+    for (const x of tableData) {
+      datalistarr.push(x.name);
+    }
+    for (var i = 0; i < datalistarr.length; ++i) {
+      str += '<option value="' + datalistarr[i] + '" />';
+    }
+    list.innerHTML = str;
+
     //only runs if its a database entry
     if (!isNaN(row.firstChild.textContent)) {
+      let thisnode = getNode(Number(row.firstChild.textContent));
       let node = {
         id: children[0].textContent,
         generation: children[1].textContent,
         name: children[2].textContent,
         birthdate: children[3].textContent,
-        pid: children[4].textContent,
+        parent: children[4].textContent,
+        partner: children[5].textContent,
+        isPartner: thisnode.isPartner,
       };
       //update current node json object
       currentNode = node;
       setNodestate(node);
-      console.log(nodestate);
+
+      (node.isPartner) ? setRadiochecked(false) : setRadiochecked(true);
 
       //sort out edit menu
       populateEditFields(currentNode);
       document.getElementById("editForm").style.display = "block";
-      document.getElementById("exitCatch").style.display = "block";
+      document.getElementById("Modal").style.display = "block";
     }
   };
 
@@ -84,7 +115,7 @@ export default function Table() {
                 try {
                   document.getElementsByClassName("Create")[0].style.display =
                     "block";
-                  document.getElementById("exitCatch").style.display = "block";
+                  document.getElementById("Modal").style.display = "block";
                 } catch {}
               }}
             >
@@ -96,14 +127,17 @@ export default function Table() {
           <ReactTable data={tableData} open={openNode} />
         </div>
       </div>
-      <ExitCatch close={closePopups} />
+      <Modal close={closePopups} />
       <Create
         update={() => {
           updateTable();
         }}
       />
-      <EditContainer
-        data={nodestate}
+      <Edit
+        radiochecked={radiochecked}
+        switchRadio={switchRadio}
+        data={tableData}
+        nodedata={nodestate}
         update={() => {
           updateTable();
         }}

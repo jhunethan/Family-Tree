@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import "../css/EditContainer.css";
+import "../css/Edit.css";
 import Axios from "axios";
 
-export default function EditContainer(props) {
-  var [radiochecked, setRadiochecked] = useState(true);
+export default function Edit(props) {
+  
   const [changed, setChanged] = useState(false);
   const [nodeInput, setNodeInput] = useState({
     id: 0,
@@ -12,24 +12,33 @@ export default function EditContainer(props) {
     birthdate: "",
     pid: 0,
     isPartner: 0,
+    parent: "",
+    partner: "",
   });
-  var switchRadio = () => {
-    setRadiochecked(!radiochecked);
-  };
 
   var inputChangedHandler = () => {
     let isPartner = false;
+    let partner, parent;
     getRadioVal("option-1", "option-2") === "partner"
       ? (isPartner = 1)
       : (isPartner = 0);
     CheckInput();
+
+    if (isPartner === 1) {
+      partner = document.getElementById("parentInput").value;
+    } else {
+      parent = document.getElementById("parentInput").value;
+    }
+
     setNodeInput({
-      id: props.data.id,
+      id: props.nodedata.id,
       generation: document.getElementById("genInput").value,
       name: document.getElementById("name").value,
       birthdate: document.getElementById("birthdate").value,
       pid: document.getElementById("parentInput").value,
       isPartner: isPartner,
+      parent: parent,
+      partner: partner,
     });
   };
 
@@ -40,59 +49,83 @@ export default function EditContainer(props) {
 
   function CheckInput() {
     setChanged(false);
-    if (document.getElementById("genInput").value !== props.data.generation) {
+    if (
+      document.getElementById("genInput").value !== props.nodedata.generation
+    ) {
       setChanged(true);
     }
-    if (document.getElementById("name").value !== props.data.name) {
+    if (document.getElementById("name").value !== props.nodedata.name) {
       setChanged(true);
     }
-    if (document.getElementById("birthdate").value !== props.data.birthdate) {
+    if (
+      document.getElementById("birthdate").value !== props.nodedata.birthdate
+    ) {
       setChanged(true);
     }
     // eslint-disable-next-line
-    if (document.getElementById("parentInput").value != props.data.pid) {
+    if (document.getElementById("parentInput").value != props.nodedata.pid) {
       setChanged(true);
     }
     // case "option-1":
     //   element = document.getElementById(id).checked;
-    //   if (element === true && props.data.savedTags === "partner") {
+    //   if (element === true && props.nodadata.savedTags === "partner") {
     //     setChanged(true);
     //     return true;
     //   }
     //   break;
     // case "option-2":
     //   element = document.getElementById(id).checked;
-    //   if (element === true && props.data.savedTags !== "partner") {
+    //   if (element === true && props.nodadata.savedTags !== "partner") {
     //     setChanged(true);
     //     return true;
     //   }
+    if (getRadioVal === "partner" && props.nodedata.isPartner !== 1) {
+      setChanged(true);
+    }
+    if (getRadioVal === "child" && props.nodedata.isPartner !== 0) {
+      setChanged(true);
+    }
+  }
+
+  function checkParent() {
+    let element = document.getElementById("parentInput");
+    for (const x of props.data) {
+      if (element.value === x.name) {
+        return true;
+      }
+    }
+    return false;
   }
 
   function saveEdit() {
-    console.log(nodeInput);
-    if (changed === true) {
+    let check = false;
+    check = checkParent();
+    console.log(`changed=${changed}  checkParent=${check}`);
+    if (changed === true && check) {
       //save
-      Axios.put("https://lay-family-tree.herokuapp.com/api/update", {
+      Axios.put("http://localhost:5000/api/update", {
         id: nodeInput.id,
         generation: nodeInput.generation,
         name: nodeInput.name,
         birthdate: nodeInput.birthdate,
         pid: nodeInput.pid,
         isPartner: nodeInput.isPartner,
+        parent: nodeInput.parent,
+        partner: nodeInput.partner,
       }).then(closeEditMenu());
     } else {
       //alert no changes made
-      alert("no changes detected");
+      console.log("error, no changes made");
     }
     setChanged(false);
   }
   var closeEditMenu = () => {
     document.getElementById("editForm").style.display = "none";
-    document.getElementById("exitCatch").style.display = "none";
+    document.getElementById("Modal").style.display = "none";
     //wait for Axios update then update
     setTimeout(() => {
       props.update();
-    }, 100);
+    }, 200);
   };
 
   function cancelDeleteConfirm() {
@@ -104,8 +137,8 @@ export default function EditContainer(props) {
 
     if (userValidation.value === "confirm") {
       //delete node
-      Axios.post("https://lay-family-tree.herokuapp.com/api/delete", {
-        id: props.data.id,
+      Axios.post("http://localhost:5000/api/delete", {
+        id: props.nodedata.id,
       });
 
       cancelDeleteConfirm();
@@ -130,7 +163,7 @@ export default function EditContainer(props) {
   };
 
   return (
-    <div id="editContainer">
+    <div id="Edit">
       <div id="editForm">
         <h2>Edit Details</h2>
         <button type="submit" id="deleteNode" onClick={deleteNode}>
@@ -173,7 +206,6 @@ export default function EditContainer(props) {
             onChange={inputChangedHandler}
             placeholder="YYYY-MM-DD"
             onKeyUp={(event) => {
-              // Number 13 is the "Enter" key on the keyboard
               if (event.key === "Enter") {
                 // Cancel the default action, if needed
                 event.preventDefault();
@@ -193,7 +225,6 @@ export default function EditContainer(props) {
             list="parentSearchDataList"
             onChange={inputChangedHandler}
             onKeyUp={(event) => {
-              // Number 13 is the "Enter" key on the keyboard
               if (event.key === "Enter") {
                 // Cancel the default action, if needed
                 event.preventDefault();
@@ -207,22 +238,22 @@ export default function EditContainer(props) {
 
         <div className="radio-toggles">
           <input
-            onClick={switchRadio}
+            onClick={props.switchRadio}
             onChange={inputChangedHandler}
             type="radio"
             id="option-1"
             name="radio-options"
-            checked={radiochecked}
+            checked={props.radiochecked}
             value="child"
           />
           <label htmlFor="option-1">Child</label>
           <input
-            onClick={switchRadio}
+            onClick={props.switchRadio}
             onChange={inputChangedHandler}
             type="radio"
             id="option-2"
             name="radio-options"
-            checked={!radiochecked}
+            checked={!(props.radiochecked)}
             value="partner"
           />
           <label htmlFor="option-2">Partner</label>

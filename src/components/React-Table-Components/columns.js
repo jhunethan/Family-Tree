@@ -20,9 +20,14 @@ export const COLUMNS = [
     accessor: "birthdate",
   },
   {
-    Header: "PID",
-    Footer: "PID",
-    accessor: "pid",
+    Header: "Parent",
+    Footer: "Parent",
+    accessor: "parent",
+  },
+  {
+    Header: "Partner",
+    Footer: "Partner",
+    accessor: "partner",
   },
 ];
 
