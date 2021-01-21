@@ -72,7 +72,7 @@ export default function EditContainer(props) {
     console.log(nodeInput);
     if (changed === true) {
       //save
-      Axios.put("https://lay-family-tree.herokuapp.com//api/update", {
+      Axios.put("https://lay-family-tree.herokuapp.com/api/update", {
         id: nodeInput.id,
         generation: nodeInput.generation,
         name: nodeInput.name,
@@ -104,7 +104,7 @@ export default function EditContainer(props) {
 
     if (userValidation.value === "confirm") {
       //delete node
-      Axios.post("https://lay-family-tree.herokuapp.com//api/delete", {
+      Axios.post("https://lay-family-tree.herokuapp.com/api/delete", {
         id: props.data.id,
       });
 

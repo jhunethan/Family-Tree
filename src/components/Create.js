@@ -9,7 +9,7 @@ function Create(props) {
   const [birthdate, setBirthdate] = useState("");
 
   const submit = () => {
-    Axios.post("https://lay-family-tree.herokuapp.com//api/insert", {
+    Axios.post("https://lay-family-tree.herokuapp.com/api/insert", {
       pid: pid,
       generation: generation,
       name: name,
