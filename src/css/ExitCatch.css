@@ -1,0 +1,12 @@
+#exitCatch{
+    display: none;
+    position: absolute;
+    z-index: 4;
+    margin:0;
+    height: 100%;
+    width: 100%;
+    top:0;
+    left:0;
+    
+    background-color: rgba(0, 0, 0, 0.637);
+}

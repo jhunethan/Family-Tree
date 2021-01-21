@@ -1,0 +1,12 @@
+#searchInput {
+  position: relative;
+  width: 285px;
+  padding: 5px;
+  border: 2px solid black;
+  border-radius: 4px;
+  font-size: 20px;
+  font-weight: bold;
+  background: none;
+  float: right;
+  top:-100px;
+}
