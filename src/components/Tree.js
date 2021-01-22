@@ -90,7 +90,7 @@ export default Chart;
 // var treeData = [];
 
 // useEffect(() => {
-//   Axios.get("https://lay-family-tree.herokuapp.com/api/get").then(
+//   Axios.get("https://layfamily.herokuapp.com/api/get").then(
 //     (result) => {
 //       setTableData(result.data);
 //     }
