@@ -49,18 +49,6 @@ const Card = (props) => {
 
               </div>
               <div className="card-footer" style={{ background: levelColor }}>
-                <img
-                  src="https://www.flaticon.com/svg/static/icons/svg/2950/2950657.svg"
-                  alt="Chat"
-                />
-                <img
-                  src="https://www.flaticon.com/svg/static/icons/svg/1034/1034131.svg"
-                  alt="Call"
-                />
-                <img
-                  src="https://www.flaticon.com/svg/static/icons/svg/570/570387.svg"
-                  alt="Video"
-                />
               </div>
               <div></div>
             </div>
@@ -90,7 +78,7 @@ export default Chart;
 // var treeData = [];
 
 // useEffect(() => {
-//   Axios.get("https://layfamily.herokuapp.com/api/get").then(
+//   Axios.get("http://localhost:5000/api/get").then(
 //     (result) => {
 //       setTableData(result.data);
 //     }

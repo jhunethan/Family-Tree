@@ -28,7 +28,7 @@
   float: right;
   margin-right: 79px;
 }
-.follow img {
+.follow > img {
   width: 25px;
   position: relative;
   top: 7px;
@@ -215,7 +215,7 @@ body {
   left: 50%;
   transform: translateX(-50%);
 }
-.card .card-footer img {
+.card-footer > img {
   width: 25px;
   margin: 5px;
 }
