@@ -1,8 +1,14 @@
 import React, { useState } from "react";
 import "../css/Edit.css";
-import Axios from "axios";
+import axios from "axios";
+import * as $ from "jquery";
 
 export default function Edit(props) {
+
+  const Axios = axios.create({
+    withCredentials: true
+  })
+
   const [changed, setChanged] = useState(false);
   const [nodeInput, setNodeInput] = useState({
     id: 0,
@@ -99,6 +105,7 @@ export default function Edit(props) {
         return true;
       }
     }
+    if ($.trim(element.value) === "") return true;
     return false;
   }
 

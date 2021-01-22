@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Axios from "axios";
+import axios from "axios";
 import { ReactTable } from "./React-Table-Components/ReactTable";
 import Create from "./Create.js";
 import Modal from "./Modal";
@@ -11,7 +11,11 @@ export default function Table() {
   const [tableData, setTableData] = useState([]);
   const [nodestate, setNodestate] = useState(0);
   var [radiochecked, setRadiochecked] = useState(true);
-  var [radiocheckedC, setRadiocheckedC] = useState(true);
+
+  const Axios = axios.create({
+    withCredentials: true
+  })
+
   var currentNode = {
     id: 0,
     generation: "",
@@ -23,11 +27,6 @@ export default function Table() {
   const switchRadio = () => {
     setRadiochecked(!radiochecked);
   };
-
-  const switchRadioC = () => {
-    setRadiocheckedC(!radiocheckedC);
-  };
-
   useEffect(() => {
     Axios.get("https://lay-family-tree.herokuapp.com/api/get").then((result) => {
       setTableData(result.data);
@@ -79,6 +78,7 @@ export default function Table() {
     }
     list.innerHTML = str;
     try {
+      document.getElementById("toggle-slide").checked = false;
       document.getElementsByClassName("Create")[0].style.display = "block";
       document.getElementById("Modal").style.display = "block";
       document.getElementById("nameInputC").style.borderBottomColor = "#bebed2";
@@ -162,8 +162,6 @@ export default function Table() {
       <Modal close={closePopups} />
       <Create
         getPID={getPID}
-        switchRadioC={switchRadioC}
-        radiocheckedC={radiocheckedC}
         update={() => {
           updateTable();
         }}

@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import "../css/Create.css";
-import Axios from "axios";
+import axios from "axios";
 import * as $ from "jquery";
 
 function Create(props) {
+  const Axios = axios.create({
+    withCredentials: true,
+  });
+
   const [sendNode, setsendNode] = useState({
     pid: 0,
     generation: "",
@@ -25,15 +29,12 @@ function Create(props) {
     isPartner: 0,
   };
 
-  const switchRadioInit = () => {
-    props.switchRadioC();
-  };
-
   const inputChangedHandler = () => {
     node.parentNode = document.getElementById("parentInputC").value;
-    let pid,
+    let pid = document.getElementById("toggle-slide").checked,
       isPartner = 0;
-    if (props.radiocheckedC === true) {
+    console.log(pid);
+    if (pid === false) {
       node.parent = node.parentNode;
     } else {
       node.partner = node.parentNode;
@@ -61,7 +62,7 @@ function Create(props) {
     return $.trim(str);
   };
 
-  const successAdd = () =>{
+  const successAdd = () => {
     try {
       document.getElementsByClassName("Create")[0].style.display = "none";
       document.getElementById("Modal").style.display = "none";
@@ -70,7 +71,7 @@ function Create(props) {
     setTimeout(() => {
       props.update();
     }, 200);
-  }
+  };
 
   const validation = () => {
     let nameinput = document.getElementById("nameInputC");
@@ -89,18 +90,20 @@ function Create(props) {
       node.parent = node.parentNode;
     }
 
-    console.log(props.radiocheckedC);
+    inputChangedHandler();
     console.log(sendNode);
-    if (validation()) {
-      Axios.post("https://lay-family-tree.herokuapp.com/api/insert", {
-        pid: sendNode.pid,
-        generation: sendNode.generation,
-        name: sendNode.name,
-        birthdate: sendNode.birthdate,
-        parent: sendNode.parent,
-        partner: sendNode.partner,
-      }).then(successAdd());
-    }
+    setTimeout(() => {
+      if (validation()) {
+        Axios.post("https://lay-family-tree.herokuapp.com/api/insert", {
+          pid: sendNode.pid,
+          generation: sendNode.generation,
+          name: sendNode.name,
+          birthdate: sendNode.birthdate,
+          parent: sendNode.parent,
+          partner: sendNode.partner,
+        }).then(successAdd());
+      }
+    }, 500);
   };
 
   return (
@@ -165,7 +168,7 @@ function Create(props) {
               // Cancel the default action, if needed
               event.preventDefault();
               // Focus on next element
-              submit();
+              document.getElementById("toggle-slide").focus();
             }
           }}
         ></input>
@@ -177,14 +180,11 @@ function Create(props) {
         <input
           type="checkbox"
           id="toggle-slide"
-          onClick={switchRadioInit}
           onChange={() => {
             console.log("Changed Radio!");
             inputChangedHandler();
           }}
           name="radio-optionsC"
-          checked={!props.radiocheckedC}
-          value="child"
         />
         <p> Partner</p>
       </div>
