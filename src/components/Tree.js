@@ -46,8 +46,7 @@ const Card = (props) => {
                 <img alt="Profile" style={{ borderColor: levelColor }} />
               </div>
               <div className="card-body">
-                <h4></h4>
-                <p></p>
+
               </div>
               <div className="card-footer" style={{ background: levelColor }}>
                 <img
