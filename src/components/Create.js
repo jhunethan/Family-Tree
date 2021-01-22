@@ -1,13 +1,9 @@
 import React, { useState } from "react";
 import "../css/Create.css";
-import axios from "axios";
+import Axios from "axios";
 import * as $ from "jquery";
 
 function Create(props) {
-  const Axios = axios.create({
-    withCredentials: true,
-  });
-
   const [sendNode, setsendNode] = useState({
     pid: 0,
     generation: "",

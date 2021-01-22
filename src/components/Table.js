@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import Axios from "axios";
 import { ReactTable } from "./React-Table-Components/ReactTable";
 import Create from "./Create.js";
 import Modal from "./Modal";
@@ -11,10 +11,6 @@ export default function Table() {
   const [tableData, setTableData] = useState([]);
   const [nodestate, setNodestate] = useState(0);
   var [radiochecked, setRadiochecked] = useState(true);
-
-  const Axios = axios.create({
-    withCredentials: true
-  })
 
   var currentNode = {
     id: 0,

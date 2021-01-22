@@ -1,14 +1,9 @@
 import React, { useState } from "react";
 import "../css/Edit.css";
-import axios from "axios";
+import Axios from "axios";
 import * as $ from "jquery";
 
 export default function Edit(props) {
-
-  const Axios = axios.create({
-    withCredentials: true
-  })
-
   const [changed, setChanged] = useState(false);
   const [nodeInput, setNodeInput] = useState({
     id: 0,
