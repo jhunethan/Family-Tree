@@ -12,7 +12,7 @@ export default function Tree() {
   var treeData = [];
 
   useEffect(() => {
-    Axios.get("http://localhost:5000/api/get").then((result) => {
+    Axios.get("https://layfamily.herokuapp.com/api/get").then((result) => {
       setTableData(result.data);
     });
   }, [update]);

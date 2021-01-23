@@ -24,7 +24,7 @@ export default function Table() {
     setRadiochecked(!radiochecked);
   };
   useEffect(() => {
-    Axios.get("http://localhost:5000/api/get").then((result) => {
+    Axios.get("https://layfamily.herokuapp.com/api/get").then((result) => {
       setTableData(result.data);
     });
   }, [update]);
