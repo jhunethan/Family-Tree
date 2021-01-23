@@ -78,7 +78,7 @@ export default Chart;
 // var treeData = [];
 
 // useEffect(() => {
-//   Axios.get("https://layfamily.herokuapp.com/api/get").then(
+//   Axios.get("https://cors-anywhere.herokuapp.com/https://layfamily.herokuapp.com/api/get").then(
 //     (result) => {
 //       setTableData(result.data);
 //     }
