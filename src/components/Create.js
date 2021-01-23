@@ -97,6 +97,7 @@ function Create(props) {
           birthdate: sendNode.birthdate,
           parent: sendNode.parent,
           partner: sendNode.partner,
+          isPartner: sendNode.isPartner,
         }).then(successAdd());
       }
     }, 500);

@@ -26,14 +26,16 @@ export default function Tree() {
   const converttreeData = () => {
     treeData = tableData;
     let partners = treeData.filter((x) => x.isPartner === 1);
-
+    treeData = treeData.filter((x) => x.isPartner !== 1);
+    console.log(partners);
+    console.log(treeData);
     for (let i = 0; i < partners.length; i++) {
       //get name of parent node
-      //make partner object an attribute of parent node
+      //make partner object an attribute of parent node (partnerinfo)
       for (let x = 0; x < treeData.length; x++) {
         if (treeData[x].id === partners[i].pid) {
           treeData[x].partnerinfo = partners[i];
-          console.log()
+          console.log("partner appended to " + treeData[x].name);
         }
       }
     }
@@ -53,7 +55,6 @@ export default function Tree() {
     treeLayout.nodeSize([175, 150]);
     treeLayout(treeData);
     var linksData = treeData.links();
-    console.log(linksData);
     // Nodes
     var rectangles = d3
       .select("svg g.nodes")
