@@ -1,100 +1,31 @@
-import React, { Fragment } from "react";
-var data = [
-  {
-    name: "Root",
-    children: [
-      {
-        name: "Child 1",
-        children: [
-          {
-            name: "Grand Child",
-          },
-        ],
-      },
-      {
-        name: "Child 2",
-        children: [
-          {
-            name: "Grand Child",
-            children: [
-              {
-                name: "Great Grand Child 1",
-              },
-              {
-                name: "Grand Grand Child 2",
-              },
-            ],
-          },
-        ],
-      },
-      {
-        name: "Child 2",
-      },
-    ],
-  },
-];
-const Card = (props) => {
-  const levelColor = "#fff";
+import React, { useState, useEffect } from "react";
+import * as d3 from "d3";
+import Axios from "axios";
 
-  return (
-    <ul>
-      {props.data.map((item) => (
-        <Fragment key={item.name}>
-          <li>
-            <div className="card">
-              <div className="image">
-                <img alt="Profile" style={{ borderColor: levelColor }} />
-              </div>
-              <div className="card-body">
+export default function Tree() {
+  const [update, setUpdate] = useState(false);
+  const [tableData, setTableData] = useState();
+  var treeData = [];
 
-              </div>
-              <div className="card-footer" style={{ background: levelColor }}>
-              </div>
-              <div></div>
-            </div>
-            {item.children?.length && <Card data={item.children} />}
-          </li>
-        </Fragment>
-      ))}
-    </ul>
-  );
-};
+  useEffect(() => {
+    Axios.get("http://localhost:5000/api/get").then((result) => {
+      setTableData(result.data);
+    });
+  }, [update]);
 
-const Chart = () => {
-  return (
-    <div className="org-tree">
-      <Card data={data} />
-    </div>
-  );
-};
+  //triggers a data request
+  const updateTree = () => {
+    setUpdate((prevUpdate) => !prevUpdate);
+  };
 
-export default Chart;
+  //convert to hierarchal tree form using d3.stratify()
+  const converttreeData = () => {
+    treeData = tableData;
+    treeData = d3
+      .stratify()
+      .id((d) => d["id"])
+      .parentId((d) => d["parentId"])(treeData);
+  };
 
-// import * as d3 from "d3";
-// import Axios from "axios";
-
-// const [update, setUpdate] = useState(false);
-// const [tableData, setTableData] = useState();
-// var treeData = [];
-
-// useEffect(() => {
-//   Axios.get("https://cors-anywhere.herokuapp.com/https://layfamily.herokuapp.com/api/get").then(
-//     (result) => {
-//       setTableData(result.data);
-//     }
-//   );
-// }, [update]);
-
-// //triggers a data request
-// const updateTree = () => {
-//   setUpdate((prevUpdate) => !prevUpdate);
-// };
-
-// //convert to hierarchal tree form using d3.stratify()
-// const converttreeData = () => {
-//   treeData = tableData;
-//   treeData = d3
-//     .stratify()
-//     .id((d) => d["id"])
-//     .parentId((d) => d["parentId"])(treeData);
-// };
+  return <div></div>;
+}

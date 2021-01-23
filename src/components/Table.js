@@ -24,7 +24,7 @@ export default function Table() {
     setRadiochecked(!radiochecked);
   };
   useEffect(() => {
-    Axios.get("https://cors-anywhere.herokuapp.com/https://layfamily.herokuapp.com/api/get").then((result) => {
+    Axios.get("http://localhost:5000/api/get").then((result) => {
       setTableData(result.data);
     });
   }, [update]);
@@ -144,6 +144,7 @@ export default function Table() {
               Here you can sort, search and edit any family member by clicking.
               <br /> You can also search to filter results.
             </p>
+            <button type="button" onClick={()=>{updateTable()}}>Update Table</button>
           </div>
           <div className="right">
             <button id="createNew" onClick={resetCreateFields}>
