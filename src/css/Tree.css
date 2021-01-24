@@ -1,35 +1,40 @@
 /* //main svg container */
 #Tree {
   border: 2px solid black;
+  width: auto;
+  margin: 0;
 }
 
 svg {
   border: 2px solid black;
+  margin: 0;
 }
 
-.node {
-  fill: #fff;
-  stroke: black;
-  stroke-width: 1.5px;
+.node,
+.partnernode {
   width: 150px;
-  height: 125px;
+  height: 200px;
   padding: 8px 12px;
+  fill: #fff;
+
   font-family: "Montserrat", sans-serif;
-  border: 2px solid black;
-  background: 0;
-  cursor: pointer;
+  filter: drop-shadow(10px 10px 4px rgb(138, 138, 138));
+
   transition: all 0.3s;
 }
 
 .node:hover {
   fill: rgb(231, 231, 231);
   transition: all 0.3s;
+  cursor: pointer;
 }
 
 .link {
+  max-width: 150px;
   fill: none;
   stroke: white;
   stroke-width: 1.5px;
+  filter: drop-shadow(10px 10px 4px rgb(138, 138, 138));
 }
 text {
   text-anchor: middle;
@@ -44,4 +49,10 @@ text {
 
 .level-0 > text {
   color: #fff;
+  user-select: none;
+  pointer-events: none;
+}
+
+.hide {
+  display: none;
 }

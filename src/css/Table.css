@@ -5,19 +5,18 @@ body {
   overflow-x: hidden;
   height: 100vh;
   overflow:hidden;
-  display: grid;
-  place-items: start center;
-  background-image: linear-gradient(rgb(243, 158, 0), rgb(255, 217, 147));
-  padding: 5rem 5rem 1rem 5rem;
+  background-image: linear-gradient(rgb(241, 200, 123), rgb(255, 217, 147));
 }
 
 .container {
+  position: absolute;
+  margin: 5vh 40vh ;
+  padding: 2.5vh;
   width: 1000px;
-  padding: 1.5rem 30px 5rem 2rem;
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 5px 10px 20px rgb(255, 176, 29);
-  filter: drop-shadow(0 0 0.75rem rgba(128, 128, 128, 0.425));
+  filter: drop-shadow(0 0 0.75rem rgba(197, 197, 197, 0.425));
   max-height: 600px;
   overflow: auto;
   -ms-overflow-style: none; /* IE and Edge */

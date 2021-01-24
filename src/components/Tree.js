@@ -2,9 +2,45 @@ import React, { useState, useEffect } from "react";
 import * as d3 from "d3";
 import Axios from "axios";
 import "../css/Tree.css";
+import * as $ from "jquery";
 
 var height = 1000;
-var width = 1500;
+var width = 2000;
+
+function wrap(text, width) {
+  text.each(function () {
+    var text = d3.select(this),
+      words = text.text().split(/\s+/).reverse(),
+      word,
+      line = [],
+      lineNumber = 0,
+      lineHeight = 1.1, // ems
+      x = text.attr("x"),
+      y = text.attr("y"),
+      dy = 0, //parseFloat(text.attr("dy")),
+      tspan = text
+        .text(null)
+        .append("tspan")
+        .attr("x", x)
+        .attr("y", y)
+        .attr("dy", dy + "em");
+    while ((word = words.pop())) {
+      line.push(word);
+      tspan.text(line.join(" "));
+      if (tspan.node().getComputedTextLength() > width) {
+        line.pop();
+        tspan.text(line.join(" "));
+        line = [word];
+        tspan = text
+          .append("tspan")
+          .attr("x", x)
+          .attr("y", y)
+          .attr("dy", ++lineNumber * lineHeight + dy + "em")
+          .text(word);
+      }
+    }
+  });
+}
 
 export default function Tree() {
   const [update, setUpdate] = useState(false);
@@ -12,7 +48,9 @@ export default function Tree() {
   var treeData = [];
 
   useEffect(() => {
-    Axios.get("https://layfamily.herokuapp.com/api/get").then((result) => {
+    Axios.get(
+      "https://cors-anywhere.herokuapp.com/https://layfamily.herokuapp.com/api/get"
+    ).then((result) => {
       setTableData(result.data);
     });
   }, [update]);
@@ -56,21 +94,18 @@ export default function Tree() {
     }
 
     var treeLayout = d3.tree();
-    treeLayout.nodeSize([175, 200]);
+    treeLayout.nodeSize([375, 250]);
     treeLayout(treeData);
     var linksData = treeData.links();
 
     var svg = d3.select("#Tree").append("svg");
-    svg
-      .attr("width", width)
-      .attr("height", height)
-      .attr("transform", "translate(0, 0)");
+    svg.attr("width", width).attr("height", height);
 
     var nodes = d3.select("svg").selectAll("g").data([0]);
+    nodes.enter().append("g").attr("class", "links");
     nodes.enter().append("g").attr("class", "nodes");
 
     var links = d3.select("svg").selectAll("g").data([0]);
-    nodes.enter().append("g").attr("class", "links");
 
     svg.call(
       d3
@@ -98,8 +133,72 @@ export default function Tree() {
         return d.x - 75;
       })
       .attr("y", function (d) {
-        return d.y - 50;
+        return d.y - 175;
       });
+
+    var partnerRect = d3
+      .select("svg g.nodes")
+      .selectAll("rect .node")
+      .data(treeData.descendants());
+
+    partnerRect
+      .enter()
+      .append("rect")
+      .attr("class", function (d) {
+        return "partnernode level-" + d.depth;
+      })
+      .attr("x", function (d) {
+        return d.x + 87.5;
+      })
+      .attr("y", function (d) {
+        return d.y - 175;
+      })
+      .classed("hide", function (d) {
+        try {
+          if (d.data.partnerinfo.name === "text") return false;
+        } catch {
+          return true;
+        }
+      });
+
+    var partnerText = d3
+      .select("svg g.nodes")
+      .selectAll("text .node")
+      .data(treeData.descendants());
+    partnerText
+      .enter()
+      .append("text")
+      .attr("x", function (d) {
+        return d.x + 165.5;
+      })
+      .attr("y", function (d) {
+        return d.y - 145;
+      })
+      .text(function (d) {
+        try {
+          return d.data.partnerinfo.birthdate;
+        } catch {
+          return "";
+        }
+      })
+      .call(wrap, 100);
+    partnerText
+      .enter()
+      .append("text")
+      .attr("x", function (d) {
+        return d.x + 165.5;
+      })
+      .attr("y", function (d) {
+        return d.y - 125;
+      })
+      .text(function (d) {
+        try {
+          return d.data.partnerinfo.name;
+        } catch {
+          return "";
+        }
+      })
+      .call(wrap, 100);
     var text = d3
       .select("svg g.nodes")
       .selectAll("text .node")
@@ -111,11 +210,12 @@ export default function Tree() {
         return d.x;
       })
       .attr("y", function (d) {
-        return d.y;
+        return d.y - 145;
       })
       .text(function (d) {
-        return d.data.name;
-      });
+        return d.data.birthdate;
+      })
+      .call(wrap, 150);
     text
       .enter()
       .append("text")
@@ -123,11 +223,25 @@ export default function Tree() {
         return d.x;
       })
       .attr("y", function (d) {
-        return d.y - 20;
+        return d.y - 125;
       })
       .text(function (d) {
-        return d.data.birthdate;
-      });
+        return d.data.generation;
+      })
+      .call(wrap, 150);
+    text
+      .enter()
+      .append("text")
+      .attr("x", function (d) {
+        return d.x;
+      })
+      .attr("y", function (d) {
+        return d.y - 105;
+      })
+      .text(function (d) {
+        return d.data.name;
+      })
+      .call(wrap, 100);
 
     links = d3.select("svg g.links").selectAll("path").data(linksData);
     links
@@ -142,17 +256,9 @@ export default function Tree() {
           d.source.x +
           "," +
           d.source.y +
-          " C " +
-          d.source.x +
-          "," +
-          (d.source.y + d.target.y) / 2 +
-          " " +
+          " v 50 H" +
           d.target.x +
-          "," +
-          (d.source.y + d.target.y) / 2 +
-          " " +
-          d.target.x +
-          "," +
+          " V" +
           d.target.y
         );
       })
@@ -169,43 +275,9 @@ export default function Tree() {
         return d.target.y;
       });
     console.log(treeData.descendants());
-
-    // var names = d3
-    //   .select("svg")
-    //   .append("g")
-    //   .selectAll("text")
-    //   .data(treeData.descendants());
-    // names
-    //   .enter()
-    //   .append("text")
-    //   .text(function (d) {
-    //     return `${d.data.name}`;
-    //   })
-    //   .attr("class", function (d) {
-    //     return "text level-" + d.depth;
-    //   })
-    //   .attr("x", function (d) {
-    //     return d.x;
-    //   })
-    //   .attr("y", function (d) {
-    //     return d.y;
-    //   });
-    // names
-    //   .enter()
-    //   .append("text")
-    //   .attr("class", function (d) {
-    //     return "text level-" + d.depth;
-    //   })
-    //   .text(function (d) {
-    //     return `${d.data.birthdate}`;
-    //   })
-    //   .attr("x", function (d) {
-    //     return d.x;
-    //   })
-    //   .attr("y", function (d) {
-    //     return d.y;
-    //   });
   };
+
+
 
   return (
     <div>
@@ -217,14 +289,7 @@ export default function Tree() {
       >
         Build Tree
       </button>
-      <div id="Tree">
-        {/* <svg width={width} height={height}>
-          <g transform="translate(600, 125)">
-            <g className="links"></g>
-            <g className="nodes"></g>
-          </g>
-        </svg> */}
-      </div>
+      <div id="Tree"></div>
     </div>
   );
 }
