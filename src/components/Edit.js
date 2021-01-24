@@ -111,7 +111,7 @@ export default function Edit(props) {
     if (changed === true && check) {
       //save
       console.log(nodeInput)
-      Axios.put("https://cors-anywhere.herokuapp.com/https://layfamily.herokuapp.com/api/update", {
+      Axios.put("https://layfamily.herokuapp.com/api/update", {
         id: nodeInput.id,
         generation: nodeInput.generation,
         name: nodeInput.name,
@@ -145,7 +145,7 @@ export default function Edit(props) {
 
     if (userValidation.value === "confirm") {
       //delete node
-      Axios.post("https://cors-anywhere.herokuapp.com/https://layfamily.herokuapp.com/api/delete", {
+      Axios.post("https://layfamily.herokuapp.com/api/delete", {
         id: props.nodedata.id,
       });
 
