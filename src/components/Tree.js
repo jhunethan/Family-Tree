@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import * as d3 from "d3";
 import Axios from "axios";
 import "../css/Tree.css";
-import * as $ from "jquery";
 
 var height = 1000;
 var width = 2000;
@@ -277,7 +276,7 @@ export default function Tree() {
     console.log(treeData.descendants());
   };
 
-
+  window.setInterval(function () {console.log("interval")}, 2000);
 
   return (
     <div>
