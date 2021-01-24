@@ -1,6 +1,12 @@
-label {
-  font: 12px sans-serif;
+/* //main svg container */
+#Tree {
+  border: 2px solid black;
 }
+
+svg {
+  border: 2px solid black;
+}
+
 .node {
   fill: #fff;
   stroke: black;
@@ -16,7 +22,6 @@ label {
 }
 
 .node:hover {
-  color: white;
   fill: rgb(231, 231, 231);
   transition: all 0.3s;
 }
@@ -32,11 +37,11 @@ text {
   pointer-events: none;
 }
 
-.level-0{
+.level-0 {
   stroke: none;
-  fill:none;
+  fill: none;
 }
 
-.level-0>text{
+.level-0 > text {
   color: #fff;
 }

@@ -51,10 +51,38 @@ export default function Tree() {
     converttreeData();
     updateTree();
 
+    function zoomed({ transform }) {
+      d3.select("svg").selectAll("g").attr("transform", transform);
+    }
+
     var treeLayout = d3.tree();
-    treeLayout.nodeSize([175, 150]);
+    treeLayout.nodeSize([175, 200]);
     treeLayout(treeData);
     var linksData = treeData.links();
+
+    var svg = d3.select("#Tree").append("svg");
+    svg
+      .attr("width", width)
+      .attr("height", height)
+      .attr("transform", "translate(0, 0)");
+
+    var nodes = d3.select("svg").selectAll("g").data([0]);
+    nodes.enter().append("g").attr("class", "nodes");
+
+    var links = d3.select("svg").selectAll("g").data([0]);
+    nodes.enter().append("g").attr("class", "links");
+
+    svg.call(
+      d3
+        .zoom()
+        .extent([
+          [0, 0],
+          [width, height],
+        ])
+        .scaleExtent([-5, 8])
+        .on("zoom", zoomed)
+    );
+
     // Nodes
     var rectangles = d3
       .select("svg g.nodes")
@@ -72,8 +100,36 @@ export default function Tree() {
       .attr("y", function (d) {
         return d.y - 50;
       });
+    var text = d3
+      .select("svg g.nodes")
+      .selectAll("text .node")
+      .data(treeData.descendants());
+    text
+      .enter()
+      .append("text")
+      .attr("x", function (d) {
+        return d.x;
+      })
+      .attr("y", function (d) {
+        return d.y;
+      })
+      .text(function (d) {
+        return d.data.name;
+      });
+    text
+      .enter()
+      .append("text")
+      .attr("x", function (d) {
+        return d.x;
+      })
+      .attr("y", function (d) {
+        return d.y - 20;
+      })
+      .text(function (d) {
+        return d.data.birthdate;
+      });
 
-    var links = d3.select("svg g.links").selectAll("path").data(linksData);
+    links = d3.select("svg g.links").selectAll("path").data(linksData);
     links
       .enter()
       .append("path")
@@ -114,41 +170,41 @@ export default function Tree() {
       });
     console.log(treeData.descendants());
 
-    var names = d3
-      .select("svg")
-      .append("g")
-      .selectAll("text")
-      .data(treeData.descendants());
-    names
-      .enter()
-      .append("text")
-      .text(function (d) {
-        return `${d.data.name}`;
-      })
-      .attr("class", function (d) {
-        return "text level-" + d.depth;
-      })
-      .attr("x", function (d) {
-        return d.x + width / 4 + 225;
-      })
-      .attr("y", function (d) {
-        return d.y + 160;
-      });
-    names
-      .enter()
-      .append("text")
-      .attr("class", function (d) {
-        return "text level-" + d.depth;
-      })
-      .text(function (d) {
-        return `${d.data.birthdate}`;
-      })
-      .attr("x", function (d) {
-        return d.x + width / 4 + 225;
-      })
-      .attr("y", function (d) {
-        return d.y + 185;
-      });
+    // var names = d3
+    //   .select("svg")
+    //   .append("g")
+    //   .selectAll("text")
+    //   .data(treeData.descendants());
+    // names
+    //   .enter()
+    //   .append("text")
+    //   .text(function (d) {
+    //     return `${d.data.name}`;
+    //   })
+    //   .attr("class", function (d) {
+    //     return "text level-" + d.depth;
+    //   })
+    //   .attr("x", function (d) {
+    //     return d.x;
+    //   })
+    //   .attr("y", function (d) {
+    //     return d.y;
+    //   });
+    // names
+    //   .enter()
+    //   .append("text")
+    //   .attr("class", function (d) {
+    //     return "text level-" + d.depth;
+    //   })
+    //   .text(function (d) {
+    //     return `${d.data.birthdate}`;
+    //   })
+    //   .attr("x", function (d) {
+    //     return d.x;
+    //   })
+    //   .attr("y", function (d) {
+    //     return d.y;
+    //   });
   };
 
   return (
@@ -162,12 +218,12 @@ export default function Tree() {
         Build Tree
       </button>
       <div id="Tree">
-        <svg width={width} height={height}>
+        {/* <svg width={width} height={height}>
           <g transform="translate(600, 125)">
             <g className="links"></g>
             <g className="nodes"></g>
           </g>
-        </svg>
+        </svg> */}
       </div>
     </div>
   );
