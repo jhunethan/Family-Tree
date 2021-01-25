@@ -4,6 +4,7 @@ import { ReactTable } from "./React-Table-Components/ReactTable";
 import Create from "./Create.js";
 import Modal from "./Modal";
 import Edit from "./Edit";
+import Header from "./Header";
 
 export default function Table() {
   // eslint-disable-next-line
@@ -67,7 +68,7 @@ export default function Table() {
     let list = document.getElementById("parentSearchDataList");
     //populate parentSearchDataList
     for (const x of tableData) {
-      datalistarr.push(x.name);
+      datalistarr.push(`${x.generation} ${x.name}`);
     }
     for (var i = 0; i < datalistarr.length; ++i) {
       str += '<option value="' + datalistarr[i] + '" />';
@@ -96,7 +97,7 @@ export default function Table() {
     let list = document.getElementById("parentSearchDataList");
     //populate parentSearchDataList
     for (const x of tableData) {
-      datalistarr.push(x.name);
+      datalistarr.push(`${x.generation} ${x.name}`);
     }
     for (var i = 0; i < datalistarr.length; ++i) {
       str += '<option value="' + datalistarr[i] + '" />';
@@ -136,6 +137,7 @@ export default function Table() {
 
   return (
     <div className="TableContainer">
+      <Header />
       <div className="container">
         <div className="container-top">
           <div className="left">

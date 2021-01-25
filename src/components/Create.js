@@ -71,13 +71,32 @@ function Create(props) {
 
   const validation = () => {
     let nameinput = document.getElementById("nameInputC");
+    let parentInputC = document.getElementById("parentInputC");
+    let check1,
+      check2 = false;
+    if (node.isPartner === 0 && whitespace(parentInputC.value) !== "") {
+      check1 = true;
+    } else {
+      check1 = false;
+      parentInputC.style.borderBottomColor = "red";
+      parentInputC.placeholder =
+        "This field cant be empty when partner is chosen";
+    }
     if (whitespace(nameinput.value) !== "") {
+      whitespace(node.generation);
+      whitespace(node.name);
+      whitespace(node.birthdate);
+      whitespace(node.parent);
+      whitespace(node.partner);
       setsendNode(node);
-      return true;
+      check2 = true;
     } else {
       //empty, apply error styles
       nameinput.style.borderBottomColor = "red";
       nameinput.placeholder = "Name can not be empty";
+    }
+    if (check1 && check2) {
+      return true;
     }
   };
 

@@ -6,19 +6,7 @@ export default function LandingPage() {
   return (
     <div className="wrapper">
       <div className="Container">
-        <div className="nav">
-          <div className="logo">LOGO</div>
-          <div className="menu">
-            <ul className="navMenu">
-              <li>
-                <a href="/">Login</a>
-              </li>
-              <li>
-                <a href="/">Register</a>
-              </li>
-            </ul>
-          </div>
-        </div>
+
         <div className="header">
           <h1>Lay Family Tree</h1>
           <p>Interactive visual representation</p>

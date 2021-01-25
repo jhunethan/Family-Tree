@@ -45,9 +45,9 @@ export const ReactTable = (props) => {
                     <span>
                       {column.isSorted
                         ? column.isSortedDesc
-                          ? " 🔽"
-                          : " 🔼"
-                        : ""}
+                          ? " ↓"
+                          : " ↑"
+                        : " ↕"}
                     </span>
                   </th>
                 ))}

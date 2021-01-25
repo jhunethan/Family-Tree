@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import * as d3 from "d3";
 import Axios from "axios";
 import "../css/Tree.css";
-import * as $ from "jquery";
+import Header from "./Header.js";
 
 var height = 1000;
 var width = 2000;
@@ -53,6 +53,15 @@ export default function Tree() {
     });
   }, [update]);
 
+  useEffect(() => {
+    try {
+      let buildcheck = document.getElementById("Tree").children;
+      if (buildcheck.length < 1) {
+        buildTree();
+      }
+    } catch {} // eslint-disable-next-line
+  }, [tableData]);
+
   //triggers a data request
   const updateTree = () => {
     setUpdate((prevUpdate) => !prevUpdate);
@@ -85,7 +94,6 @@ export default function Tree() {
 
   const buildTree = () => {
     converttreeData();
-    updateTree();
 
     function zoomed({ transform }) {
       d3.select("svg").selectAll("g").attr("transform", transform);
@@ -274,17 +282,14 @@ export default function Tree() {
       });
   };
 
-
   return (
     <div>
-      <button
-        type="button"
-        onClick={() => {
-          buildTree();
+      <Header
+        option1text={"Update Tree"}
+        option1action={() => {
+          updateTree();
         }}
-      >
-        Build Tree
-      </button>
+      />
       <div id="Tree"></div>
     </div>
   );

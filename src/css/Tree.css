@@ -1,12 +1,10 @@
 /* //main svg container */
 #Tree {
-  border: 2px solid black;
   width: auto;
   margin: 0;
 }
 
 svg {
-  border: 2px solid black;
   margin: 0;
 }
 
