@@ -151,7 +151,7 @@ export default function Tree() {
       .attr("ry", function (d) {
         return 5;
       })
-      .on("click", function (d) {
+      .on("mouseover", function (d) {
         setInfoCard({
           id: d.target.__data__.data.id,
           name: d.target.__data__.data.name,
@@ -186,7 +186,7 @@ export default function Tree() {
           return true;
         }
       })
-      .on("click", function (d) {
+      .on("mouseover", function (d) {
         setInfoCard({
           id: d.target.__data__.data.partnerinfo.id,
           name: d.target.__data__.data.partnerinfo.name,

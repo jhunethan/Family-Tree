@@ -24,10 +24,9 @@
   text-align: center;
 }
 .header h1 {
-  font-family: Didact Gothic;
   font-size: 4rem;
   font-weight: 600;
-  letter-spacing: 0.2rem;
+  letter-spacing: 0.3rem;
   color: white;
   padding: 0 20px 8px;
 }
