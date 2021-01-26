@@ -10,12 +10,12 @@ body {
 
 .container {
   position: absolute;
-  margin: 5vh 45vh ;
+  margin: 2vh 5vh 5vh 35vh ;
   padding: 2.5vh;
   width: 1000px;
   background-color: #fff;
   border-radius: 10px;
-  box-shadow: 5px 10px 20px #ffffff;
+  filter: drop-shadow(10px 10px 10px rgb(138, 138, 138));
   max-height: 600px;
   overflow: auto;
   -ms-overflow-style: none; /* IE and Edge */

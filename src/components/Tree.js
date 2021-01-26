@@ -46,6 +46,13 @@ function wrap(text, width) {
 export default function Tree() {
   const [update, setUpdate] = useState(false);
   const [tableData, setTableData] = useState();
+  const [InfoCard, setInfoCard] = useState({
+    id: "",
+    name: "",
+    generation: "",
+    birthdate: "",
+    parent: "",
+  });
   var treeData = [];
 
   useEffect(() => {
@@ -143,6 +150,14 @@ export default function Tree() {
       })
       .attr("ry", function (d) {
         return 5;
+      })
+      .on("click", function (d) {
+        setInfoCard({
+          id: d.target.__data__.data.id,
+          name: d.target.__data__.data.name,
+          generation: d.target.__data__.data.generation,
+          birthdate: d.target.__data__.data.birthdate,
+        });
       });
 
     var partnerRect = d3
@@ -162,18 +177,22 @@ export default function Tree() {
       .attr("y", function (d) {
         return d.y - 175;
       })
-      .attr("rx", function (d) {
-        return 5;
-      })
-      .attr("ry", function (d) {
-        return 5;
-      })
+      .attr("rx", 5)
+      .attr("ry", 5)
       .classed("hide", function (d) {
         try {
           if (d.data.partnerinfo.name === "text") return false;
         } catch {
           return true;
         }
+      })
+      .on("click", function (d) {
+        setInfoCard({
+          id: d.target.__data__.data.partnerinfo.id,
+          name: d.target.__data__.data.partnerinfo.name,
+          generation: d.target.__data__.data.partnerinfo.generation,
+          birthdate: d.target.__data__.data.partnerinfo.birthdate,
+        });
       });
 
     var partnerText = d3
@@ -299,7 +318,11 @@ export default function Tree() {
           updateTree();
         }}
       />
-      <NodeCard data={tableData}/>
+      <NodeCard
+        InfoCardname={InfoCard.name}
+        InfoCardbirthdate={InfoCard.birthdate}
+        InfoCardgeneration={InfoCard.generation}
+      />
       <div id="Tree"></div>
     </div>
   );

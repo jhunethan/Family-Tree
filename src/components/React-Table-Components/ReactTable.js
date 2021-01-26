@@ -32,10 +32,17 @@ export const ReactTable = (props) => {
     <>
       <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
       <div>
-        <table {...getTableProps()} onClick={(e)=>{
-          var row = e.target.closest("tr");
-          props.open(row);
-        }}>
+        <table
+          {...getTableProps()}
+          onClick={(e) => {
+            let row = e.target.closest("tr");
+            props.open(row);
+          }}
+          onMouseOver={(e) => {
+            let row = e.target.closest("tr");
+            props.show(row);
+          }}
+        >
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr className="tableRow" {...headerGroup.getHeaderGroupProps()}>

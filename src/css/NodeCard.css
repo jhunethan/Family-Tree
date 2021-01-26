@@ -69,7 +69,6 @@
 .top-card .name {
   width: 50%;
   height: 0;
-  text-align: center;
   float: right;
 }
 
@@ -115,4 +114,10 @@ footer {
 
 .middle-card {
   text-align: justify;
+}
+
+#card-edit {
+  position: absolute;
+  right: 10px;
+  top: 10px;
 }

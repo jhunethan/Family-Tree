@@ -15,7 +15,7 @@ export default function Header(props) {
         </i>
 
         <a href="/" className="nav-logo">
-          LOGO
+          LAY
         </a>
         <ul className="nav-ul">
           <li>

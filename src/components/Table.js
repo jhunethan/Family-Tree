@@ -7,6 +7,7 @@ import Create from "./Create.js";
 import Modal from "./Modal";
 import Edit from "./Edit";
 import Header from "./Header";
+import NodeCard from "./NodeCard";
 
 export default function Table() {
   // eslint-disable-next-line
@@ -14,7 +15,7 @@ export default function Table() {
   const [tableData, setTableData] = useState([]);
   const [nodestate, setNodestate] = useState(0);
   var [radiochecked, setRadiochecked] = useState(true);
-
+  const [currentRow, setcurrentRow] = useState();
   var currentNode = {
     id: 0,
     generation: "",
@@ -38,12 +39,17 @@ export default function Table() {
   };
 
   const populateEditFields = (node) => {
-    document.getElementById("genInput").value = node.generation;
-    document.getElementById("name").value = node.name;
-    document.getElementById("birthdate").value = node.birthdate;
+    $("#genInput").val(node.generation);
+    $("#name").val(node.name);
+    $("#birthdate").val(node.birthdate);
+
     let pval;
-    node.isPartner === 0 ? (pval = node.parent) : (pval = node.partner);
-    document.getElementById("parentInput").value = pval;
+    if (node.partner.length > 0) {
+      pval = node.partner;
+    } else {
+      pval = node.parent;
+    }
+    $("#parentInput").val(pval);
   };
 
   const getNode = (idKey) => {
@@ -57,7 +63,7 @@ export default function Table() {
   const getPID = (nameKey) => {
     let node;
     for (var i = 0; i < tableData.length; i++) {
-      let namecheck = tableData[i].generation + " " + tableData[i].name
+      let namecheck = tableData[i].generation + " " + tableData[i].name;
       if (namecheck === nameKey) {
         node = tableData[i];
       }
@@ -112,7 +118,10 @@ export default function Table() {
     list.innerHTML = str;
 
     //only runs if its a database entry
-    if (!isNaN(row.firstChild.textContent)) {
+    if (
+      !isNaN(row.firstChild.textContent) &&
+      row.firstChild.textContent !== "0"
+    ) {
       let thisnode = getNode(Number(row.firstChild.textContent));
       let node = {
         id: children[0].textContent,
@@ -133,6 +142,29 @@ export default function Table() {
       populateEditFields(currentNode);
       document.getElementById("editForm").style.display = "block";
       document.getElementById("Modal").style.display = "block";
+    }
+  };
+
+  const showNode = (row) => {
+    let children = row.children;
+    setcurrentRow(row);
+    //only runs if its a database entry
+    if (
+      !isNaN(row.firstChild.textContent) &&
+      row.firstChild.textContent !== "0"
+    ) {
+      let thisnode = getNode(Number(row.firstChild.textContent));
+      let node = {
+        id: children[0].textContent,
+        generation: children[1].textContent,
+        name: children[2].textContent,
+        birthdate: children[3].textContent,
+        parent: children[4].textContent,
+        partner: children[5].textContent,
+        isPartner: thisnode.isPartner,
+      };
+      //update current node json object
+      setNodestate(node);
     }
   };
 
@@ -169,7 +201,7 @@ export default function Table() {
           </div>
         </div>
         <div className="container-body">
-          <ReactTable data={tableData} open={openNode} />
+          <ReactTable data={tableData} open={openNode} show={showNode} />
         </div>
       </div>
       <Modal close={closePopups} />
@@ -187,6 +219,14 @@ export default function Table() {
         nodedata={nodestate}
         update={() => {
           updateTable();
+        }}
+      />
+      <NodeCard
+        InfoCardname={nodestate.name}
+        InfoCardbirthdate={nodestate.birthdate}
+        InfoCardgeneration={nodestate.generation}
+        edit={() => {
+          openNode(currentRow);
         }}
       />
     </div>
