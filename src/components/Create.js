@@ -26,7 +26,7 @@ function Create(props) {
   };
 
   const inputChangedHandler = () => {
-    node.parentNode = document.getElementById("parentInputC").value;
+    node.parentNode = $("#parentInputC").val();
     let pid = document.getElementById("toggle-slide").checked,
       isPartner = 0;
     console.log(pid);
@@ -43,9 +43,9 @@ function Create(props) {
     }
 
     setsendNode({
-      generation: document.getElementById("genInputC").value,
-      name: document.getElementById("nameInputC").value,
-      birthdate: document.getElementById("birthdateInputC").value,
+      generation: $("#genInputC").val(),
+      name: $("#nameInputC").val(),
+      birthdate: $("#birthdateInputC").val(),
       pid: pid,
       isPartner: isPartner,
       parent: node.parent,
@@ -61,7 +61,7 @@ function Create(props) {
   const successAdd = () => {
     try {
       document.getElementsByClassName("Create")[0].style.display = "none";
-      document.getElementById("Modal").style.display = "none";
+      $("#Modal").style.display = "none";
     } catch {}
 
     setTimeout(() => {
@@ -70,19 +70,21 @@ function Create(props) {
   };
 
   const validation = () => {
-    let nameinput = document.getElementById("nameInputC");
-    let parentInputC = document.getElementById("parentInputC");
+    let nameinput = $("#nameInputC");
+    let parentInputC = $("#parentInputC");
     let check1,
       check2 = false;
-    if (node.isPartner === 0 && whitespace(parentInputC.value) !== "") {
+    if (node.isPartner === 0 && whitespace(parentInputC.val()) !== "") {
       check1 = true;
     } else {
       check1 = false;
-      parentInputC.style.borderBottomColor = "red";
-      parentInputC.placeholder =
-        "This field cant be empty when partner is chosen";
+      parentInputC.css("border-bottom", "2px solid red");
+      parentInputC.attr(
+        "placeholder",
+        "This field cant be empty when partner is chosen"
+      );
     }
-    if (whitespace(nameinput.value) !== "") {
+    if (whitespace(nameinput.val()) !== "") {
       whitespace(node.generation);
       whitespace(node.name);
       whitespace(node.birthdate);
@@ -92,8 +94,8 @@ function Create(props) {
       check2 = true;
     } else {
       //empty, apply error styles
-      nameinput.style.borderBottomColor = "red";
-      nameinput.placeholder = "Name can not be empty";
+      nameinput.css("border-bottom", "2px solid red");
+      nameinput.attr("placeholder", "Name cannot be empty");
     }
     if (check1 && check2) {
       return true;

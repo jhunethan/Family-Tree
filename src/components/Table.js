@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Axios from "axios";
+import * as $ from "jquery";
+
 import { ReactTable } from "./React-Table-Components/ReactTable";
 import Create from "./Create.js";
 import Modal from "./Modal";
@@ -55,7 +57,8 @@ export default function Table() {
   const getPID = (nameKey) => {
     let node;
     for (var i = 0; i < tableData.length; i++) {
-      if (tableData[i].name === nameKey) {
+      let namecheck = tableData[i].generation + " " + tableData[i].name
+      if (namecheck === nameKey) {
         node = tableData[i];
       }
     }
@@ -91,6 +94,10 @@ export default function Table() {
 
   const openNode = (row) => {
     let children = row.children;
+
+    $("#parentInput").css("border-bottom", "2px solid #bebed2");
+    $("#parentInput").val("");
+    $("#parentInput").attr("placeholder", "Parent/Partner");
 
     let str = "";
     let datalistarr = [];
@@ -146,7 +153,14 @@ export default function Table() {
               Here you can sort, search and edit any family member by clicking.
               <br /> You can also search to filter results.
             </p>
-            <button type="button" onClick={()=>{updateTable()}}>Update Table</button>
+            <button
+              type="button"
+              onClick={() => {
+                updateTable();
+              }}
+            >
+              Update Table
+            </button>
           </div>
           <div className="right">
             <button id="createNew" onClick={resetCreateFields}>

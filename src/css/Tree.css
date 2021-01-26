@@ -16,12 +16,12 @@ svg {
   fill: #fff;
 
   font-family: "Montserrat", sans-serif;
-  filter: drop-shadow(10px 10px 4px rgb(138, 138, 138));
+  filter: drop-shadow(10px 10px 10px rgb(138, 138, 138));
 
   transition: all 0.3s;
 }
 
-.node:hover {
+.node:hover, .partnernode:hover {
   fill: rgb(231, 231, 231);
   transition: all 0.3s;
   cursor: pointer;

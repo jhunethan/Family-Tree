@@ -3,9 +3,10 @@ import * as d3 from "d3";
 import Axios from "axios";
 import "../css/Tree.css";
 import Header from "./Header.js";
+import NodeCard from "./NodeCard";
 
-var height = 1000;
-var width = 2000;
+var height = 2000;
+var width = 4000;
 
 function wrap(text, width) {
   text.each(function () {
@@ -72,15 +73,12 @@ export default function Tree() {
     treeData = tableData;
     let partners = treeData.filter((x) => x.isPartner === 1);
     treeData = treeData.filter((x) => x.isPartner !== 1);
-    console.log(partners);
-    console.log(treeData);
     for (let i = 0; i < partners.length; i++) {
       //get name of parent node
       //make partner object an attribute of parent node (partnerinfo)
       for (let x = 0; x < treeData.length; x++) {
         if (treeData[x].id === partners[i].pid) {
           treeData[x].partnerinfo = partners[i];
-          console.log("partner appended to " + treeData[x].name);
         }
       }
     }
@@ -89,7 +87,6 @@ export default function Tree() {
       .stratify()
       .id((d) => d["id"])
       .parentId((d) => d["pid"])(treeData);
-    console.log(treeData);
   };
 
   const buildTree = () => {
@@ -120,7 +117,7 @@ export default function Tree() {
           [0, 0],
           [width, height],
         ])
-        .scaleExtent([-5, 8])
+        .scaleExtent([0.25, 1])
         .on("zoom", zoomed)
     );
 
@@ -140,6 +137,12 @@ export default function Tree() {
       })
       .attr("y", function (d) {
         return d.y - 175;
+      })
+      .attr("rx", function (d) {
+        return 5;
+      })
+      .attr("ry", function (d) {
+        return 5;
       });
 
     var partnerRect = d3
@@ -158,6 +161,12 @@ export default function Tree() {
       })
       .attr("y", function (d) {
         return d.y - 175;
+      })
+      .attr("rx", function (d) {
+        return 5;
+      })
+      .attr("ry", function (d) {
+        return 5;
       })
       .classed("hide", function (d) {
         try {
@@ -187,7 +196,7 @@ export default function Tree() {
           return "";
         }
       })
-      .call(wrap, 100);
+      .call(wrap, 150);
     partnerText
       .enter()
       .append("text")
@@ -204,7 +213,7 @@ export default function Tree() {
           return "";
         }
       })
-      .call(wrap, 100);
+      .call(wrap, 150);
     var text = d3
       .select("svg g.nodes")
       .selectAll("text .node")
@@ -290,6 +299,7 @@ export default function Tree() {
           updateTree();
         }}
       />
+      <NodeCard data={tableData}/>
       <div id="Tree"></div>
     </div>
   );

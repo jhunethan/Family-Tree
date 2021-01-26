@@ -25,22 +25,23 @@ export default function Edit(props) {
     CheckInput();
 
     if (isPartner === 1) {
-      partner = document.getElementById("parentInput").value;
+      partner = $("#parentInput").val();
     } else {
-      parent = document.getElementById("parentInput").value;
+      parent = $("#parentInput").val();
     }
 
     try {
-      pid = props.getPID(document.getElementById("parentInput").value);
+      pid = props.getPID($("#parentInput").val());
+      console.log(pid);
     } catch {
       pid = 0;
     }
 
     setNodeInput({
       id: props.nodedata.id,
-      generation: document.getElementById("genInput").value,
-      name: document.getElementById("name").value,
-      birthdate: document.getElementById("birthdate").value,
+      generation: $("#genInput").val(),
+      name: $("#name").val(),
+      birthdate: $("#birthdate").val(),
       pid: pid,
       isPartner: isPartner,
       parent: parent,
@@ -56,35 +57,22 @@ export default function Edit(props) {
   function CheckInput() {
     setChanged(false);
     if (
-      document.getElementById("genInput").value !== props.nodedata.generation
+      $("genInput").val() !== props.nodedata.generation
     ) {
       setChanged(true);
     }
-    if (document.getElementById("name").value !== props.nodedata.name) {
+    if ($("name").val() !== props.nodedata.name) {
       setChanged(true);
     }
     if (
-      document.getElementById("birthdate").value !== props.nodedata.birthdate
+      $("birthdate").val() !== props.nodedata.birthdate
     ) {
       setChanged(true);
     }
     // eslint-disable-next-line
-    if (document.getElementById("parentInput").value != props.nodedata.pid) {
+    if ($("parentInput").val() != props.nodedata.pid) {
       setChanged(true);
     }
-    // case "option-1":
-    //   element = document.getElementById(id).checked;
-    //   if (element === true && props.nodadata.savedTags === "partner") {
-    //     setChanged(true);
-    //     return true;
-    //   }
-    //   break;
-    // case "option-2":
-    //   element = document.getElementById(id).checked;
-    //   if (element === true && props.nodadata.savedTags !== "partner") {
-    //     setChanged(true);
-    //     return true;
-    //   }
     if (getRadioVal === "partner" && props.nodedata.isPartner !== 1) {
       setChanged(true);
     }
@@ -94,13 +82,17 @@ export default function Edit(props) {
   }
 
   function checkParent() {
-    let element = document.getElementById("parentInput");
+    let element = $("#parentInput");
     for (const x of props.data) {
-      if (element.value === x.name) {
+      let namecheck = x.generation + " " + x.name;
+      if (element.val() === namecheck) {
         return true;
       }
     }
-    if ($.trim(element.value) === "") return true;
+    if ($.trim(element.val()) === "") return true;
+    element.css("border-bottom", "2px solid red");
+    element.val("");
+    element.attr("placeholder", "parent not in database");
     return false;
   }
 
@@ -110,7 +102,7 @@ export default function Edit(props) {
     console.log(`changed=${changed}  checkParent=${check}`);
     if (changed === true && check) {
       //save
-      console.log(nodeInput)
+      console.log(nodeInput);
       Axios.put("https://layfamily.herokuapp.com/api/update", {
         id: nodeInput.id,
         generation: nodeInput.generation,
@@ -128,8 +120,8 @@ export default function Edit(props) {
     setChanged(false);
   }
   var closeEditMenu = () => {
-    document.getElementById("editForm").style.display = "none";
-    document.getElementById("Modal").style.display = "none";
+    $("#editForm").css("display", "none");
+    $("#Modal").css("display", "none");
     //wait for Axios update then update
     setTimeout(() => {
       props.update();
@@ -137,13 +129,13 @@ export default function Edit(props) {
   };
 
   function cancelDeleteConfirm() {
-    document.getElementById("deleteConfirmMenu").style.display = "none";
-    document.getElementById("editForm").style.display = "block";
+    $("#deleteConfirmMenu").css("display", "none");
+    $("#editForm").css("display", "block");
   }
   function confirmDeletion() {
-    let userValidation = document.getElementById("deleteTextbox");
+    let userValidation = $("#deleteTextbox");
 
-    if (userValidation.value === "confirm") {
+    if (userValidation.val() === "confirm") {
       //delete node
       Axios.post("https://layfamily.herokuapp.com/api/delete", {
         id: props.nodedata.id,
@@ -152,22 +144,22 @@ export default function Edit(props) {
       cancelDeleteConfirm();
       closeEditMenu();
     } else {
-      userValidation.style.borderBottom = "2px solid red";
-      userValidation.value = "";
-      userValidation.placeholder = "input doesn't match, try again";
+      userValidation.css("border-bottom", "2px solid red");
+      userValidation.val("");
+      userValidation.attr("placeholder", "input doesn't match, try again");
     }
   }
 
   var deleteNode = () => {
     //hide edit menu
-    document.getElementById("editForm").style.display = "none";
+    $("#editForm").css("display", "none");
     //show confirm menu and reset default values
-    let userValidation = document.getElementById("deleteTextbox");
+    let userValidation = $("deleteTextbox");
 
-    document.getElementById("deleteConfirmMenu").style.display = "block";
-    userValidation.value = "";
-    userValidation.placeholder = "type here";
-    userValidation.style.borderBottom = "2px solid #bebed2";
+    $("#deleteConfirmMenu").css("display", "block");
+    userValidation.val("");
+    userValidation.attr("placeholder", "type here");
+    userValidation.css("border-bottom", "2px solid #bebed2");
   };
 
   return (
