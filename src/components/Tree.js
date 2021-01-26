@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import * as d3 from "d3";
 import Axios from "axios";
+import * as $ from "jquery";
 import "../css/Tree.css";
 import Header from "./Header.js";
 import NodeCard from "./NodeCard";
@@ -53,7 +54,8 @@ export default function Tree() {
     birthdate: "",
     parent: "",
   });
-  var treeData = [];
+  var datalistarr,
+    treeData = [];
 
   useEffect(() => {
     Axios.get("https://layfamily.herokuapp.com/api/get").then((result) => {
@@ -151,7 +153,8 @@ export default function Tree() {
       .attr("ry", function (d) {
         return 5;
       })
-      .on("mouseover", function (d) {
+      .on("click", function (d) {
+        $("#card-container").css("display", "block");
         setInfoCard({
           id: d.target.__data__.data.id,
           name: d.target.__data__.data.name,
@@ -186,7 +189,8 @@ export default function Tree() {
           return true;
         }
       })
-      .on("mouseover", function (d) {
+      .on("click", function (d) {
+        $("#card-container").css("display", "block");
         setInfoCard({
           id: d.target.__data__.data.partnerinfo.id,
           name: d.target.__data__.data.partnerinfo.name,
@@ -310,6 +314,56 @@ export default function Tree() {
       });
   };
 
+  const populateDatalist = () => {
+    let str = "";
+    datalistarr = [];
+    let list = document.getElementById("datalist-ul");
+    //populate parentSearchDataList
+    for (const x of tableData) {
+      if (x.id !== 0)
+        datalistarr.push(`${x.generation} ${x.name} ${x.birthdate} ${x.id}`);
+    }
+    for (var i = 0; i < datalistarr.length; ++i) {
+      str += '<option value="' + datalistarr[i] + '" />';
+    }
+    list.innerHTML = str;
+  };
+
+  const search = () => {
+    let found = false;
+    let node;
+    let searchterm = $("#datalist-input").val();
+    $("#datalist-input").val("");
+
+    for (const x of datalistarr) {
+      if ($.trim(searchterm) === $.trim(x)) {
+        found = true;
+      }
+    }
+    if (found) {
+      //get node object
+      var n = searchterm.split(" ");
+      let id = Number(n[n.length - 1]);
+      for (const x of tableData) {
+        if (x.id === id) {
+          node = x;
+        }
+      }
+      $("#card-container").css("display", "block");
+      console.log(node)
+      try {
+        setInfoCard({
+          id: node.id,
+          name: node.name,
+          generation: node.generation,
+          birthdate: node.birthdate,
+        });
+      } catch {}
+    } else {
+      alert("not found");
+    }
+  };
+
   return (
     <div>
       <Header
@@ -318,6 +372,23 @@ export default function Tree() {
           updateTree();
         }}
       />
+      <div className="datalist">
+        <input
+          id="datalist-input"
+          class="datalist-input"
+          type="text"
+          name="searchtree"
+          placeholder="Search Here"
+          list="datalist-ul"
+          onClick={() => {
+            populateDatalist();
+          }}
+        />
+        <button id="datalistbutton" onClick={() => search()}>
+          Search
+        </button>
+        <datalist id="datalist-ul" class="datalist-ul"></datalist>
+      </div>
       <NodeCard
         InfoCardname={InfoCard.name}
         InfoCardbirthdate={InfoCard.birthdate}

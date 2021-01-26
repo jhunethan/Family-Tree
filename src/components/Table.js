@@ -201,7 +201,7 @@ export default function Table() {
           </div>
         </div>
         <div className="container-body">
-          <ReactTable data={tableData} open={openNode} show={showNode} />
+          <ReactTable data={tableData} open={showNode} show={showNode} />
         </div>
       </div>
       <Modal close={closePopups} />

@@ -21,7 +21,8 @@ svg {
   transition: all 0.3s;
 }
 
-.node:hover, .partnernode:hover {
+.node:hover,
+.partnernode:hover {
   fill: rgb(231, 231, 231);
   transition: all 0.3s;
   cursor: pointer;
@@ -53,4 +54,21 @@ text {
 
 .hide {
   display: none;
+}
+
+/*                 */
+/*    datalist     */
+/*                 */
+
+.datalist {
+  display: flex;
+  margin: 10px;
+  transition: all 0.5s;
+}
+.datalist-input {
+  padding: 10px;
+}
+.datalist-ul {
+  overflow-x: auto;
+  font-size: 20px;
 }
