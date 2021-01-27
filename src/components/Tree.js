@@ -63,9 +63,9 @@ export default function Tree() {
   }, [update]);
 
   useEffect(() => {
+    //if tabledata is updated, check if the tree exists, else do nothing
     var intervalId = setInterval(function () {
       if (!$("svg").children().length > 0) {
-        //do stuff
         try {
           buildTree();
         } catch {}
@@ -73,6 +73,7 @@ export default function Tree() {
         clearInterval(intervalId);
       }
     }, 100);
+    // eslint-disable-next-line
   }, [tableData]);
 
   //triggers a data request
@@ -157,7 +158,7 @@ export default function Tree() {
       })
       .on("click", function (d) {
         $("#card-container").css("display", "block");
-        zoom.scaleTo(svg.transition().duration(750), 1);
+        zoom.scaleTo(svg.transition().duration(250), 1);
         setInfoCard({
           id: d.target.__data__.data.id,
           name: d.target.__data__.data.name,
@@ -165,13 +166,13 @@ export default function Tree() {
           birthdate: d.target.__data__.data.birthdate,
         });
         zoom.translateTo(
-          svg.transition().duration(750),
+          svg.transition().duration(250),
           d.target.__data__.x + width / 3.2,
           d.target.__data__.y + height / 4
         );
         setTimeout(() => {
           zoom.scaleTo(svg.transition().duration(750), 1);
-        }, 1000);
+        }, 250);
       });
 
     var partnerRect = d3
@@ -201,7 +202,7 @@ export default function Tree() {
         }
       })
       .on("click", function (d) {
-        zoom.scaleTo(svg.transition().duration(750), 1);
+        zoom.scaleTo(svg.transition().duration(250), 1);
         $("#card-container").css("display", "block");
         setInfoCard({
           id: d.target.__data__.data.partnerinfo.id,
@@ -211,13 +212,13 @@ export default function Tree() {
         });
         console.log(d.target.__data__.x);
         zoom.translateTo(
-          svg.transition().duration(750),
+          svg.transition().duration(250),
           d.target.__data__.x + width / 3.2,
           d.target.__data__.y + height / 4
         );
         setTimeout(() => {
           zoom.scaleTo(svg.transition().duration(750), 1);
-        }, 1000);
+        }, 250);
       });
 
     var partnerText = d3
@@ -354,18 +355,18 @@ export default function Tree() {
   const search = () => {
     let found = false;
     let node;
-    let searchterm = $("#datalist-input").val();
+    let searchterm = $.trim($("#datalist-input").val());
     $("#datalist-input").val("");
     populateDatalist();
 
     for (const x of datalistarr) {
-      if ($.trim(searchterm) === $.trim(x)) {
+      if (searchterm === $.trim(x)) {
         found = true;
       }
     }
     if (found) {
       //get node object
-      var n = searchterm.split(" ");
+      let n = searchterm.split(" ");
       let id = Number(n[n.length - 1]);
       for (const x of tableData) {
         if (x.id === id) {
@@ -379,8 +380,16 @@ export default function Tree() {
         if (x.__data__.data.name === node.name) {
           dimensions[0] = x.__data__.x;
           dimensions[1] = x.__data__.y;
+        } else {
+          try {
+            if (x.__data__.data.partnerinfo.name === node.name) {
+              dimensions[0] = x.__data__.x + 100;
+              dimensions[1] = x.__data__.y;
+            }
+          } catch {}
         }
       }
+      console.log(nodeRect);
       try {
         setInfoCard({
           id: node.id,
@@ -388,21 +397,22 @@ export default function Tree() {
           generation: node.generation,
           birthdate: node.birthdate,
         });
-        zoom.scaleTo(svg.transition().duration(750), 1);
+        zoom.scaleTo(svg.transition().duration(250), 1);
         $("#card-container").css("display", "block");
         zoom.translateTo(
-          svg.transition().duration(750),
+          svg.transition().duration(250),
           dimensions[0] + width / 3.2,
           dimensions[1] + height / 4
         );
         setTimeout(() => {
           zoom.scaleTo(svg.transition().duration(750), 1);
-        }, 1000);
+        }, 250);
       } catch (error) {
         console.log(error);
       }
     } else {
       $("#datalist-input").css("border", "2px solid red");
+      $("#datalist-input").attr("placeholder","Please click from list")
     }
   };
 
