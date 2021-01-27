@@ -57,7 +57,7 @@ export default function Tree() {
   });
 
   useEffect(() => {
-    Axios.get("https://layfamily.herokuapp.com/api/get").then((result) => {
+    Axios.get("http://localhost:5000/api/get").then((result) => {
       setTableData(result.data);
     });
   }, [update]);
@@ -410,9 +410,11 @@ export default function Tree() {
       } catch (error) {
         console.log(error);
       }
+      return true;
     } else {
       $("#datalist-input").css("border", "2px solid red");
-      $("#datalist-input").attr("placeholder","Please click from list")
+      $("#datalist-input").attr("placeholder", "Please click from list");
+      return false;
     }
   };
 
@@ -435,8 +437,21 @@ export default function Tree() {
           onClick={() => {
             populateDatalist();
           }}
+          onKeyUp={(event) => {
+            if (event.key === "Enter") {
+              // Cancel the default action, if needed
+              event.preventDefault();
+              // Focus on next element if successful
+              if (search()) event.target.blur();
+            }
+          }}
         />
-        <button id="datalistbutton" onClick={() => search()}>
+        <button
+          id="datalistbutton"
+          onClick={(event) => {
+            if (!search()) document.getElementById("datalist-input").focus();
+          }}
+        >
           Search
         </button>
         <datalist id="datalist-ul" className="datalist-ul"></datalist>

@@ -6,7 +6,6 @@ export default function LandingPage() {
   return (
     <div className="wrapper">
       <div className="Container">
-
         <div className="header">
           <h1>Lay Family Tree</h1>
           <p>Interactive visual representation</p>

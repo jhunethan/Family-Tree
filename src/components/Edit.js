@@ -56,17 +56,13 @@ export default function Edit(props) {
 
   function CheckInput() {
     setChanged(false);
-    if (
-      $("genInput").val() !== props.nodedata.generation
-    ) {
+    if ($("genInput").val() !== props.nodedata.generation) {
       setChanged(true);
     }
     if ($("name").val() !== props.nodedata.name) {
       setChanged(true);
     }
-    if (
-      $("birthdate").val() !== props.nodedata.birthdate
-    ) {
+    if ($("birthdate").val() !== props.nodedata.birthdate) {
       setChanged(true);
     }
     // eslint-disable-next-line
@@ -85,9 +81,8 @@ export default function Edit(props) {
     let element = $("#parentInput");
     for (const x of props.data) {
       let namecheck = x.generation + " " + x.name;
-      if (element.val() === namecheck) {
-        return true;
-      }
+      if (element.val() === namecheck) return true;
+      if (x.name === element.val()) return true;
     }
     if ($.trim(element.val()) === "") return true;
     element.css("border-bottom", "2px solid red");
@@ -103,7 +98,7 @@ export default function Edit(props) {
     if (changed === true && check) {
       //save
       console.log(nodeInput);
-      Axios.put("https://layfamily.herokuapp.com/api/update", {
+      Axios.put("http://localhost:5000/api/update", {
         id: nodeInput.id,
         generation: nodeInput.generation,
         name: nodeInput.name,
@@ -137,7 +132,7 @@ export default function Edit(props) {
 
     if (userValidation.val() === "confirm") {
       //delete node
-      Axios.post("https://layfamily.herokuapp.com/api/delete", {
+      Axios.post("http://localhost:5000/api/delete", {
         id: props.nodedata.id,
       });
 

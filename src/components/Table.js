@@ -28,7 +28,7 @@ export default function Table() {
     setRadiochecked(!radiochecked);
   };
   useEffect(() => {
-    Axios.get("https://layfamily.herokuapp.com/api/get").then((result) => {
+    Axios.get("http://localhost:5000/api/get").then((result) => {
       setTableData(result.data);
     });
   }, [update]);
@@ -202,7 +202,7 @@ export default function Table() {
           </div>
         </div>
         <div className="container-body">
-          <ReactTable data={tableData} open={showNode} show={showNode} />
+          <ReactTable data={tableData} open={openNode} show={showNode} />
         </div>
       </div>
       <Modal close={closePopups} />

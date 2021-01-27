@@ -11,7 +11,7 @@
   line-height: 22px;
   color: #000;
   border-radius: 7px;
-  filter: drop-shadow(10px 10px 4px rgb(138, 138, 138));
+  filter: drop-shadow(10px 10px 10px rgba(43, 43, 43, 0.473));
 
   margin: 50px auto;
 
