@@ -105,30 +105,28 @@ export default function Tree() {
       d3.select("svg").selectAll("g").attr("transform", transform);
     }
 
+    var zoom = d3
+      .zoom()
+      .extent([
+        [0, 0],
+        [width, height],
+      ])
+      .scaleExtent([0.25, 1])
+      .on("zoom", zoomed);
+
     var treeLayout = d3.tree();
     treeLayout.nodeSize([375, 250]);
     treeLayout(treeData);
     var linksData = treeData.links();
 
     var svg = d3.select("#Tree").append("svg");
-    svg.attr("width", width).attr("height", height);
+    svg.attr("width", width).attr("height", height).call(zoom);
 
     var nodes = d3.select("svg").selectAll("g").data([0]);
     nodes.enter().append("g").attr("class", "links");
     nodes.enter().append("g").attr("class", "nodes");
 
     var links = d3.select("svg").selectAll("g").data([0]);
-
-    svg.call(
-      d3
-        .zoom()
-        .extent([
-          [0, 0],
-          [width, height],
-        ])
-        .scaleExtent([0.25, 1])
-        .on("zoom", zoomed)
-    );
 
     // Nodes
     var rectangles = d3
@@ -155,12 +153,21 @@ export default function Tree() {
       })
       .on("click", function (d) {
         $("#card-container").css("display", "block");
+        zoom.scaleTo(svg.transition().duration(750), 0.5);
         setInfoCard({
           id: d.target.__data__.data.id,
           name: d.target.__data__.data.name,
           generation: d.target.__data__.data.generation,
           birthdate: d.target.__data__.data.birthdate,
         });
+        zoom.translateTo(
+          svg.transition().duration(750),
+          d.target.__data__.x + width / 3.2,
+          d.target.__data__.y + height / 4
+        );
+        setTimeout(() => {
+          zoom.scaleTo(svg.transition().duration(750), 1);
+        }, 1000);
       });
 
     var partnerRect = d3
@@ -190,6 +197,7 @@ export default function Tree() {
         }
       })
       .on("click", function (d) {
+        zoom.scaleTo(svg.transition().duration(750), 0.5);
         $("#card-container").css("display", "block");
         setInfoCard({
           id: d.target.__data__.data.partnerinfo.id,
@@ -197,6 +205,15 @@ export default function Tree() {
           generation: d.target.__data__.data.partnerinfo.generation,
           birthdate: d.target.__data__.data.partnerinfo.birthdate,
         });
+        console.log(d.target.__data__.x);
+        zoom.translateTo(
+          svg.transition().duration(750),
+          d.target.__data__.x + width / 3.2,
+          d.target.__data__.y + height / 4
+        );
+        setTimeout(() => {
+          zoom.scaleTo(svg.transition().duration(750), 1);
+        }, 1000);
       });
 
     var partnerText = d3
@@ -350,7 +367,7 @@ export default function Tree() {
         }
       }
       $("#card-container").css("display", "block");
-      console.log(node)
+      console.log(node);
       try {
         setInfoCard({
           id: node.id,
@@ -375,7 +392,7 @@ export default function Tree() {
       <div className="datalist">
         <input
           id="datalist-input"
-          class="datalist-input"
+          className="datalist-input"
           type="text"
           name="searchtree"
           placeholder="Search Here"
@@ -387,7 +404,7 @@ export default function Tree() {
         <button id="datalistbutton" onClick={() => search()}>
           Search
         </button>
-        <datalist id="datalist-ul" class="datalist-ul"></datalist>
+        <datalist id="datalist-ul" className="datalist-ul"></datalist>
       </div>
       <NodeCard
         InfoCardname={InfoCard.name}
