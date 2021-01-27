@@ -146,6 +146,7 @@ export default function Table() {
   };
 
   const showNode = (row) => {
+    $("#card-container").css("display", "block");
     let children = row.children;
     setcurrentRow(row);
     //only runs if its a database entry

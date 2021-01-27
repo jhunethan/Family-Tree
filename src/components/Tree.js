@@ -8,7 +8,8 @@ import NodeCard from "./NodeCard";
 
 var height = 2000;
 var width = 4000;
-
+var datalistarr,
+  treeData = [];
 function wrap(text, width) {
   text.each(function () {
     var text = d3.select(this),
@@ -54,8 +55,6 @@ export default function Tree() {
     birthdate: "",
     parent: "",
   });
-  var datalistarr,
-    treeData = [];
 
   useEffect(() => {
     Axios.get("https://layfamily.herokuapp.com/api/get").then((result) => {
@@ -64,12 +63,16 @@ export default function Tree() {
   }, [update]);
 
   useEffect(() => {
-    try {
-      let buildcheck = document.getElementById("Tree").children;
-      if (buildcheck.length < 1) {
-        buildTree();
+    var intervalId = setInterval(function () {
+      if (!$("svg").children().length > 0) {
+        //do stuff
+        try {
+          buildTree();
+        } catch {}
+
+        clearInterval(intervalId);
       }
-    } catch {} // eslint-disable-next-line
+    }, 100);
   }, [tableData]);
 
   //triggers a data request
@@ -98,28 +101,29 @@ export default function Tree() {
       .parentId((d) => d["pid"])(treeData);
   };
 
+  function zoomed({ transform }) {
+    d3.select("svg").selectAll("g").attr("transform", transform);
+  }
+
+  var zoom = d3
+    .zoom()
+    .extent([
+      [0, 0],
+      [width, height],
+    ])
+    .scaleExtent([0.25, 1])
+    .on("zoom", zoomed);
+
+  var svg = d3.select("#Tree").append("svg");
+
   const buildTree = () => {
     converttreeData();
-
-    function zoomed({ transform }) {
-      d3.select("svg").selectAll("g").attr("transform", transform);
-    }
-
-    var zoom = d3
-      .zoom()
-      .extent([
-        [0, 0],
-        [width, height],
-      ])
-      .scaleExtent([0.25, 1])
-      .on("zoom", zoomed);
 
     var treeLayout = d3.tree();
     treeLayout.nodeSize([375, 250]);
     treeLayout(treeData);
     var linksData = treeData.links();
 
-    var svg = d3.select("#Tree").append("svg");
     svg.attr("width", width).attr("height", height).call(zoom);
 
     var nodes = d3.select("svg").selectAll("g").data([0]);
@@ -153,7 +157,7 @@ export default function Tree() {
       })
       .on("click", function (d) {
         $("#card-container").css("display", "block");
-        zoom.scaleTo(svg.transition().duration(750), 0.5);
+        zoom.scaleTo(svg.transition().duration(750), 1);
         setInfoCard({
           id: d.target.__data__.data.id,
           name: d.target.__data__.data.name,
@@ -197,7 +201,7 @@ export default function Tree() {
         }
       })
       .on("click", function (d) {
-        zoom.scaleTo(svg.transition().duration(750), 0.5);
+        zoom.scaleTo(svg.transition().duration(750), 1);
         $("#card-container").css("display", "block");
         setInfoCard({
           id: d.target.__data__.data.partnerinfo.id,
@@ -332,6 +336,7 @@ export default function Tree() {
   };
 
   const populateDatalist = () => {
+    $("#datalist-input").css("border", "1px solid black");
     let str = "";
     datalistarr = [];
     let list = document.getElementById("datalist-ul");
@@ -351,6 +356,7 @@ export default function Tree() {
     let node;
     let searchterm = $("#datalist-input").val();
     $("#datalist-input").val("");
+    populateDatalist();
 
     for (const x of datalistarr) {
       if ($.trim(searchterm) === $.trim(x)) {
@@ -367,7 +373,14 @@ export default function Tree() {
         }
       }
       $("#card-container").css("display", "block");
-      console.log(node);
+      let nodeRect = d3.select("svg g.nodes").selectAll("text")._groups[0];
+      let dimensions = [];
+      for (const x of nodeRect) {
+        if (x.__data__.data.name === node.name) {
+          dimensions[0] = x.__data__.x;
+          dimensions[1] = x.__data__.y;
+        }
+      }
       try {
         setInfoCard({
           id: node.id,
@@ -375,9 +388,21 @@ export default function Tree() {
           generation: node.generation,
           birthdate: node.birthdate,
         });
-      } catch {}
+        zoom.scaleTo(svg.transition().duration(750), 1);
+        $("#card-container").css("display", "block");
+        zoom.translateTo(
+          svg.transition().duration(750),
+          dimensions[0] + width / 3.2,
+          dimensions[1] + height / 4
+        );
+        setTimeout(() => {
+          zoom.scaleTo(svg.transition().duration(750), 1);
+        }, 1000);
+      } catch (error) {
+        console.log(error);
+      }
     } else {
-      alert("not found");
+      $("#datalist-input").css("border", "2px solid red");
     }
   };
 
