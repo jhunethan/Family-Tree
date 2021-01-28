@@ -1,6 +1,7 @@
 import React from "react";
 import "../css/Header.css";
 
+
 export default function Header(props) {
   return (
     <nav>
@@ -15,7 +16,7 @@ export default function Header(props) {
         </i>
 
         <a href="/" className="nav-logo">
-          LAY
+           LAY
         </a>
         <ul className="nav-ul">
           <li>

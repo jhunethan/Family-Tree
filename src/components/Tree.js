@@ -138,10 +138,9 @@ export default function Tree() {
 
     height = $("#Tree").height();
     width = $("#Tree").width();
-    console.log(height, width);
 
     var treeLayout = d3.tree();
-    treeLayout.nodeSize([375, 350]);
+    treeLayout.nodeSize([750, 350]);
     treeLayout(treeData);
     var linksData = treeData.links();
 
@@ -152,6 +151,93 @@ export default function Tree() {
     nodes.enter().append("g").attr("class", "nodes");
 
     var links = d3.select("svg").selectAll("g").data([0]);
+
+    //partnernodes
+    var partnerShapes = d3
+      .select("svg g.nodes")
+      .selectAll("rect .node")
+      .data(treeData.descendants());
+    partnerShapes
+      .enter()
+      .append("rect")
+      .attr("class", function (d) {
+        return "partner-container level-" + d.depth;
+      })
+      .attr("x", function (d) {
+        return d.x - 400;
+      })
+      .attr("y", function (d) {
+        return d.y - 180;
+      })
+      .attr("rx", 100)
+      .attr("ry", 100)
+      .classed("hide", function (d) {
+        try {
+          if (d.data.partnerinfo.name === "text") return false;
+        } catch {
+          return true;
+        }
+      });
+    partnerShapes
+      .enter()
+      .append("rect")
+      .attr("class", function (d) {
+        return "partnernode level-" + d.depth;
+      })
+      .attr("x", function (d) {
+        return d.x + 50;
+      })
+      .attr("y", function (d) {
+        return d.y - 180;
+      })
+      .attr("rx", 100)
+      .attr("ry", 100)
+      .classed("hide", function (d) {
+        try {
+          if (d.data.partnerinfo.name === "text") return false;
+        } catch {
+          return true;
+        }
+      })
+      .on("click", function (d) {
+        zoom.scaleTo(svg.transition().duration(500), 0.25);
+        $("#card-container").css("display", "block");
+        setInfoCard({
+          id: d.target.__data__.data.partnerinfo.id,
+          name: d.target.__data__.data.partnerinfo.name,
+          generation: d.target.__data__.data.partnerinfo.generation,
+          birthdate: d.target.__data__.data.partnerinfo.birthdate,
+        });
+        zoom.translateTo(
+          svg.transition().duration(500),
+          d.target.__data__.x,
+          d.target.__data__.y
+        );
+        setTimeout(() => {
+          zoom.scaleTo(svg.transition().duration(750), 1);
+        }, 500);
+      });
+
+    partnerShapes
+      .enter()
+      .append("circle")
+      .attr("r", 50)
+      .attr("class", function (d) {
+        return "circle level-" + d.depth;
+      })
+      .attr("cx", function (d) {
+        return d.x + 145;
+      })
+      .attr("cy", function (d) {
+        return d.y - 90;
+      })
+      .classed("hide", function (d) {
+        try {
+          if (d.data.partnerinfo.name === "text") return false;
+        } catch {
+          return true;
+        }
+      });
 
     // Nodes
     var shapes = d3
@@ -165,13 +251,18 @@ export default function Tree() {
         return "node level-" + d.depth;
       })
       .attr("x", function (d) {
-        return d.x - 75;
+        try {
+          if (!d.data.partnerinfo.name === "text") return d.x;
+          return d.x - 400;
+        } catch {
+          return d.x - 190;
+        }
       })
       .attr("y", function (d) {
         return d.y - 180;
       })
-      .attr("rx", 5)
-      .attr("ry", 5)
+      .attr("rx", 100)
+      .attr("ry", 100)
       .on("click", function (d) {
         $("#card-container").css("display", "block");
         zoom.scaleTo(svg.transition().duration(500), 0.25);
@@ -199,76 +290,15 @@ export default function Tree() {
         return "circle level-" + d.depth;
       })
       .attr("cx", function (d) {
-        return d.x;
-      })
-      .attr("cy", function (d) {
-        return d.y - 180;
-      });
-
-    var partnerShapes = d3
-      .select("svg g.nodes")
-      .selectAll("rect .node")
-      .data(treeData.descendants());
-
-    partnerShapes
-      .enter()
-      .append("rect")
-      .attr("class", function (d) {
-        return "partnernode level-" + d.depth;
-      })
-      .attr("x", function (d) {
-        return d.x + 87.5;
-      })
-      .attr("y", function (d) {
-        return d.y - 180;
-      })
-      .attr("rx", 5)
-      .attr("ry", 5)
-      .classed("hide", function (d) {
         try {
-          if (d.data.partnerinfo.name === "text") return false;
+          if (!d.data.partnerinfo.name === "text") return d.x;
+          return d.x - 290;
         } catch {
-          return true;
+          return d.x - 90;
         }
       })
-      .on("click", function (d) {
-        zoom.scaleTo(svg.transition().duration(500), 0.25);
-        $("#card-container").css("display", "block");
-        setInfoCard({
-          id: d.target.__data__.data.partnerinfo.id,
-          name: d.target.__data__.data.partnerinfo.name,
-          generation: d.target.__data__.data.partnerinfo.generation,
-          birthdate: d.target.__data__.data.partnerinfo.birthdate,
-        });
-        console.log(d.target.__data__.x);
-        zoom.translateTo(
-          svg.transition().duration(500),
-          d.target.__data__.x + 150,
-          d.target.__data__.y
-        );
-        setTimeout(() => {
-          zoom.scaleTo(svg.transition().duration(750), 1);
-        }, 500);
-      });
-    partnerShapes
-      .enter()
-      .append("circle")
-      .attr("r", 50)
-      .attr("class", function (d) {
-        return "circle level-" + d.depth;
-      })
-      .attr("cx", function (d) {
-        return d.x + 165;
-      })
       .attr("cy", function (d) {
-        return d.y - 180;
-      })
-      .classed("hide", function (d) {
-        try {
-          if (d.data.partnerinfo.name === "text") return false;
-        } catch {
-          return true;
-        }
+        return d.y - 90;
       });
 
     var partnerText = d3
@@ -279,10 +309,10 @@ export default function Tree() {
       .enter()
       .append("text")
       .attr("x", function (d) {
-        return d.x + 162.5;
+        return d.x + 290;
       })
       .attr("y", function (d) {
-        return d.y - 100;
+        return d.y - 120;
       })
       .text(function (d) {
         try {
@@ -296,10 +326,10 @@ export default function Tree() {
       .enter()
       .append("text")
       .attr("x", function (d) {
-        return d.x + 162.5;
+        return d.x + 290;
       })
       .attr("y", function (d) {
-        return d.y - 75;
+        return d.y - 70;
       })
       .text(function (d) {
         try {
@@ -317,10 +347,16 @@ export default function Tree() {
       .enter()
       .append("text")
       .attr("x", function (d) {
-        return d.x;
+        try {
+          if (!d.data.partnerinfo.name === "text") return d.x;
+          console.log(d.data);
+          return d.x - 150;
+        } catch {
+          return d.x + 40;
+        }
       })
       .attr("y", function (d) {
-        return d.y - 100;
+        return d.y - 120;
       })
       .text(function (d) {
         return d.data.birthdate;
@@ -330,10 +366,16 @@ export default function Tree() {
       .enter()
       .append("text")
       .attr("x", function (d) {
-        return d.x;
+        try {
+          if (!d.data.partnerinfo.name === "text") return d.x;
+          console.log(d.data);
+          return d.x - 150;
+        } catch {
+          return d.x + 40;
+        }
       })
       .attr("y", function (d) {
-        return d.y - 75;
+        return d.y - 95;
       })
       .text(function (d) {
         return d.data.generation;
@@ -343,15 +385,21 @@ export default function Tree() {
       .enter()
       .append("text")
       .attr("x", function (d) {
-        return d.x;
+        try {
+          if (!d.data.partnerinfo.name === "text") return d.x;
+          console.log(d.data);
+          return d.x - 150;
+        } catch {
+          return d.x + 40;
+        }
       })
       .attr("y", function (d) {
-        return d.y - 50;
+        return d.y - 70;
       })
       .text(function (d) {
         return d.data.name;
       })
-      .call(wrap, 100);
+      .call(wrap, 150);
 
     links = d3.select("svg g.links").selectAll("path").data(linksData);
     links
@@ -450,7 +498,6 @@ export default function Tree() {
           } catch {}
         }
       }
-      console.log(nodeRect);
       try {
         setInfoCard({
           id: node.id,
@@ -468,9 +515,7 @@ export default function Tree() {
         setTimeout(() => {
           zoom.scaleTo(svg.transition().duration(750), 1);
         }, 500);
-      } catch (error) {
-        console.log(error);
-      }
+      } catch {}
       return true;
     } else {
       $("#datalist-input").css("border", "2px solid red");
@@ -493,26 +538,24 @@ export default function Tree() {
     $("#parentInput").val("");
     $("#parentInput").attr("placeholder", "Parent/Partner");
     let node;
-    // let str = "";
-    // let datalistarr = [];
-    // let data = tableData;
-    // let list = document.getElementById("parentSearchDataList");
+    let str = "";
+    let datalistarr = [];
+    let data = tableData;
+    let list = document.getElementById("parentSearchDataList");
 
-    // //populate parentSearchDataList
-    // for (const x of data) {
-    //   datalistarr.push(`${x.generation} ${x.name}`);
-    //   if (x.id === Number(id)) node = x;
-    // }
-    // for (var i = 0; i < datalistarr.length; ++i) {
-    //   str += '<option value="' + datalistarr[i] + '" />';
-    // }
-    // list.innerHTML = str;
+    //populate parentSearchDataList
+    for (const x of data) {
+      datalistarr.push(`${x.generation} ${x.name}`);
+    }
+    for (var i = 0; i < datalistarr.length; ++i) {
+      str += '<option value="' + datalistarr[i] + '" />';
+    }
+    list.innerHTML = str;
 
     for (let i = 0; i < tableData.length; i++) {
       if (InfoCard.id === tableData[i].id) node = tableData[i];
     }
 
-    console.log(node);
     node.isPartner ? setRadiochecked(false) : setRadiochecked(true);
 
     //sort out edit menu

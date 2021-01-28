@@ -1,121 +1,123 @@
-@import url('https://fonts.googleapis.com/css2?family=Didact+Gothic&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Didact+Gothic&display=swap");
 
 .asidecontainer {
-    display: flex;
-    align-items: center;
-    color: white;
+  display: flex;
+  align-items: center;
+  color: white;
 }
 
 nav {
-    height: 3rem;
-    display: flex;
-    background-color:#0A4150;
-    height: 80px;
+  height: 3rem;
+  display: flex;
+  background-color: #d10300;
+  height: 80px;
 }
 
+
+
 ul {
-    display: flex;
-    list-style-type: none;
-    align-items: center;
+  display: flex;
+  list-style-type: none;
+  align-items: center;
 }
 
 li {
-    text-decoration: none;
-    font-family: "Montserrat", sans-serif;
-    font-size: 16px;
-    font-weight: 600;
-    letter-spacing: 0.1rem;
-    color: white;
-    border: 1px solid transparent;
-    padding: 5px;
-    margin: 0 5px;
-    width: 150px;
-    transition: 0.5s ease;
-    user-select: none;
+  text-decoration: none;
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.1rem;
+  color: white;
+  border: 1px solid transparent;
+  padding: 5px;
+  margin: 0 5px;
+  width: 150px;
+  transition: 0.5s ease;
+  user-select: none;
 }
 
-li:hover{
-    cursor: pointer;
+li:hover {
+  cursor: pointer;
 }
 
 .nav-link {
-    transition: color 0.2s ease-in-out;
-    color: white;
-    font-size: 16px;
-    border-color: rgba(0, 0, 0, 0);
+  transition: color 0.2s ease-in-out;
+  color: white;
+  font-size: 16px;
+  border-color: rgba(0, 0, 0, 0);
 }
 
 a {
-    text-decoration: none;
-    color: white;
-    font-family: "Montserrat", sans-serif;
+  text-decoration: none;
+  color: white;
+  font-family: "Montserrat", sans-serif;
 }
 
 .nav-logo {
-    font-family: "Montserrat", sans-serif;
-    font-size: 2.5rem;
-    font-weight: 600;
-    letter-spacing: 0.7rem;
-    color: white;
-    margin: 4%;
+  font-family: "Montserrat", sans-serif;
+  font-size: 2.5rem;
+  font-weight: 600;
+  letter-spacing: 0.7rem;
+  color: white;
+  margin: 10px;
 }
 
 i {
-    visibility: hidden;
-    transition: transform 0.2s ease-in-out;
+  visibility: hidden;
+  transition: transform 0.2s ease-in-out;
 }
 
 header {
-    margin-top: 7em;
-    display: flex;
-    flex-direction: column;
+  margin-top: 7em;
+  display: flex;
+  flex-direction: column;
 }
 
 h1 {
-    font-size: 3em;
-    color: black;
-    text-align: center;
+  font-size: 3em;
+  color: black;
+  text-align: center;
 }
 
 @media screen and (max-width: 576px) {
-    .fa-bars {
-        margin: 0 1em;
-        visibility: visible;
-        cursor: pointer;
-        user-select: none;
-    }
+  .fa-bars {
+    margin: 0 1em;
+    visibility: visible;
+    cursor: pointer;
+    user-select: none;
+  }
 
-    .fa-times-circle {
-        visibility: visible;
-        position: absolute;
-        top: 1.3rem;
-        left: 40vw;
-        cursor: pointer;
-        user-select: none;
-    }
+  .fa-times-circle {
+    visibility: visible;
+    position: absolute;
+    top: 1.3rem;
+    left: 40vw;
+    cursor: pointer;
+    user-select: none;
+  }
 
-    .nav-ul {
-        transition: all 0.2s;
-        flex-direction: column;
-        align-items: flex-start;
-        position: absolute;
-        top: 4em;
-        background-color: rgba(0, 0, 0, 0.692);
-        width: 50vw;
-        height: calc(100vh - 3rem);
-        margin-left: -75vw;
-    }
+  .nav-ul {
+    transition: all 0.2s;
+    flex-direction: column;
+    align-items: flex-start;
+    position: absolute;
+    top: 4em;
+    background-color: rgba(0, 0, 0, 0.692);
+    width: 50vw;
+    height: calc(100vh - 3rem);
+    margin-left: -75vw;
+  }
 
-    .nav-ul li {
-        padding: 1rem 1rem;
-    }
+  .nav-ul li {
+    padding: 1rem 1rem;
+  }
 
-    .nav-ul li:hover {
-        background-color: rgb(51, 51, 51);
-        transition: all 0.3s;
-    }
+  .nav-ul li:hover {
+    background-color: rgb(51, 51, 51);
+    transition: all 0.3s;
+  }
 
-    .visible {
-        margin-left: 0;
-    }
+  .visible {
+    margin-left: 0;
+  }
 }

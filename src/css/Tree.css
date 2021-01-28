@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@1,300&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@1,300&display=swap");
 
 /* //main svg container */
 #Tree {
@@ -13,11 +13,20 @@ svg {
 
 .node,
 .partnernode {
-  width: 150px;
-  height: 200px;
+  width: 350px;
+  height: 180px;
+  padding: 8px 12px;
+  fill: #fff;
+  transition: all 0.3s;
+}
+
+.partner-container {
+  width: 800px;
+  height: 180px;
   padding: 8px 12px;
   fill: white;
   transition: all 0.3s;
+
 }
 
 .circle {
@@ -29,9 +38,13 @@ svg {
   transition: all 0.3s;
 }
 
+.shadow {
+  fill: black;
+}
+
 .node:hover,
 .partnernode:hover {
-  fill: #ffffff;
+  fill: #eeeeee;
 
   transition: all 0.3s;
   cursor: pointer;
@@ -40,7 +53,7 @@ svg {
 .link {
   max-width: 150px;
   fill: none;
-  stroke:whitesmoke;
+  stroke: #cd211d;
   stroke-width: 1.5px;
 }
 text {

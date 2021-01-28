@@ -5,7 +5,7 @@ body {
   overflow-x: hidden;
   height: 100vh;
   overflow: hidden;
-  background-image: linear-gradient(#4F969F,#0A4150);
+  background-color: #ffe3dc;
 }
 
 .container {
