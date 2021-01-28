@@ -5,49 +5,18 @@ import * as $ from "jquery";
 import "../css/Tree.css";
 import Header from "./Header.js";
 import NodeCard from "./NodeCard";
+import Modal from "./Modal";
+import Edit from "./Edit";
 
-var height = 2000;
-var width = 4000;
+var height;
+var width;
 var datalistarr,
   treeData = [];
-function wrap(text, width) {
-  text.each(function () {
-    var text = d3.select(this),
-      words = text.text().split(/\s+/).reverse(),
-      word,
-      line = [],
-      lineNumber = 0,
-      lineHeight = 1.1, // ems
-      x = text.attr("x"),
-      y = text.attr("y"),
-      dy = 0, //parseFloat(text.attr("dy")),
-      tspan = text
-        .text(null)
-        .append("tspan")
-        .attr("x", x)
-        .attr("y", y)
-        .attr("dy", dy + "em");
-    while ((word = words.pop())) {
-      line.push(word);
-      tspan.text(line.join(" "));
-      if (tspan.node().getComputedTextLength() > width) {
-        line.pop();
-        tspan.text(line.join(" "));
-        line = [word];
-        tspan = text
-          .append("tspan")
-          .attr("x", x)
-          .attr("y", y)
-          .attr("dy", ++lineNumber * lineHeight + dy + "em")
-          .text(word);
-      }
-    }
-  });
-}
 
 export default function Tree() {
   const [update, setUpdate] = useState(false);
   const [tableData, setTableData] = useState();
+  var [radiochecked, setRadiochecked] = useState(true);
   const [InfoCard, setInfoCard] = useState({
     id: "",
     name: "",
@@ -55,6 +24,10 @@ export default function Tree() {
     birthdate: "",
     parent: "",
   });
+
+  const switchRadio = () => {
+    setRadiochecked(!radiochecked);
+  };
 
   useEffect(() => {
     Axios.get("http://localhost:5000/api/get").then((result) => {
@@ -69,7 +42,6 @@ export default function Tree() {
         try {
           buildTree();
         } catch {}
-
         clearInterval(intervalId);
       }
     }, 100);
@@ -79,6 +51,12 @@ export default function Tree() {
   //triggers a data request
   const updateTree = () => {
     setUpdate((prevUpdate) => !prevUpdate);
+  };
+
+  const closePopups = () => {
+    // $("div.Create").css("display", "none");
+    $("#editForm").css("display", "none");
+    $("#deleteConfirmMenu").css("display", "none");
   };
 
   //convert to hierarchal tree form using d3.stratify()
@@ -106,11 +84,46 @@ export default function Tree() {
     d3.select("svg").selectAll("g").attr("transform", transform);
   }
 
+  function wrap(text, width) {
+    text.each(function () {
+      var text = d3.select(this),
+        words = text.text().split(/\s+/).reverse(),
+        word,
+        line = [],
+        lineNumber = 0,
+        lineHeight = 1.1, // ems
+        x = text.attr("x"),
+        y = text.attr("y"),
+        dy = 0, //parseFloat(text.attr("dy")),
+        tspan = text
+          .text(null)
+          .append("tspan")
+          .attr("x", x)
+          .attr("y", y)
+          .attr("dy", dy + "em");
+      while ((word = words.pop())) {
+        line.push(word);
+        tspan.text(line.join(" "));
+        if (tspan.node().getComputedTextLength() > width) {
+          line.pop();
+          tspan.text(line.join(" "));
+          line = [word];
+          tspan = text
+            .append("tspan")
+            .attr("x", x)
+            .attr("y", y)
+            .attr("dy", ++lineNumber * lineHeight + dy + "em")
+            .text(word);
+        }
+      }
+    });
+  }
+
   var zoom = d3
     .zoom()
     .extent([
       [0, 0],
-      [width, height],
+      [$("#Tree").width(), $("#Tree").height()],
     ])
     .scaleExtent([0.25, 1])
     .on("zoom", zoomed);
@@ -119,6 +132,9 @@ export default function Tree() {
 
   const buildTree = () => {
     converttreeData();
+    height = $("#Tree").height();
+    width = $("#Tree").width();
+    console.log(height, width);
 
     var treeLayout = d3.tree();
     treeLayout.nodeSize([375, 250]);
@@ -134,11 +150,11 @@ export default function Tree() {
     var links = d3.select("svg").selectAll("g").data([0]);
 
     // Nodes
-    var rectangles = d3
+    var shapes = d3
       .select("svg g.nodes")
       .selectAll("rect .node")
       .data(treeData.descendants());
-    rectangles
+    shapes
       .enter()
       .append("rect")
       .attr("class", function (d) {
@@ -148,14 +164,10 @@ export default function Tree() {
         return d.x - 75;
       })
       .attr("y", function (d) {
-        return d.y - 175;
+        return d.y - 180;
       })
-      .attr("rx", function (d) {
-        return 5;
-      })
-      .attr("ry", function (d) {
-        return 5;
-      })
+      .attr("rx", 5)
+      .attr("ry", 5)
       .on("click", function (d) {
         $("#card-container").css("display", "block");
         zoom.scaleTo(svg.transition().duration(250), 1);
@@ -175,12 +187,26 @@ export default function Tree() {
         }, 250);
       });
 
-    var partnerRect = d3
+    shapes
+      .enter()
+      .append("circle")
+      .attr("r", 50)
+      .attr("class", function (d) {
+        return "circle level-" + d.depth;
+      })
+      .attr("cx", function (d) {
+        return d.x;
+      })
+      .attr("cy", function (d) {
+        return d.y - 180;
+      });
+
+    var partnerShapes = d3
       .select("svg g.nodes")
       .selectAll("rect .node")
       .data(treeData.descendants());
 
-    partnerRect
+    partnerShapes
       .enter()
       .append("rect")
       .attr("class", function (d) {
@@ -190,7 +216,7 @@ export default function Tree() {
         return d.x + 87.5;
       })
       .attr("y", function (d) {
-        return d.y - 175;
+        return d.y - 180;
       })
       .attr("rx", 5)
       .attr("ry", 5)
@@ -220,6 +246,26 @@ export default function Tree() {
           zoom.scaleTo(svg.transition().duration(750), 1);
         }, 250);
       });
+    partnerShapes
+      .enter()
+      .append("circle")
+      .attr("r", 50)
+      .attr("class", function (d) {
+        return "circle level-" + d.depth;
+      })
+      .attr("cx", function (d) {
+        return d.x + 165;
+      })
+      .attr("cy", function (d) {
+        return d.y - 180;
+      })
+      .classed("hide", function (d) {
+        try {
+          if (d.data.partnerinfo.name === "text") return false;
+        } catch {
+          return true;
+        }
+      });
 
     var partnerText = d3
       .select("svg g.nodes")
@@ -229,10 +275,10 @@ export default function Tree() {
       .enter()
       .append("text")
       .attr("x", function (d) {
-        return d.x + 165.5;
+        return d.x + 162.5;
       })
       .attr("y", function (d) {
-        return d.y - 145;
+        return d.y - 100;
       })
       .text(function (d) {
         try {
@@ -246,10 +292,10 @@ export default function Tree() {
       .enter()
       .append("text")
       .attr("x", function (d) {
-        return d.x + 165.5;
+        return d.x + 162.5;
       })
       .attr("y", function (d) {
-        return d.y - 125;
+        return d.y - 75;
       })
       .text(function (d) {
         try {
@@ -270,7 +316,7 @@ export default function Tree() {
         return d.x;
       })
       .attr("y", function (d) {
-        return d.y - 145;
+        return d.y - 100;
       })
       .text(function (d) {
         return d.data.birthdate;
@@ -283,7 +329,7 @@ export default function Tree() {
         return d.x;
       })
       .attr("y", function (d) {
-        return d.y - 125;
+        return d.y - 75;
       })
       .text(function (d) {
         return d.data.generation;
@@ -296,7 +342,7 @@ export default function Tree() {
         return d.x;
       })
       .attr("y", function (d) {
-        return d.y - 105;
+        return d.y - 50;
       })
       .text(function (d) {
         return d.data.name;
@@ -350,6 +396,17 @@ export default function Tree() {
       str += '<option value="' + datalistarr[i] + '" />';
     }
     list.innerHTML = str;
+  };
+
+  const getPID = (nameKey) => {
+    let node;
+    for (var i = 0; i < tableData.length; i++) {
+      let namecheck = tableData[i].generation + " " + tableData[i].name;
+      if (namecheck === nameKey) {
+        node = tableData[i];
+      }
+    }
+    return node.id;
   };
 
   const search = () => {
@@ -418,6 +475,48 @@ export default function Tree() {
     }
   };
 
+  const populateEditFields = (node) => {
+    $("#genInput").val(node.generation);
+    $("#name").val(node.name);
+    $("#birthdate").val(node.birthdate);
+
+    let pval = node.isPartner ? node.partner : node.parent;
+    $("#parentInput").val(pval);
+  };
+
+  const openNode = () => {
+    $("#parentInput").css("border-bottom", "2px solid #bebed2");
+    $("#parentInput").val("");
+    $("#parentInput").attr("placeholder", "Parent/Partner");
+    let node;
+    // let str = "";
+    // let datalistarr = [];
+    // let data = tableData;
+    // let list = document.getElementById("parentSearchDataList");
+
+    // //populate parentSearchDataList
+    // for (const x of data) {
+    //   datalistarr.push(`${x.generation} ${x.name}`);
+    //   if (x.id === Number(id)) node = x;
+    // }
+    // for (var i = 0; i < datalistarr.length; ++i) {
+    //   str += '<option value="' + datalistarr[i] + '" />';
+    // }
+    // list.innerHTML = str;
+
+    for (let i = 0; i < tableData.length; i++) {
+      if (InfoCard.id === tableData[i].id) node = tableData[i];
+    }
+
+    console.log(node);
+    node.isPartner ? setRadiochecked(false) : setRadiochecked(true);
+
+    //sort out edit menu
+    populateEditFields(node);
+    $("#editForm").css("display", "block");
+    $("#Modal").css("display", "block");
+  };
+
   return (
     <div>
       <Header
@@ -460,8 +559,20 @@ export default function Tree() {
         InfoCardname={InfoCard.name}
         InfoCardbirthdate={InfoCard.birthdate}
         InfoCardgeneration={InfoCard.generation}
+        edit={() => openNode()}
       />
       <div id="Tree"></div>
+      <Edit
+        getPID={getPID}
+        radiochecked={radiochecked}
+        switchRadio={switchRadio}
+        data={tableData}
+        nodedata={InfoCard}
+        update={() => {
+          updateTree();
+        }}
+      />
+      <Modal close={closePopups} />
     </div>
   );
 }

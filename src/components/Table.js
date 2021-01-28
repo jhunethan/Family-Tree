@@ -170,9 +170,9 @@ export default function Table() {
   };
 
   const closePopups = () => {
-    document.getElementsByClassName("Create")[0].style.display = "none";
-    document.getElementById("editForm").style.display = "none";
-    document.getElementById("deleteConfirmMenu").style.display = "none";
+    $("div.Create").css("display", "none");
+    $("#editForm").css("display", "none");
+    $("#deleteConfirmMenu").css("display", "none");
   };
 
   return (

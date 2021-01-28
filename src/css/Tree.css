@@ -1,6 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@1,300&display=swap');
+
 /* //main svg container */
 #Tree {
   width: auto;
+  height: 100vh;
   margin: 0;
 }
 
@@ -13,33 +16,42 @@ svg {
   width: 150px;
   height: 200px;
   padding: 8px 12px;
-  fill:rgb(255, 255, 255);
-  stroke: black;
-  stroke-width: 1px;
+  fill: white;
+  transition: all 0.3s;
+}
 
-  font-family: "Montserrat", sans-serif;
+.circle {
+  fill: white;
+  stroke-width: 1px;
+  stroke: #446491;
+  pointer-events: none;
 
   transition: all 0.3s;
 }
 
 .node:hover,
 .partnernode:hover {
-  fill: #F1F1F1;
+  fill: #ffffff;
 
   transition: all 0.3s;
   cursor: pointer;
 }
 
+.node-decor {
+  fill: #0048ff;
+}
+
 .link {
   max-width: 150px;
   fill: none;
-  stroke: black;
+  stroke:black;
   stroke-width: 1.5px;
 }
 text {
   text-anchor: middle;
   user-select: none;
   pointer-events: none;
+  font-size: 20px;
 }
 
 .level-0 {
@@ -76,12 +88,13 @@ text {
 #datalistbutton {
   letter-spacing: 0.15rem;
   color: black;
-  background-color: white;
+  background-color: #fff200;
   cursor: pointer;
 }
 
 #datalistbutton:hover {
-  background-color: #6D7EAD;
-  color: white;
+  background-color: black;
+  color: #fff200;
+  font-weight: bold;
   transition: all 0.3s;
 }
