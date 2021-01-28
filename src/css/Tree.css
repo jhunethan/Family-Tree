@@ -37,14 +37,10 @@ svg {
   cursor: pointer;
 }
 
-.node-decor {
-  fill: #0048ff;
-}
-
 .link {
   max-width: 150px;
   fill: none;
-  stroke:black;
+  stroke:whitesmoke;
   stroke-width: 1.5px;
 }
 text {

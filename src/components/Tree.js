@@ -36,6 +36,8 @@ export default function Tree() {
   }, [update]);
 
   useEffect(() => {
+    //clear tree
+    $("svg").html("");
     //if tabledata is updated, check if the tree exists, else do nothing
     var intervalId = setInterval(function () {
       if (!$("svg").children().length > 0) {
@@ -125,19 +127,21 @@ export default function Tree() {
       [0, 0],
       [$("#Tree").width(), $("#Tree").height()],
     ])
-    .scaleExtent([0.25, 1])
+    .scaleExtent([0.5, 1])
     .on("zoom", zoomed);
 
   var svg = d3.select("#Tree").append("svg");
 
   const buildTree = () => {
+    //reconvert tabledata to check for updates
     converttreeData();
+
     height = $("#Tree").height();
     width = $("#Tree").width();
     console.log(height, width);
 
     var treeLayout = d3.tree();
-    treeLayout.nodeSize([375, 250]);
+    treeLayout.nodeSize([375, 350]);
     treeLayout(treeData);
     var linksData = treeData.links();
 
@@ -170,7 +174,7 @@ export default function Tree() {
       .attr("ry", 5)
       .on("click", function (d) {
         $("#card-container").css("display", "block");
-        zoom.scaleTo(svg.transition().duration(250), 1);
+        zoom.scaleTo(svg.transition().duration(500), 0.25);
         setInfoCard({
           id: d.target.__data__.data.id,
           name: d.target.__data__.data.name,
@@ -178,13 +182,13 @@ export default function Tree() {
           birthdate: d.target.__data__.data.birthdate,
         });
         zoom.translateTo(
-          svg.transition().duration(250),
-          d.target.__data__.x + width / 3.2,
-          d.target.__data__.y + height / 4
+          svg.transition().duration(500),
+          d.target.__data__.x,
+          d.target.__data__.y
         );
         setTimeout(() => {
           zoom.scaleTo(svg.transition().duration(750), 1);
-        }, 250);
+        }, 500);
       });
 
     shapes
@@ -228,7 +232,7 @@ export default function Tree() {
         }
       })
       .on("click", function (d) {
-        zoom.scaleTo(svg.transition().duration(250), 1);
+        zoom.scaleTo(svg.transition().duration(500), 0.25);
         $("#card-container").css("display", "block");
         setInfoCard({
           id: d.target.__data__.data.partnerinfo.id,
@@ -238,13 +242,13 @@ export default function Tree() {
         });
         console.log(d.target.__data__.x);
         zoom.translateTo(
-          svg.transition().duration(250),
-          d.target.__data__.x + width / 3.2,
-          d.target.__data__.y + height / 4
+          svg.transition().duration(500),
+          d.target.__data__.x + 150,
+          d.target.__data__.y
         );
         setTimeout(() => {
           zoom.scaleTo(svg.transition().duration(750), 1);
-        }, 250);
+        }, 500);
       });
     partnerShapes
       .enter()
@@ -454,16 +458,16 @@ export default function Tree() {
           generation: node.generation,
           birthdate: node.birthdate,
         });
-        zoom.scaleTo(svg.transition().duration(250), 1);
+        zoom.scaleTo(svg.transition().duration(500), 0.25);
         $("#card-container").css("display", "block");
         zoom.translateTo(
-          svg.transition().duration(250),
-          dimensions[0] + width / 3.2,
-          dimensions[1] + height / 4
+          svg.transition().duration(500),
+          dimensions[0],
+          dimensions[1]
         );
         setTimeout(() => {
           zoom.scaleTo(svg.transition().duration(750), 1);
-        }, 250);
+        }, 500);
       } catch (error) {
         console.log(error);
       }
