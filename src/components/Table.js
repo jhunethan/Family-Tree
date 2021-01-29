@@ -6,6 +6,7 @@ import { ReactTable } from "./React-Table-Components/ReactTable";
 import Create from "./Create.js";
 import Modal from "./Modal";
 import Edit from "./Edit";
+import EditExtra from "./EditExtra";
 import Header from "./Header";
 import NodeCard from "./NodeCard";
 
@@ -140,8 +141,9 @@ export default function Table() {
 
       //sort out edit menu
       populateEditFields(currentNode);
-      document.getElementById("editForm").style.display = "block";
-      document.getElementById("Modal").style.display = "block";
+      $("#Modal").css("display", "block");
+      $("#editForm").css("display", "block");
+      $("div.edit-container").css("display", "flex");
     }
   };
 
@@ -173,6 +175,7 @@ export default function Table() {
     $("div.Create").css("display", "none");
     $("#editForm").css("display", "none");
     $("#deleteConfirmMenu").css("display", "none");
+    $("div.edit-container").css("display", "none");
   };
 
   return (
@@ -230,6 +233,7 @@ export default function Table() {
           openNode(currentRow);
         }}
       />
+      <EditExtra currentNode={nodestate} currentNodeName={nodestate.name} />
     </div>
   );
 }

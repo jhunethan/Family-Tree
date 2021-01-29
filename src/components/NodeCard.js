@@ -7,6 +7,18 @@ import placeholder from "../css/person-placeholder.jpg";
 export default function NodeCard(props) {
   const [cardexpanded, setcardexpanded] = useState(false);
 
+  const transform = () => {
+    if (!cardexpanded) {
+      $("#card-container").css("width", 600);
+      $("#card-container").css("right", "calc(50% - 250px)");
+      setcardexpanded(true);
+    } else {
+      $("#card-container").css("width", 350);
+      $("#card-container").css("right", 10);
+      setcardexpanded(false);
+    }
+  };
+
   return (
     <div id="card-container">
       <section className="top-card">
@@ -21,18 +33,7 @@ export default function NodeCard(props) {
         <button id="card-edit" onClick={props.edit}>
           Edit
         </button>
-        <button
-          id="card-expand"
-          onClick={() => {
-            if (!cardexpanded) {
-              $("#card-container").css("width", 600);
-              setcardexpanded(true);
-            } else {
-              $("#card-container").css("width", 350);
-              setcardexpanded(false);
-            }
-          }}
-        >
+        <button id="card-expand" onClick={transform}>
           ⤡
         </button>
         <img src={placeholder} alt="user" />

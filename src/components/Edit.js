@@ -98,7 +98,7 @@ export default function Edit(props) {
     if (changed === true && check) {
       //save
       console.log(nodeInput);
-      Axios.put("http://localhost:5000/api/update", {
+      Axios.post("http://localhost:5000/api/update", {
         id: nodeInput.id,
         generation: nodeInput.generation,
         name: nodeInput.name,

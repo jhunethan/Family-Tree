@@ -15,7 +15,7 @@
   font-family: 'Montserrat', sans-serif;
   position: absolute;
   top: 10vh;
-  left: calc(50% - 200px);
+  left: calc(50% - 440px);
   z-index: 1000;
 }
 #editForm > h2 {
