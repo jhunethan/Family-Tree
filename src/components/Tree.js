@@ -161,6 +161,28 @@ export default function Tree() {
       .enter()
       .append("rect")
       .attr("class", function (d) {
+        return "partner-container shadow level-" + d.depth;
+      })
+      .attr("x", function (d) {
+        return d.x - 390;
+      })
+      .attr("y", function (d) {
+        return d.y - 170;
+      })
+      .attr("rx", 5)
+      .attr("ry", 5)
+      .classed("hide", function (d) {
+        try {
+          if (d.data.partnerinfo.isPartner === 1) return false;
+        } catch {
+          return true;
+        }
+      });
+
+    partnerShapes
+      .enter()
+      .append("rect")
+      .attr("class", function (d) {
         return "partner-container level-" + d.depth;
       })
       .attr("x", function (d) {
@@ -169,8 +191,8 @@ export default function Tree() {
       .attr("y", function (d) {
         return d.y - 180;
       })
-      .attr("rx", 100)
-      .attr("ry", 100)
+      .attr("rx", 5)
+      .attr("ry", 5)
       .classed("hide", function (d) {
         try {
           if (d.data.partnerinfo.name === "text") return false;
@@ -190,8 +212,8 @@ export default function Tree() {
       .attr("y", function (d) {
         return d.y - 180;
       })
-      .attr("rx", 100)
-      .attr("ry", 100)
+      .attr("rx", 5)
+      .attr("ry", 5)
       .classed("hide", function (d) {
         try {
           if (d.data.partnerinfo.name === "text") return false;
@@ -244,6 +266,27 @@ export default function Tree() {
       .select("svg g.nodes")
       .selectAll("rect .node")
       .data(treeData.descendants());
+    //normal node shadow
+    shapes
+      .enter()
+      .append("rect")
+      .attr("class", function (d) {
+        return "node shadow level-" + d.depth;
+      })
+      .attr("x", function (d) {
+        return d.x - 180;
+      })
+      .attr("y", function (d) {
+        return d.y - 170;
+      })
+      .classed("hide", function (d) {
+        try {
+          if (d.data.partnerinfo.name !== "") return true;
+        } catch {
+          return false;
+        }
+      });
+    //normal node rectangle
     shapes
       .enter()
       .append("rect")
@@ -261,8 +304,8 @@ export default function Tree() {
       .attr("y", function (d) {
         return d.y - 180;
       })
-      .attr("rx", 100)
-      .attr("ry", 100)
+      .attr("rx", 5)
+      .attr("ry", 5)
       .on("click", function (d) {
         $("#card-container").css("display", "block");
         zoom.scaleTo(svg.transition().duration(500), 0.25);
@@ -321,7 +364,7 @@ export default function Tree() {
           return "";
         }
       })
-      .call(wrap, 150);
+      .call(wrap, 200);
     partnerText
       .enter()
       .append("text")
@@ -338,7 +381,7 @@ export default function Tree() {
           return "";
         }
       })
-      .call(wrap, 150);
+      .call(wrap, 200);
     var text = d3
       .select("svg g.nodes")
       .selectAll("text .node")
@@ -361,7 +404,7 @@ export default function Tree() {
       .text(function (d) {
         return d.data.birthdate;
       })
-      .call(wrap, 150);
+      .call(wrap, 200);
     text
       .enter()
       .append("text")
@@ -380,7 +423,7 @@ export default function Tree() {
       .text(function (d) {
         return d.data.generation;
       })
-      .call(wrap, 150);
+      .call(wrap, 200);
     text
       .enter()
       .append("text")
@@ -399,7 +442,7 @@ export default function Tree() {
       .text(function (d) {
         return d.data.name;
       })
-      .call(wrap, 150);
+      .call(wrap, 200);
 
     links = d3.select("svg g.links").selectAll("path").data(linksData);
     links
@@ -492,7 +535,7 @@ export default function Tree() {
         } else {
           try {
             if (x.__data__.data.partnerinfo.name === node.name) {
-              dimensions[0] = x.__data__.x + 100;
+              dimensions[0] = x.__data__.x;
               dimensions[1] = x.__data__.y;
             }
           } catch {}

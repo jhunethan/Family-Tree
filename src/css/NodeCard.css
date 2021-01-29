@@ -4,20 +4,17 @@
   top: 5vh;
   right: 10px;
 
-  width: 340px;
+  width: 350px;
   overflow-y: auto;
   background-color: #f1f1f1;
-  font-size: 16px;
   line-height: 22px;
   color: #000;
-  border-radius: 7px;
-  filter: drop-shadow(10px 10px 10px rgba(43, 43, 43, 0.473));
+  border-radius: 5px;
+  filter: drop-shadow(10px 10px 5px rgba(65, 65, 65, 0.322));
 
   margin: 50px auto;
+  transition: all 0.5s;
 
-  animation-name: rotate;
-  animation-duration: 1.5s;
-  animation-fill-mode: both;
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
@@ -28,11 +25,10 @@
 
 .top-card {
   width: 100%;
-  /* height: 200px; */
 }
 
 .top-card img {
-  width: 100%;
+  max-height: 350px;
 }
 
 .top-card .menu-icon {
@@ -126,5 +122,13 @@ footer {
 #card-close {
   position: absolute;
   right: 10px;
+  top: 10px;
+}
+
+#card-expand {
+  font-size: 24px;
+  position: absolute;
+  padding: 0px 7.5px;
+  left: 10px;
   top: 10px;
 }

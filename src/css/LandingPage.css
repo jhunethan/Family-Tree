@@ -29,7 +29,7 @@
   letter-spacing: 0.3rem;
   color: white;
   padding: 0 20px 8px;
-  filter: drop-shadow(10px 5px 5px rgba(43, 43, 43, 0.3));
+  filter: drop-shadow(10px 10px 5px rgba(65, 65, 65, 0.322));
 }
 .header p {
   font-family: Didact Gothic;
@@ -38,7 +38,7 @@
   letter-spacing: 0.3rem;
   color: white;
   padding: 10px 15px;
-  filter: drop-shadow(5px 5px 5px rgba(43, 43, 43, 0.5));
+  filter: drop-shadow(10px 10px 5px rgba(65, 65, 65, 0.322));
 }
 #landingButton {
   font-size: 1.5rem;
@@ -50,7 +50,7 @@
   margin: 20px 5px 0;
   border: none;
   cursor: pointer;
-  filter: drop-shadow(5px 5px 5px rgba(43, 43, 43, 0.25));
+  filter: drop-shadow(10px 10px 5px rgba(65, 65, 65, 0.322));
 }
 
 #landingButton:hover {

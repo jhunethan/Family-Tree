@@ -5,7 +5,7 @@ body {
   overflow-x: hidden;
   height: 100vh;
   overflow: hidden;
-  background-color: #ffe3dc;
+  background-image: linear-gradient(#EC7771,#FED381);
 }
 
 .container {
@@ -14,8 +14,8 @@ body {
   padding: 2.5vh;
   width: 1000px;
   background-color: #fff;
-  border-radius: 10px;
-  filter: drop-shadow(10px 10px 10px rgba(43, 43, 43, 0.473));
+  border-radius: 5px;
+  filter: drop-shadow(10px 10px 5px rgba(65, 65, 65, 0.322));
   max-height: 600px;
   overflow: auto;
   -ms-overflow-style: none; /* IE and Edge */

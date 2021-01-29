@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import * as $ from "jquery";
 
 import "../css/NodeCard.css";
 import placeholder from "../css/person-placeholder.jpg";
 
 export default function NodeCard(props) {
+  const [cardexpanded, setcardexpanded] = useState(false);
+
   return (
     <div id="card-container">
       <section className="top-card">
@@ -18,6 +20,20 @@ export default function NodeCard(props) {
         </button>
         <button id="card-edit" onClick={props.edit}>
           Edit
+        </button>
+        <button
+          id="card-expand"
+          onClick={() => {
+            if (!cardexpanded) {
+              $("#card-container").css("width", 600);
+              setcardexpanded(true);
+            } else {
+              $("#card-container").css("width", 350);
+              setcardexpanded(false);
+            }
+          }}
+        >
+          ⤡
         </button>
         <img src={placeholder} alt="user" />
       </section>
