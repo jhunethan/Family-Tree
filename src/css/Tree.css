@@ -11,6 +11,8 @@ svg {
   margin: 0;
 }
 
+
+
 .node,
 .partnernode {
   width: 350px;
@@ -107,3 +109,4 @@ text {
   font-weight: bold;
   transition: all 0.3s;
 }
+

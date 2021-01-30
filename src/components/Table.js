@@ -7,13 +7,13 @@ import Create from "./Create.js";
 import Modal from "./Modal";
 import Edit from "./Edit";
 import EditExtra from "./EditExtra";
-import Header from "./Header";
 import NodeCard from "./NodeCard";
 
 export default function Table() {
   // eslint-disable-next-line
   const [update, setUpdate] = useState(0);
   const [tableData, setTableData] = useState([]);
+  const [tableDataExtra, settableDataExtra] = useState([]);
   const [nodestate, setNodestate] = useState(0);
   var [radiochecked, setRadiochecked] = useState(true);
   const [currentRow, setcurrentRow] = useState();
@@ -31,6 +31,9 @@ export default function Table() {
   useEffect(() => {
     Axios.get("https://layfamily.herokuapp.com/api/get").then((result) => {
       setTableData(result.data);
+    });
+    Axios.get("https://layfamily.herokuapp.com/api/getextra").then((result) => {
+      settableDataExtra(result.data);
     });
   }, [update]);
 
@@ -51,6 +54,12 @@ export default function Table() {
       pval = node.parent;
     }
     $("#parentInput").val(pval);
+    try {
+      $("#location-input").val(node.extradetails.location);
+      $("#extranames-input").val(node.extradetails.extranames);
+      $("#fblink-input").val(node.extradetails.fblink);
+      $("textarea.description-input").val(node.extradetails.description);
+    } catch {}
   };
 
   const getNode = (idKey) => {
@@ -85,15 +94,19 @@ export default function Table() {
     }
     list.innerHTML = str;
     try {
-      document.getElementById("toggle-slide").checked = false;
-      document.getElementsByClassName("Create")[0].style.display = "block";
-      document.getElementById("Modal").style.display = "block";
-      document.getElementById("nameInputC").style.borderBottomColor = "#bebed2";
-      document.getElementById("nameInputC").placeholder = "";
-      document.getElementById("nameInputC").value = "";
-      document.getElementById("genInputC").value = "";
-      document.getElementById("birthdateInputC").value = "";
-      document.getElementById("parentInputC").value = "";
+      $("#toggle-slide").checked = false;
+      $("div.Create").css("display", "block");
+      $("#Modal").css("display", "block");
+      $("#nameInputC")
+        .attr("placeholder", "")
+        .val("")
+        .css("border-bottom", "2px solid #bebed2");
+      $("#genInputC").val("");
+      $("#birthdateInputC").val("");
+      $("#parentInputC")
+        .val("")
+        .css("border-bottom", "2px solid #bebed2")
+        .attr("placeholder", "");
     } catch (err) {
       console.log(err);
     }
@@ -132,8 +145,17 @@ export default function Table() {
         parent: children[4].textContent,
         partner: children[5].textContent,
         isPartner: thisnode.isPartner,
+        extradetails: "",
       };
-      //update current node json object
+      //check if extra details exists
+
+      for (let i = 0; i < tableDataExtra.length; i++) {
+        if (tableDataExtra[i].id === Number(node.id)) {
+          node.extradetails = tableDataExtra[i];
+          alert("working!");
+        }
+      }
+
       currentNode = node;
       setNodestate(node);
 
@@ -180,15 +202,11 @@ export default function Table() {
 
   return (
     <div className="TableContainer">
-      <Header />
       <div className="container">
         <div className="container-top">
           <div className="left">
             <h2>Family Tree Interactive Table View</h2>
-            <p>
-              Here you can sort, search and edit any family member by clicking.
-              <br /> You can also search to filter results.
-            </p>
+            <p>Click to interact with the table.</p>
             <button
               type="button"
               onClick={() => {
@@ -226,9 +244,7 @@ export default function Table() {
         }}
       />
       <NodeCard
-        InfoCardname={nodestate.name}
-        InfoCardbirthdate={nodestate.birthdate}
-        InfoCardgeneration={nodestate.generation}
+        data={nodestate}
         edit={() => {
           openNode(currentRow);
         }}

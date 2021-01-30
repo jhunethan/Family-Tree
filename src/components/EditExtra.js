@@ -41,8 +41,6 @@ export default function EditExtra(props) {
   const submit = () => {
     let id = props.currentNode.id;
     inputHandler();
-    console.log(id)
-    console.log(nodeInput);
     Axios.post("https://layfamily.herokuapp.com/api/updateextra", {
       id: id,
       location: nodeInput.location,

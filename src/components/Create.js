@@ -29,7 +29,6 @@ function Create(props) {
     node.parentNode = $("#parentInputC").val();
     let pid = document.getElementById("toggle-slide").checked,
       isPartner = 0;
-    console.log(pid);
     if (pid === false) {
       node.parent = node.parentNode;
     } else {
@@ -108,7 +107,6 @@ function Create(props) {
     }
 
     inputChangedHandler();
-    console.log(sendNode);
     setTimeout(() => {
       if (validation()) {
         Axios.post("https://layfamily.herokuapp.com/api/insert", {
@@ -199,7 +197,6 @@ function Create(props) {
           type="checkbox"
           id="toggle-slide"
           onChange={() => {
-            console.log("Changed Radio!");
             inputChangedHandler();
           }}
           name="radio-optionsC"

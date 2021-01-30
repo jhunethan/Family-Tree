@@ -7,6 +7,20 @@ import placeholder from "../css/person-placeholder.jpg";
 export default function NodeCard(props) {
   const [cardexpanded, setcardexpanded] = useState(false);
 
+  // const [extra, setextra] = useState({
+  //   id: 0,
+  //   location: "",
+  //   extranames: "",
+  //   fblink: "",
+  //   description: "",
+  // });
+
+  // useEffect(() => {
+  //   try {
+    //     setextra(props.data.extradetails);
+    //   } catch {}
+  // }, [props.data]); 
+
   const transform = () => {
     if (!cardexpanded) {
       $("#card-container").css("width", 600);
@@ -41,13 +55,13 @@ export default function NodeCard(props) {
 
       <section className="middle-card">
         <h1>
-          {props.InfoCardgeneration} {props.InfoCardname}
+          {props.data.generation} {props.data.name}
         </h1>
-        <p>{props.InfoCardbirthdate}</p>
+        <p>{props.data.birthdate}</p>
         <h2>Generation</h2>
-        <p>{props.InfoCardgeneration}</p>
+        <p>{props.data.generation}</p>
         <h2>Current Location</h2>
-        <p>United Kingdom</p>
+        <p></p>
       </section>
 
       <footer>

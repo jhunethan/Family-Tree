@@ -9,8 +9,11 @@ body {
 }
 /* #FED381 #EC7771 */
 
+.TableContainer{
+  display: flex;
+}
+
 .container {
-  position: absolute;
   margin: 2vh 5vh 5vh 35vh;
   padding: 2.5vh;
   width: 1000px;

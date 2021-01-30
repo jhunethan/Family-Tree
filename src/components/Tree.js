@@ -3,7 +3,6 @@ import * as d3 from "d3";
 import Axios from "axios";
 import * as $ from "jquery";
 import "../css/Tree.css";
-import Header from "./Header.js";
 import NodeCard from "./NodeCard";
 import Modal from "./Modal";
 import Edit from "./Edit";
@@ -40,7 +39,7 @@ export default function Tree() {
     $("svg").html("");
     //if tabledata is updated, check if the tree exists, else do nothing
     var intervalId = setInterval(function () {
-      if (!$("svg").children().length > 0) {
+      if ($("#Tree").children().length <= 1) {
         try {
           buildTree();
         } catch {}
@@ -392,7 +391,6 @@ export default function Tree() {
       .attr("x", function (d) {
         try {
           if (!d.data.partnerinfo.name === "text") return d.x;
-          console.log(d.data);
           return d.x - 150;
         } catch {
           return d.x + 40;
@@ -411,7 +409,6 @@ export default function Tree() {
       .attr("x", function (d) {
         try {
           if (!d.data.partnerinfo.name === "text") return d.x;
-          console.log(d.data);
           return d.x - 150;
         } catch {
           return d.x + 40;
@@ -430,7 +427,6 @@ export default function Tree() {
       .attr("x", function (d) {
         try {
           if (!d.data.partnerinfo.name === "text") return d.x;
-          console.log(d.data);
           return d.x - 150;
         } catch {
           return d.x + 40;
@@ -609,12 +605,6 @@ export default function Tree() {
 
   return (
     <div>
-      <Header
-        option1text={"Update Tree"}
-        option1action={() => {
-          updateTree();
-        }}
-      />
       <div className="datalist">
         <input
           id="datalist-input"
@@ -646,9 +636,7 @@ export default function Tree() {
         <datalist id="datalist-ul" className="datalist-ul"></datalist>
       </div>
       <NodeCard
-        InfoCardname={InfoCard.name}
-        InfoCardbirthdate={InfoCard.birthdate}
-        InfoCardgeneration={InfoCard.generation}
+        data={InfoCard}
         edit={() => openNode()}
       />
       <div id="Tree"></div>

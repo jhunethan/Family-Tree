@@ -32,7 +32,6 @@ export default function Edit(props) {
 
     try {
       pid = props.getPID($("#parentInput").val());
-      console.log(pid);
     } catch {
       pid = 0;
     }
@@ -97,7 +96,6 @@ export default function Edit(props) {
     console.log(`changed=${changed}  checkParent=${check}`);
     if (changed === true && check) {
       //save
-      console.log(nodeInput);
       Axios.post("https://layfamily.herokuapp.com/api/update", {
         id: nodeInput.id,
         generation: nodeInput.generation,

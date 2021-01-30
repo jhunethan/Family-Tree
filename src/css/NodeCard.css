@@ -1,7 +1,7 @@
 #card-container {
-  display: none;
   position: absolute;
-  top: 0;
+  display: none;
+  top: 1vh;
   right: 10px;
 
   max-height: 600px;
@@ -11,7 +11,7 @@
   line-height: 22px;
   color: #000;
   border-radius: 5px;
-  filter: drop-shadow(10px 10px 5px rgba(65, 65, 65, 0.322));
+  filter: drop-shadow(5px 5px 5px rgba(65, 65, 65, 0.322));
 
   margin: 10px auto;
   transition: all 0.5s;
@@ -93,7 +93,7 @@ h1 {
   color: #000;
   font-weight: 600;
   margin: 12px 0;
-  border-bottom: 2px solid #000000;
+  border-bottom: 2px solid #78788c;
 }
 
 h2 {

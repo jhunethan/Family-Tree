@@ -5,10 +5,12 @@ import Error from "./components/Error";
 import "./css/App.css";
 import { Switch, Route } from "react-router-dom";
 import Tree from "./components/Tree";
+import Header from "./components/Header.js";
 
 export default function App() {
   return (
     <main>
+      <Header />
       <Switch>
         <Route exact path="/" component={LandingPage} />
         <Route path="/table" component={Table} />
