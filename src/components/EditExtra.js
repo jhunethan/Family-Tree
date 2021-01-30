@@ -43,7 +43,7 @@ export default function EditExtra(props) {
     inputHandler();
     console.log(id)
     console.log(nodeInput);
-    Axios.post("http://localhost:5000/api/updateextra", {
+    Axios.post("https://layfamily.herokuapp.com/api/updateextra", {
       id: id,
       location: nodeInput.location,
       extranames: nodeInput.extranames,

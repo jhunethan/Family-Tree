@@ -30,7 +30,7 @@ export default function Tree() {
   };
 
   useEffect(() => {
-    Axios.get("http://localhost:5000/api/get").then((result) => {
+    Axios.get("https://layfamily.herokuapp.com/api/get").then((result) => {
       setTableData(result.data);
     });
   }, [update]);
@@ -127,7 +127,7 @@ export default function Tree() {
       [0, 0],
       [$("#Tree").width(), $("#Tree").height()],
     ])
-    .scaleExtent([0.5, 1])
+    .scaleExtent([0.1, 1])
     .on("zoom", zoomed);
 
   var svg = d3.select("#Tree").append("svg");

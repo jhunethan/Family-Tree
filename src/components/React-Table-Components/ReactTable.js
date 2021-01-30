@@ -36,10 +36,6 @@ export const ReactTable = (props) => {
           {...getTableProps()}
           onClick={(e) => {
             let row = e.target.closest("tr");
-            props.open(row);
-          }}
-          onMouseOver={(e) => {
-            let row = e.target.closest("tr");
             props.show(row);
           }}
         >
