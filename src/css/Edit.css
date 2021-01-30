@@ -14,7 +14,7 @@
   max-width: calc(100vw - 40px);
   font-family: 'Montserrat', sans-serif;
   position: absolute;
-  top: 10vh;
+  top: 10px;
   left: calc(50% - 440px);
   z-index: 1000;
 }

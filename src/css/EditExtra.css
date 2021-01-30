@@ -1,7 +1,7 @@
 .edit-container {
   display: none;
   position: absolute;
-  top: 10vh;
+  top: 10px;
   left: calc(50%);
   z-index: 1000;
 

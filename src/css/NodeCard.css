@@ -1,9 +1,10 @@
 #card-container {
   display: none;
   position: absolute;
-  top: 5vh;
+  top: 0;
   right: 10px;
 
+  max-height: 600px;
   width: 350px;
   overflow-y: auto;
   background-color: #f1f1f1;
@@ -12,7 +13,7 @@
   border-radius: 5px;
   filter: drop-shadow(10px 10px 5px rgba(65, 65, 65, 0.322));
 
-  margin: 50px auto;
+  margin: 10px auto;
   transition: all 0.5s;
 
   -ms-overflow-style: none; /* IE and Edge */
