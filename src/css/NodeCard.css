@@ -1,13 +1,16 @@
 #card-container {
   position: absolute;
-  display: none;
-  top: 1vh;
+  display: flex;
   right: 10px;
+  transition: all 0.5s;
+}
 
-  max-height: 600px;
+.card-main {
+  max-height: 80vh;
   width: 350px;
   overflow-y: auto;
-  background-color: #f1f1f1;
+  overflow-x: hidden;
+  background-color: #fff;
   line-height: 22px;
   color: #000;
   border-radius: 5px;
@@ -15,13 +18,21 @@
 
   margin: 10px auto;
   transition: all 0.5s;
-
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
 }
 
-#card-container::-webkit-scrollbar {
-  display: none;
+.card-nav {
+  position: fixed;
+  z-index: 500;
+  width: 340px;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+  padding: 10px 10px 10px 10px;
+}
+
+.card-nav > *{
+  margin: 0px 5px;
+  background-color: white;
 }
 
 .top-card {
@@ -114,22 +125,35 @@ footer {
   text-align: justify;
 }
 
-#card-edit {
-  position: absolute;
-  right: 50px;
-  top: 10px;
-}
-
-#card-close {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-}
-
 #card-expand {
   font-size: 24px;
-  position: absolute;
   padding: 0px 7.5px;
-  left: 10px;
-  top: 10px;
+}
+
+.fblink {
+  color: black;
+  font-weight: bold;
+  border: 2px solid black;
+  padding: 5px;
+  transition: all 0.4s;
+}
+
+.fblink:hover {
+  background-color: black;
+  color: #fff;
+  transition: all 0.4s;
+}
+
+.card-content {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.card-details {
+  min-width: 340px;
+}
+
+.card-description{
+  max-width: 150vh;
 }

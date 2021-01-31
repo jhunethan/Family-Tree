@@ -10,20 +10,12 @@ import EditExtra from "./EditExtra";
 import NodeCard from "./NodeCard";
 
 export default function Table() {
-  // eslint-disable-next-line
   const [update, setUpdate] = useState(0);
   const [tableData, setTableData] = useState([]);
   const [tableDataExtra, settableDataExtra] = useState([]);
   const [nodestate, setNodestate] = useState(0);
   var [radiochecked, setRadiochecked] = useState(true);
   const [currentRow, setcurrentRow] = useState();
-  var currentNode = {
-    id: 0,
-    generation: "",
-    name: "",
-    birthdate: "",
-    pid: 0,
-  };
 
   const switchRadio = () => {
     setRadiochecked(!radiochecked);
@@ -59,7 +51,12 @@ export default function Table() {
       $("#extranames-input").val(node.extradetails.extranames);
       $("#fblink-input").val(node.extradetails.fblink);
       $("textarea.description-input").val(node.extradetails.description);
-    } catch {}
+    } catch {
+      $("#location-input").val("");
+      $("#extranames-input").val("");
+      $("#fblink-input").val("");
+      $("textarea.description-input").val("");
+    }
   };
 
   const getNode = (idKey) => {
@@ -113,8 +110,6 @@ export default function Table() {
   };
 
   const openNode = (row) => {
-    let children = row.children;
-
     $("#parentInput").css("border-bottom", "2px solid #bebed2");
     $("#parentInput").val("");
     $("#parentInput").attr("placeholder", "Parent/Partner");
@@ -136,33 +131,10 @@ export default function Table() {
       !isNaN(row.firstChild.textContent) &&
       row.firstChild.textContent !== "0"
     ) {
-      let thisnode = getNode(Number(row.firstChild.textContent));
-      let node = {
-        id: children[0].textContent,
-        generation: children[1].textContent,
-        name: children[2].textContent,
-        birthdate: children[3].textContent,
-        parent: children[4].textContent,
-        partner: children[5].textContent,
-        isPartner: thisnode.isPartner,
-        extradetails: "",
-      };
-      //check if extra details exists
-
-      for (let i = 0; i < tableDataExtra.length; i++) {
-        if (tableDataExtra[i].id === Number(node.id)) {
-          node.extradetails = tableDataExtra[i];
-        }
-      }
-      console.log(tableDataExtra)
-      console.log(tableData)
-      currentNode = node;
-      setNodestate(node);
-
-      node.isPartner ? setRadiochecked(false) : setRadiochecked(true);
+      nodestate.isPartner ? setRadiochecked(false) : setRadiochecked(true);
 
       //sort out edit menu
-      populateEditFields(currentNode);
+      populateEditFields(nodestate);
       $("#Modal").css("display", "block");
       $("#editForm").css("display", "block");
       $("div.edit-container").css("display", "flex");
@@ -170,7 +142,7 @@ export default function Table() {
   };
 
   const showNode = (row) => {
-    $("#card-container").css("display", "block");
+    $("#card-container").css("display", "flex");
     let children = row.children;
     setcurrentRow(row);
     //only runs if its a database entry
@@ -188,6 +160,15 @@ export default function Table() {
         partner: children[5].textContent,
         isPartner: thisnode.isPartner,
       };
+
+      //check if extra details exists
+
+      for (let i = 0; i < tableDataExtra.length; i++) {
+        if (tableDataExtra[i].id === Number(node.id)) {
+          node.extradetails = tableDataExtra[i];
+        }
+      }
+
       //update current node json object
       setNodestate(node);
     }
