@@ -152,10 +152,10 @@ export default function Table() {
       for (let i = 0; i < tableDataExtra.length; i++) {
         if (tableDataExtra[i].id === Number(node.id)) {
           node.extradetails = tableDataExtra[i];
-          alert("working!");
         }
       }
-
+      console.log(tableDataExtra)
+      console.log(tableData)
       currentNode = node;
       setNodestate(node);
 
