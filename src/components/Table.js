@@ -142,14 +142,15 @@ export default function Table() {
   };
 
   const showNode = (row) => {
-    $("#card-container").css("display", "flex");
     let children = row.children;
-    setcurrentRow(row);
+
     //only runs if its a database entry
     if (
       !isNaN(row.firstChild.textContent) &&
       row.firstChild.textContent !== "0"
     ) {
+      setcurrentRow(row);
+      $("#card-container").css("display", "flex");
       let thisnode = getNode(Number(row.firstChild.textContent));
       let node = {
         id: children[0].textContent,

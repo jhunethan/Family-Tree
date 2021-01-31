@@ -1,6 +1,6 @@
 #card-container {
   position: absolute;
-  display: flex;
+  display: none;
   right: 10px;
   transition: all 0.5s;
 }
