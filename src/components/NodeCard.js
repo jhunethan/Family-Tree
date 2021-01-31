@@ -7,11 +7,11 @@ import placeholder from "../css/person-placeholder.jpg";
 function NodeCardDetails(props) {
   switch (props.method) {
     case "generation":
-      if (props.data.generation !== "") {
+      if (props.node.generation !== "") {
         return (
           <section>
             <h2>Generation</h2>
-            <p>{props.data.generation}</p>
+            <p>{props.node.generation}</p>
           </section>
         );
       } else {
@@ -19,12 +19,11 @@ function NodeCardDetails(props) {
       }
     case "location":
       try {
-        console.log(props.data.extradetails);
-        if (props.data.extradetails.location !== "") {
+        if (props.node.extradetails.location !== "") {
           return (
             <section>
               <h2>Current location</h2>
-              <p>{props.data.extradetails.location}</p>
+              <p>{props.node.extradetails.location}</p>
             </section>
           );
         }
@@ -37,7 +36,7 @@ function NodeCardDetails(props) {
         return (
           <section>
             <h2>Additional Names</h2>
-            <p>{props.data.extradetails.extranames}</p>
+            <p>{props.node.extradetails.extranames}</p>
           </section>
         );
       } catch {
@@ -46,11 +45,11 @@ function NodeCardDetails(props) {
     case "fblink":
       try {
         if (
-          props.data.extradetails.fblink.includes("https://www.facebook.com")
+          props.node.extradetails.fblink.includes("https://www.facebook.com")
         ) {
           return (
             <section>
-              <a className="fblink" href={props.data.extradetails.fblink}>
+              <a className="fblink" href={props.node.extradetails.fblink}>
                 Facebook Link
               </a>
             </section>
@@ -63,8 +62,8 @@ function NodeCardDetails(props) {
       }
     case "description":
       try {
-        if (props.data.extradetails.description !== "") {
-          let output = props.data.extradetails.description.split("\n\n");
+        if (props.node.extradetails.description !== "") {
+          let output = props.node.extradetails.description.split("\n\n");
           return (
             <section>
               <h2>Description</h2>
@@ -85,17 +84,38 @@ function NodeCardDetails(props) {
   }
 }
 
+// function ImmediateFamily(props) {
+
+//   switch (props.method) {
+//     case "parents":
+//       if (props.node.parent !== "") {
+//         return (
+//           <p>
+//             <h2>Parents</h2>
+//             <p1>{props.node.parent}</p1>
+//           </p>
+//         );
+//       }
+//       break;
+
+//     default:
+//       return <p></p>;
+//   }
+// }
+
 export default function NodeCard(props) {
   const [cardexpanded, setcardexpanded] = useState(false);
 
   const transform = () => {
     if (!cardexpanded) {
-      $("div.card-main").css("width", "99%");
-      $("#card-container").css("width", "99%");
+      $("div.card-main").css("width", "100%");
+      $("#card-container").css("width", "100%");
+      $("#card-container").css("margin-left", "0px");
       setcardexpanded(true);
     } else {
       $("div.card-main").css("width", 350);
       $("#card-container").css("width", 350);
+      $("#card-container").css("margin-left", "10px");
       setcardexpanded(false);
     }
   };
@@ -103,7 +123,6 @@ export default function NodeCard(props) {
   return (
     <div id="card-container">
       <div className="card-nav">
-        {" "}
         <button
           id="card-close"
           onClick={() => {
@@ -125,20 +144,29 @@ export default function NodeCard(props) {
         </section>
         <section className="middle-card">
           <h1>
-            {props.data.generation} {props.data.name}
+            {props.node.generation} {props.node.name}
           </h1>
           <div className="card-content">
             <div className="card-details">
-              <NodeCardDetails data={props.data} method="generation" />
-              <NodeCardDetails data={props.data} method="location" />
-              <NodeCardDetails data={props.data} method="extranames" />
-              <NodeCardDetails data={props.data} method="fblink" />
+              <p1>{props.node.birthdate}</p1>
+              <NodeCardDetails node={props.node} method="generation" />
+              <NodeCardDetails node={props.node} method="location" />
+              <NodeCardDetails node={props.node} method="extranames" />
+              <NodeCardDetails node={props.node} method="fblink" />
             </div>
             <div className="card-description">
-              <NodeCardDetails data={props.data} method="description" />
+              <NodeCardDetails node={props.node} method="description" />
             </div>
           </div>
         </section>
+        <footer>
+          <h1>Immediate Family Members</h1>
+          {/* <ImmediateFamily
+            node={props.node}
+            data={props.data}
+            method="parents"
+          /> */}
+        </footer>
       </div>
     </div>
   );

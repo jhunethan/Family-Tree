@@ -1,12 +1,12 @@
 #card-container {
   position: absolute;
   display: none;
-  right: 10px;
+  margin-left: 10px;
   transition: all 0.5s;
 }
 
 .card-main {
-  max-height: 80vh;
+  max-height: 90vh;
   width: 350px;
   overflow-y: auto;
   overflow-x: hidden;
@@ -21,13 +21,13 @@
 }
 
 .card-nav {
-  position: fixed;
-  z-index: 500;
+  position: absolute;
+  z-index: 3;
   width: 340px;
   margin-top: 10px;
   display: flex;
   flex-direction: row;
-  padding: 10px 10px 10px 10px;
+  padding: 10px;
 }
 
 .card-nav > *{
@@ -41,6 +41,8 @@
 
 .top-card img {
   max-height: 350px;
+  display: block;
+  margin: 10px auto;
 }
 
 .top-card .menu-icon {
@@ -127,7 +129,7 @@ footer {
 
 #card-expand {
   font-size: 24px;
-  padding: 0px 7.5px;
+  padding: 5px 15px;
 }
 
 .fblink {
@@ -146,14 +148,15 @@ footer {
 
 .card-content {
   display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
+  flex-flow: row wrap
 }
 
 .card-details {
-  min-width: 340px;
+  min-width: 300px;
 }
 
 .card-description{
-  max-width: 150vh;
+  width: 10vh;
+  max-width: 160vh;
+  flex-grow: 1;
 }

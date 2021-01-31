@@ -150,6 +150,7 @@ export default function Table() {
       row.firstChild.textContent !== "0"
     ) {
       setcurrentRow(row);
+
       $("#card-container").css("display", "flex");
       let thisnode = getNode(Number(row.firstChild.textContent));
       let node = {
@@ -188,7 +189,7 @@ export default function Table() {
         <div className="container-top">
           <div className="left">
             <h2>Family Tree Interactive Table View</h2>
-            <p>Click to interact with the table.</p>
+            <p>Click the table to interact.</p>
             <button
               type="button"
               onClick={() => {
@@ -226,7 +227,8 @@ export default function Table() {
         }}
       />
       <NodeCard
-        data={nodestate}
+        node={nodestate}
+        data={tableData}
         edit={() => {
           openNode(currentRow);
         }}

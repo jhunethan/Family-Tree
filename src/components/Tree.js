@@ -636,7 +636,7 @@ export default function Tree() {
         <datalist id="datalist-ul" className="datalist-ul"></datalist>
       </div>
       <NodeCard
-        data={InfoCard}
+        node={InfoCard}
         edit={() => openNode()}
       />
       <div id="Tree"></div>

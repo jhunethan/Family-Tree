@@ -120,6 +120,9 @@ button {
   font-family: "Montserrat", sans-serif;
   border: 2px solid black;
   background: 0;
+  font-size: 16px;
+
+
   cursor: pointer;
   transition: all 0.3s;
 }
