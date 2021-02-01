@@ -100,7 +100,7 @@
   text-transform: uppercase;
 }
 
-h1 {
+.card-subtitle {
   text-align: left;
   font-size: 20px;
   color: #000;
@@ -156,7 +156,7 @@ footer {
 }
 
 .card-description{
-  width: 10vh;
+  width: 350px;
   max-width: 160vh;
   flex-grow: 1;
 }

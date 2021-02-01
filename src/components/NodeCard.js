@@ -143,12 +143,12 @@ export default function NodeCard(props) {
           <img src={placeholder} alt="user" />
         </section>
         <section className="middle-card">
-          <h1>
+          <h1 className="card-subtitle">
             {props.node.generation} {props.node.name}
           </h1>
           <div className="card-content">
             <div className="card-details">
-              <p1>{props.node.birthdate}</p1>
+              <p>{props.node.birthdate}</p>
               <NodeCardDetails node={props.node} method="generation" />
               <NodeCardDetails node={props.node} method="location" />
               <NodeCardDetails node={props.node} method="extranames" />
@@ -160,7 +160,7 @@ export default function NodeCard(props) {
           </div>
         </section>
         <footer>
-          <h1>Immediate Family Members</h1>
+          <h1 className="card-subtitle">Immediate Family Members</h1>
           {/* <ImmediateFamily
             node={props.node}
             data={props.data}

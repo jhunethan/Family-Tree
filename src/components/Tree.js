@@ -635,10 +635,7 @@ export default function Tree() {
         </button>
         <datalist id="datalist-ul" className="datalist-ul"></datalist>
       </div>
-      <NodeCard
-        node={InfoCard}
-        edit={() => openNode()}
-      />
+      <NodeCard node={InfoCard} edit={() => openNode()} />
       <div id="Tree"></div>
       <Edit
         getPID={getPID}

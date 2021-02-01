@@ -11,6 +11,9 @@ nav {
   display: flex;
   background-color: #d10300;
   height: 80px;
+  width: 100%;
+  position: relative;
+  z-index: 2;
 }
 
 

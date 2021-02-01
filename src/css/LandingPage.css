@@ -7,54 +7,96 @@
 .wrapper {
   position: absolute;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   top: 0;
   left: 0;
-  background-size: cover;
-}
-.Container {
-  width: 100%;
-  height: 100%;
+  overflow-x: hidden;
+
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
 }
+
+.content-container {
+  position: absolute;
+  top: 15vh;
+
+  width: 100%;
+  display: flex;
+}
+
 .header {
+  margin: 0 auto;
   text-align: center;
+  background-color: #ffeece;
+  padding: 30px;
+  border-radius: 2px;
+  filter: drop-shadow(5px 5px 5px rgba(65, 65, 65, 0.322));
 }
 .header h1 {
-  text-align: center;
-  font-size: 4rem;
+  font-size: 3rem;
   font-weight: 600;
   letter-spacing: 0.3rem;
-  color: white;
   padding: 0 20px 8px;
-  filter: drop-shadow(10px 10px 5px rgba(65, 65, 65, 0.322));
+  margin: 10px;
+  text-decoration: underline red;
 }
 .header p {
   font-family: Didact Gothic;
   font-size: 1.5rem;
   font-weight: 600;
   letter-spacing: 0.3rem;
-  color: white;
   padding: 10px 15px;
-  filter: drop-shadow(10px 10px 5px rgba(65, 65, 65, 0.322));
+  filter: drop-shadow(5px 5px 5px rgba(65, 65, 65, 0.322));
 }
 #landingButton {
   font-size: 1.5rem;
   font-weight: 600;
   letter-spacing: 0.15rem;
-  color: black;
-  background-color: #fff200;
-  padding: 20px 30px;
+  color: white;
+  background-color: red;
+  padding: 10px 20px;
   margin: 20px 5px 0;
   border: none;
   cursor: pointer;
-  filter: drop-shadow(10px 10px 5px rgba(65, 65, 65, 0.322));
+  filter: drop-shadow(5px 5px 5px rgba(65, 65, 65, 0.322));
+}
+
+.landing-header {
+  display: flex;
+  flex-direction: row;
 }
 
 #landingButton:hover {
   background-color: black;
   color: #fff200;
   transition: all 0.3s;
+}
+
+.image-container {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+
+  height: 80vh;
+  width: 100%;
+  overflow: hidden;
+  filter: drop-shadow(5px 5px 5px rgba(65, 65, 65, 0.322));
+}
+.image-container > img {
+  margin: 0 auto;
+  max-height: 1500px;
+  transform: translateY(-350px);
+}
+
+.about-section {
+  position: absolute;
+  top: 80vh;
+
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.about-header {
+  margin: 10px auto;
 }
