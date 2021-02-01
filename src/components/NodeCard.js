@@ -6,6 +6,26 @@ import placeholder from "../css/person-placeholder.jpg";
 
 function NodeCardDetails(props) {
   switch (props.method) {
+    case "birthdate":
+      if (props.node.birthdate !== "") {
+        try {
+          return (
+            <section>
+              <h2>Born</h2>
+              <p>{props.node.birthdate} in {props.node.extradetails.birthplace}</p>
+            </section>
+          );
+        } catch {
+          return (
+            <section>
+              <h2>Born</h2>
+              <p>{props.node.birthdate}</p>
+            </section>
+          );
+        }
+      } else {
+        return <p></p>;
+      }
     case "generation":
       if (props.node.generation !== "") {
         return (
@@ -148,7 +168,7 @@ export default function NodeCard(props) {
           </h1>
           <div className="card-content">
             <div className="card-details">
-              <p>{props.node.birthdate}</p>
+              <NodeCardDetails node={props.node} method="birthdate" />
               <NodeCardDetails node={props.node} method="generation" />
               <NodeCardDetails node={props.node} method="location" />
               <NodeCardDetails node={props.node} method="extranames" />

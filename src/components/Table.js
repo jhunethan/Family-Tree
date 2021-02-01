@@ -47,6 +47,7 @@ export default function Table() {
     }
     $("#parentInput").val(pval);
     try {
+      $("#birthplace-input").val(node.extradetails.birthplace);
       $("#location-input").val(node.extradetails.location);
       $("#extranames-input").val(node.extradetails.extranames);
       $("#fblink-input").val(node.extradetails.fblink);
