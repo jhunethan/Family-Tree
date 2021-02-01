@@ -15,12 +15,14 @@ export default function EditExtra(props) {
 
   const inputHandler = () => {
     //get
+    let birthplace = $("#birthplace-input").val();
     let location = $("#location-input").val();
     let extranames = $("#extranames-input").val();
     let fblink = $("#fblink-input").val();
     let description = $("textarea.description-input").val();
     //set nodeInput
     setNodeInput({
+      birthplace: birthplace,
       location: location,
       extranames: extranames,
       fblink: fblink,
@@ -38,16 +40,21 @@ export default function EditExtra(props) {
     setdescriptionlimit(numOfWords);
   };
 
+  const closeEditMenu = () =>{
+    $("#edit-container").css("display","none");
+  }
+
   const submit = () => {
     let id = props.currentNode.id;
     inputHandler();
     Axios.post("https://layfamily.herokuapp.com/api/updateextra", {
       id: id,
+      birthplace: nodeInput.birthplace,
       location: nodeInput.location,
       extranames: nodeInput.extranames,
       fblink: nodeInput.fblink,
       description: nodeInput.description,
-    }); //.then(closeEditMenu())
+    }).then(closeEditMenu());
   };
 
   return (
@@ -56,6 +63,16 @@ export default function EditExtra(props) {
         Further Details <br />
         {props.currentNode.generation} {props.currentNode.name}
       </h1>
+      <label htmlFor="birthplace-input" className="extra-details-label">
+        Place of Birth
+      </label>
+      <input
+        type="text"
+        name="birthplace-input"
+        id="birthplace-input"
+        className="extra-details-input"
+        onChange={inputHandler}
+      />
       <label htmlFor="location-input" className="extra-details-label">
         Current Location
       </label>

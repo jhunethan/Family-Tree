@@ -25,7 +25,7 @@ export default function LandingPage() {
           </Link>
         </div>
         <section className="about-section">
-          <h1 className="about-header">Statistics</h1>
+          <p>ᐯ</p>
         </section>
       </section>
     </div>
