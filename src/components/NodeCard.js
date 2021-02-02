@@ -27,7 +27,7 @@ function NodeCardDetails(props) {
           );
         }
       } else {
-        return <p></p>;
+        return null;
       }
     case "generation":
       if (props.node.generation !== "") {
@@ -38,7 +38,7 @@ function NodeCardDetails(props) {
           </section>
         );
       } else {
-        return <p></p>;
+        return null;
       }
     case "location":
       try {
@@ -51,7 +51,7 @@ function NodeCardDetails(props) {
           );
         }
       } catch {
-        return <p></p>;
+        return null;
       }
       break;
     case "extranames":
@@ -63,7 +63,7 @@ function NodeCardDetails(props) {
           </section>
         );
       } catch {
-        return <p></p>;
+        return null;
       }
     case "fblink":
       try {
@@ -78,10 +78,10 @@ function NodeCardDetails(props) {
             </section>
           );
         } else {
-          return <p></p>;
+          return null;
         }
       } catch {
-        return <p></p>;
+        return null;
       }
     case "description":
       try {
@@ -101,7 +101,7 @@ function NodeCardDetails(props) {
           );
         }
       } catch {
-        return <p></p>;
+        return null;
       }
       break;
     default:
@@ -124,7 +124,7 @@ const getChildren = (id, data) => {
   if (Number(id) === 0) return arr;
   for (let i = 0; i < data.length; i++) {
     if (data[i].pid === Number(id)) {
-      arr.push(data[i]);
+      if (data[i].isPartner !== 1) arr.push(data[i]);
     }
   }
   if (arr.length > 0) return arr;
@@ -145,7 +145,7 @@ function ImmediateFamily(props) {
           );
         }
       } catch {
-        if (props.node.parent !== "") {
+        if (props.node.parent !== undefined && props.node.parent !== "") {
           return (
             <div className="card-parents">
               <h2>Known Parents</h2>
@@ -153,10 +153,10 @@ function ImmediateFamily(props) {
             </div>
           );
         } else {
-          return <p></p>;
+          return null;
         }
       }
-      return <p></p>;
+      return null;
     case "siblings":
       try {
         let parent = getNode(props.node.parent, props.treeData);
@@ -172,13 +172,13 @@ function ImmediateFamily(props) {
                       {x.generation} {x.name}
                     </p>
                   );
-                } else return <p></p>;
+                } else return <p key={x.id}></p>;
               })}
             </div>
           );
-        } else return <p></p>;
+        } else return null;
       } catch {
-        return <p></p>;
+        return null;
       }
     case "children":
       try {
@@ -198,11 +198,11 @@ function ImmediateFamily(props) {
           );
         }
       } catch {
-        return <p></p>;
+        return null;
       }
-      break;
+      return null;
     default:
-      return <p></p>;
+      return null;
   }
 }
 
@@ -222,7 +222,6 @@ export default function NodeCard(props) {
       setcardexpanded(false);
     }
   };
-
   return (
     <div id="card-container">
       <div className="card-nav">

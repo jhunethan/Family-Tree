@@ -14,7 +14,7 @@ var datalistarr,
 
 export default function Tree() {
   const [update, setUpdate] = useState(false);
-  const [tableData, setTableData] = useState();
+  const [tableData, setTableData] = useState([]);
   var [radiochecked, setRadiochecked] = useState(true);
   const [InfoCard, setInfoCard] = useState({
     id: "",
@@ -33,6 +33,7 @@ export default function Tree() {
       setTableData(result.data);
     });
   }, [update]);
+
 
   useEffect(() => {
     //clear tree
@@ -313,6 +314,7 @@ export default function Tree() {
           name: d.target.__data__.data.name,
           generation: d.target.__data__.data.generation,
           birthdate: d.target.__data__.data.birthdate,
+          parent: d.target.__data__.data.parent,
         });
         zoom.translateTo(
           svg.transition().duration(500),
@@ -543,6 +545,7 @@ export default function Tree() {
           name: node.name,
           generation: node.generation,
           birthdate: node.birthdate,
+          parent: node.parent,
         });
         zoom.scaleTo(svg.transition().duration(500), 0.25);
         $("#card-container").css("display", "block");
@@ -635,7 +638,7 @@ export default function Tree() {
         </button>
         <datalist id="datalist-ul" className="datalist-ul"></datalist>
       </div>
-      <NodeCard node={InfoCard} edit={() => openNode()} />
+      <NodeCard node={InfoCard} treeData={tableData} edit={() => openNode()} />
       <div id="Tree"></div>
       <Edit
         getPID={getPID}
