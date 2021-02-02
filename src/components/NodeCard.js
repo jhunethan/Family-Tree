@@ -119,6 +119,17 @@ const getNode = (name, data) => {
   }
 };
 
+const getChildren = (id, data) => {
+  let arr = [];
+  if (Number(id) === 0) return arr;
+  for (let i = 0; i < data.length; i++) {
+    if (data[i].pid === Number(id)) {
+      arr.push(data[i]);
+    }
+  }
+  if (arr.length > 0) return arr;
+};
+
 function ImmediateFamily(props) {
   switch (props.method) {
     case "parents":
@@ -146,6 +157,50 @@ function ImmediateFamily(props) {
         }
       }
       return <p></p>;
+    case "siblings":
+      try {
+        let parent = getNode(props.node.parent, props.treeData);
+        let siblings = getChildren(parent.id, props.treeData);
+        if (siblings.length > 1) {
+          return (
+            <div className="card-parents">
+              <h2>Known Siblings</h2>
+              {siblings.map((x) => {
+                if (x.name !== props.node.name) {
+                  return (
+                    <p key={x.id}>
+                      {x.generation} {x.name}
+                    </p>
+                  );
+                } else return <p></p>;
+              })}
+            </div>
+          );
+        } else return <p></p>;
+      } catch {
+        return <p></p>;
+      }
+    case "children":
+      try {
+        let children = getChildren(props.node.id, props.treeData);
+        if (children.length > 0) {
+          return (
+            <div className="card-parents">
+              <h2>Known Children</h2>
+              {children.map((x) => {
+                return (
+                  <p key={x.id}>
+                    {x.generation} {x.name}
+                  </p>
+                );
+              })}
+            </div>
+          );
+        }
+      } catch {
+        return <p></p>;
+      }
+      break;
     default:
       return <p></p>;
   }
@@ -212,7 +267,17 @@ export default function NodeCard(props) {
           <ImmediateFamily
             node={props.node}
             treeData={props.treeData}
+            method="children"
+          />
+          <ImmediateFamily
+            node={props.node}
+            treeData={props.treeData}
             method="parents"
+          />
+          <ImmediateFamily
+            node={props.node}
+            treeData={props.treeData}
+            method="siblings"
           />
         </footer>
       </div>
