@@ -34,7 +34,6 @@ export default function Tree() {
     });
   }, [update]);
 
-
   useEffect(() => {
     //clear tree
     $("svg").html("");
@@ -309,13 +308,7 @@ export default function Tree() {
       .on("click", function (d) {
         $("#card-container").css("display", "block");
         zoom.scaleTo(svg.transition().duration(500), 0.25);
-        setInfoCard({
-          id: d.target.__data__.data.id,
-          name: d.target.__data__.data.name,
-          generation: d.target.__data__.data.generation,
-          birthdate: d.target.__data__.data.birthdate,
-          parent: d.target.__data__.data.parent,
-        });
+        setInfoCard(d.target.__data__.data);
         zoom.translateTo(
           svg.transition().duration(500),
           d.target.__data__.x,

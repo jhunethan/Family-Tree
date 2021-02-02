@@ -182,10 +182,13 @@ function ImmediateFamily(props) {
       }
     case "children":
       try {
-        let children = getChildren(props.node.id, props.treeData);
+        let node, id;
+        node = getNode(props.node.name, props.treeData);
+        node.isPartner ? (id = node.pid) : (id = node.id);
+        let children = getChildren(id, props.treeData);
         if (children.length > 0) {
           return (
-            <div className="card-parents">
+            <div className="card-children">
               <h2>Known Children</h2>
               {children.map((x) => {
                 return (
@@ -214,11 +217,13 @@ export default function NodeCard(props) {
       $("div.card-main").css("width", "100%");
       $("#card-container").css("width", "100%");
       $("#card-container").css("margin-left", "0px");
+      $("#card-expand").html("><");
       setcardexpanded(true);
     } else {
       $("div.card-main").css("width", 350);
       $("#card-container").css("width", 350);
       $("#card-container").css("margin-left", "10px");
+      $("#card-expand").html("<>");
       setcardexpanded(false);
     }
   };
@@ -234,7 +239,7 @@ export default function NodeCard(props) {
           X
         </button>
         <button id="card-expand" onClick={transform}>
-          ⤡
+          {"<>"}
         </button>
         <button id="card-edit" onClick={props.edit}>
           Edit
