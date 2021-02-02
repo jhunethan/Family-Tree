@@ -12,7 +12,10 @@ function NodeCardDetails(props) {
           return (
             <section>
               <h2>Born</h2>
-              <p>{props.node.birthdate} in {props.node.extradetails.birthplace}</p>
+              <p>
+                <strong>{props.node.birthdate}</strong> in{" "}
+                <strong>{props.node.extradetails.birthplace}</strong>
+              </p>
             </section>
           );
         } catch {
@@ -84,12 +87,14 @@ function NodeCardDetails(props) {
       try {
         if (props.node.extradetails.description !== "") {
           let output = props.node.extradetails.description.split("\n\n");
+          let count = 0;
           return (
             <section>
               <h2>Description</h2>
               <div>
                 {output.map((x) => {
-                  return <p>{x}</p>;
+                  count += 1;
+                  return <p key={count}>{x}</p>;
                 })}
               </div>
             </section>
@@ -104,24 +109,47 @@ function NodeCardDetails(props) {
   }
 }
 
-// function ImmediateFamily(props) {
+const getNode = (name, data) => {
+  let tempname;
+  for (let i = 0; i < data.length; i++) {
+    tempname = data[i].generation + " " + data[i].name;
+    if (name === tempname || name === data[i].name) {
+      return data[i];
+    }
+  }
+};
 
-//   switch (props.method) {
-//     case "parents":
-//       if (props.node.parent !== "") {
-//         return (
-//           <p>
-//             <h2>Parents</h2>
-//             <p1>{props.node.parent}</p1>
-//           </p>
-//         );
-//       }
-//       break;
-
-//     default:
-//       return <p></p>;
-//   }
-// }
+function ImmediateFamily(props) {
+  switch (props.method) {
+    case "parents":
+      try {
+        let parent = getNode(props.node.parent, props.treeData);
+        if (parent.partnerinfo.name !== "") {
+          return (
+            <div className="card-parents">
+              <h2>Known Parents</h2>
+              <p>{props.node.parent}</p>
+              <p>{parent.partnerinfo.name}</p>
+            </div>
+          );
+        }
+      } catch {
+        if (props.node.parent !== "") {
+          return (
+            <div className="card-parents">
+              <h2>Known Parents</h2>
+              <p>{props.node.parent}</p>
+            </div>
+          );
+        } else {
+          return <p></p>;
+        }
+      }
+      return <p></p>;
+    default:
+      return <p></p>;
+  }
+}
 
 export default function NodeCard(props) {
   const [cardexpanded, setcardexpanded] = useState(false);
@@ -181,11 +209,11 @@ export default function NodeCard(props) {
         </section>
         <footer>
           <h1 className="card-subtitle">Immediate Family Members</h1>
-          {/* <ImmediateFamily
+          <ImmediateFamily
             node={props.node}
-            data={props.data}
+            treeData={props.treeData}
             method="parents"
-          /> */}
+          />
         </footer>
       </div>
     </div>

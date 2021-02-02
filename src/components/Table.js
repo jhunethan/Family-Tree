@@ -12,6 +12,7 @@ import NodeCard from "./NodeCard";
 export default function Table() {
   const [update, setUpdate] = useState(0);
   const [tableData, setTableData] = useState([]);
+  const [TreeData, setTreeData] = useState([]);
   const [tableDataExtra, settableDataExtra] = useState([]);
   const [nodestate, setNodestate] = useState(0);
   var [radiochecked, setRadiochecked] = useState(true);
@@ -144,6 +145,19 @@ export default function Table() {
 
   const showNode = (row) => {
     let children = row.children;
+    let tempData = tableData;
+    let partners = tempData.filter((x) => x.isPartner === 1);
+    tempData = tempData.filter((x) => x.isPartner !== 1);
+    for (let i = 0; i < partners.length; i++) {
+      //get name of parent node
+      //make partner object an attribute of parent node (partnerinfo)
+      for (let x = 0; x < tempData.length; x++) {
+        if (tempData[x].id === partners[i].pid) {
+          tempData[x].partnerinfo = partners[i];
+        }
+      }
+    }
+    setTreeData(tempData);
 
     //only runs if its a database entry
     if (
@@ -229,6 +243,7 @@ export default function Table() {
       />
       <NodeCard
         node={nodestate}
+        treeData={TreeData}
         data={tableData}
         edit={() => {
           openNode(currentRow);
