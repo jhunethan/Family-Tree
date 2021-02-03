@@ -4,6 +4,27 @@ import * as $ from "jquery";
 import "../css/NodeCard.css";
 import placeholder from "../css/person-placeholder.jpg";
 
+const getNode = (name, data) => {
+  let tempname;
+  for (let i = 0; i < data.length; i++) {
+    tempname = data[i].generation + " " + data[i].name;
+    if (name === tempname || name === data[i].name) {
+      return data[i];
+    }
+  }
+};
+
+const getChildren = (id, data) => {
+  let arr = [];
+  if (Number(id) === 0) return arr;
+  for (let i = 0; i < data.length; i++) {
+    if (data[i].pid === Number(id)) {
+      if (data[i].isPartner !== 1) arr.push(data[i]);
+    }
+  }
+  if (arr.length > 0) return arr;
+};
+
 function NodeCardDetails(props) {
   switch (props.method) {
     case "birthdate":
@@ -27,8 +48,20 @@ function NodeCardDetails(props) {
           );
         }
       } else {
-        return null;
+        try {
+          return (
+            <section>
+              <h2>Born</h2>
+              <p>
+                in <strong>{props.node.extradetails.birthplace}</strong>
+              </p>
+            </section>
+          );
+        } catch {
+          return null;
+        }
       }
+
     case "generation":
       if (props.node.generation !== "") {
         return (
@@ -49,18 +82,23 @@ function NodeCardDetails(props) {
               <p>{props.node.extradetails.location}</p>
             </section>
           );
-        }else return null;
+        } else return null;
       } catch {
         return null;
       }
     case "extranames":
+      console.log(props.node);
       try {
-        return (
-          <section>
-            <h2>Additional Names</h2>
-            <p>{props.node.extradetails.extranames}</p>
-          </section>
-        );
+        let extranames = props.node.extradetails.extranames;
+
+        if (extranames !== "") {
+          return (
+            <section>
+              <h2>Additional Names</h2>
+              <p>{extranames}</p>
+            </section>
+          );
+        } else return null;
       } catch {
         return null;
       }
@@ -98,7 +136,7 @@ function NodeCardDetails(props) {
               </div>
             </section>
           );
-        }else return null;
+        } else return null;
       } catch {
         return null;
       }
@@ -107,45 +145,28 @@ function NodeCardDetails(props) {
   }
 }
 
-const getNode = (name, data) => {
-  let tempname;
-  for (let i = 0; i < data.length; i++) {
-    tempname = data[i].generation + " " + data[i].name;
-    if (name === tempname || name === data[i].name) {
-      return data[i];
-    }
-  }
-};
-
-const getChildren = (id, data) => {
-  let arr = [];
-  if (Number(id) === 0) return arr;
-  for (let i = 0; i < data.length; i++) {
-    if (data[i].pid === Number(id)) {
-      if (data[i].isPartner !== 1) arr.push(data[i]);
-    }
-  }
-  if (arr.length > 0) return arr;
-};
-
 function ImmediateFamily(props) {
   switch (props.method) {
     case "parents":
       try {
+        if (props.node.isPartner === 1) return null;
+      } catch {}
+      try {
         let parent = getNode(props.node.parent, props.treeData);
         if (parent.partnerinfo.name !== "") {
           return (
-            <div className="card-parents">
+            <div className="card-parents card-related">
               <h2>Known Parents</h2>
               <p>{props.node.parent}</p>
               <p>{parent.partnerinfo.name}</p>
             </div>
           );
         }
-      } catch {
+      } catch (error) {
+        console.log(error);
         if (props.node.parent !== undefined && props.node.parent !== "") {
           return (
-            <div className="card-parents">
+            <div className="card-parents card-related">
               <h2>Known Parents</h2>
               <p>{props.node.parent}</p>
             </div>
@@ -161,7 +182,7 @@ function ImmediateFamily(props) {
         let siblings = getChildren(parent.id, props.treeData);
         if (siblings.length > 1) {
           return (
-            <div className="card-parents">
+            <div className="card-siblings card-related">
               <h2>Known Siblings</h2>
               {siblings.map((x) => {
                 if (x.name !== props.node.name) {
@@ -186,7 +207,7 @@ function ImmediateFamily(props) {
         let children = getChildren(id, props.treeData);
         if (children.length > 0) {
           return (
-            <div className="card-children">
+            <div className="card-children card-related">
               <h2>Known Children</h2>
               {children.map((x) => {
                 return (
@@ -266,21 +287,23 @@ export default function NodeCard(props) {
         </section>
         <footer>
           <h1 className="card-subtitle">Immediate Family Members</h1>
-          <ImmediateFamily
-            node={props.node}
-            treeData={props.treeData}
-            method="children"
-          />
-          <ImmediateFamily
-            node={props.node}
-            treeData={props.treeData}
-            method="parents"
-          />
-          <ImmediateFamily
-            node={props.node}
-            treeData={props.treeData}
-            method="siblings"
-          />
+          <section className="related-container">
+            <ImmediateFamily
+              node={props.node}
+              treeData={props.treeData}
+              method="children"
+            />
+            <ImmediateFamily
+              node={props.node}
+              treeData={props.treeData}
+              method="parents"
+            />
+            <ImmediateFamily
+              node={props.node}
+              treeData={props.treeData}
+              method="siblings"
+            />
+          </section>
         </footer>
       </div>
     </div>

@@ -30,7 +30,7 @@
   padding: 10px;
 }
 
-.card-nav > *{
+.card-nav > * {
   margin: 0px 5px;
   background-color: white;
 }
@@ -149,15 +149,30 @@ footer {
 
 .card-content {
   display: flex;
-  flex-flow: row wrap
+  flex-flow: row wrap;
 }
 
 .card-details {
   min-width: 300px;
 }
 
-.card-description{
+.card-description {
   width: 350px;
   max-width: 160vh;
   flex-grow: 1;
+}
+
+.related-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.card-related {
+  margin: 5px 10px;
+  min-width: 250px;
+
+  padding: 5px 10px;
+  border: 1px black solid;
+  border-radius: 5px;
 }

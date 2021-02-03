@@ -239,12 +239,7 @@ export default function Tree() {
       .on("click", function (d) {
         zoom.scaleTo(svg.transition().duration(500), 0.25);
         $("#card-container").css("display", "block");
-        setInfoCard({
-          id: d.target.__data__.data.partnerinfo.id,
-          name: d.target.__data__.data.partnerinfo.name,
-          generation: d.target.__data__.data.partnerinfo.generation,
-          birthdate: d.target.__data__.data.partnerinfo.birthdate,
-        });
+        setInfoCard(d.target.__data__.data.partnerinfo);
         zoom.translateTo(
           svg.transition().duration(500),
           d.target.__data__.x,
