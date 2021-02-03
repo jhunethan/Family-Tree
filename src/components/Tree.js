@@ -74,6 +74,7 @@ export default function Tree() {
         }
       }
     }
+    
 
     treeData = d3
       .stratify()
@@ -134,6 +135,22 @@ export default function Tree() {
   const buildTree = () => {
     //reconvert tabledata to check for updates
     converttreeData();
+
+    Axios.get("https://layfamily.herokuapp.com/api/getextra").then(
+      (result) => {
+        let extradetails = result.data;
+        let tempData = tableData;
+
+        for (let i = 0; i < tempData.length; i++) {
+          for (const x of extradetails) {
+            if (x.id === tempData[i].id) {
+              tempData[i].extradetails = x;
+            }
+          }
+        }
+        setTableData(tempData);
+      }
+    );
 
     height = $("#Tree").height();
     width = $("#Tree").width();
