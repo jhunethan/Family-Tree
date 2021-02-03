@@ -49,11 +49,10 @@ function NodeCardDetails(props) {
               <p>{props.node.extradetails.location}</p>
             </section>
           );
-        }
+        }else return null;
       } catch {
         return null;
       }
-      break;
     case "extranames":
       try {
         return (
@@ -99,11 +98,10 @@ function NodeCardDetails(props) {
               </div>
             </section>
           );
-        }
+        }else return null;
       } catch {
         return null;
       }
-      break;
     default:
       break;
   }

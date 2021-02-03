@@ -7,7 +7,9 @@
 
   flex-direction: column;
   width: 340px;
-  max-height: 800px;
+  max-height: 80vh;
+overflow-y: auto;
+
   background: #e6e6e6;
   border-radius: 5px;
   box-shadow: 0 0 40px -10px #000;
@@ -39,7 +41,7 @@
 
 .description-input {
   font-size: 14px;
-  height: 200px;
+  min-height: 500px;
   flex-grow: 1.5;
 }
 

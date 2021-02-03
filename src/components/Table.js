@@ -249,7 +249,7 @@ export default function Table() {
           openNode(currentRow);
         }}
       />
-      <EditExtra currentNode={nodestate} currentNodeName={nodestate.name} />
+      <EditExtra currentNode={nodestate} />
     </div>
   );
 }

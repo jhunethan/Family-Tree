@@ -6,6 +6,7 @@ import "../css/Tree.css";
 import NodeCard from "./NodeCard";
 import Modal from "./Modal";
 import Edit from "./Edit";
+import EditExtra from "./EditExtra";
 
 var height;
 var width;
@@ -58,6 +59,7 @@ export default function Tree() {
     // $("div.Create").css("display", "none");
     $("#editForm").css("display", "none");
     $("#deleteConfirmMenu").css("display", "none");
+    $("div.edit-container").css("display", "none");
   };
 
   //convert to hierarchal tree form using d3.stratify()
@@ -74,7 +76,6 @@ export default function Tree() {
         }
       }
     }
-    
 
     treeData = d3
       .stratify()
@@ -136,21 +137,19 @@ export default function Tree() {
     //reconvert tabledata to check for updates
     converttreeData();
 
-    Axios.get("https://layfamily.herokuapp.com/api/getextra").then(
-      (result) => {
-        let extradetails = result.data;
-        let tempData = tableData;
+    Axios.get("https://layfamily.herokuapp.com/api/getextra").then((result) => {
+      let extradetails = result.data;
+      let tempData = tableData;
 
-        for (let i = 0; i < tempData.length; i++) {
-          for (const x of extradetails) {
-            if (x.id === tempData[i].id) {
-              tempData[i].extradetails = x;
-            }
+      for (let i = 0; i < tempData.length; i++) {
+        for (const x of extradetails) {
+          if (x.id === tempData[i].id) {
+            tempData[i].extradetails = x;
           }
         }
-        setTableData(tempData);
       }
-    );
+      setTableData(tempData);
+    });
 
     height = $("#Tree").height();
     width = $("#Tree").width();
@@ -614,6 +613,7 @@ export default function Tree() {
     populateEditFields(node);
     $("#editForm").css("display", "block");
     $("#Modal").css("display", "block");
+    $("div.edit-container").css("display", "flex");
   };
 
   return (
@@ -660,6 +660,7 @@ export default function Tree() {
           updateTree();
         }}
       />
+      <EditExtra currentNode={InfoCard} />
       <Modal close={closePopups} />
     </div>
   );
