@@ -17,7 +17,7 @@ export default function Table() {
   const [nodestate, setNodestate] = useState(0);
   var [radiochecked, setRadiochecked] = useState(true);
   const [currentRow, setcurrentRow] = useState();
-  const [datalist, setDatalist] = useState([])
+  const [datalist, setDatalist] = useState([]);
 
   const switchRadio = () => {
     setRadiochecked(!radiochecked);
@@ -182,51 +182,53 @@ export default function Table() {
   };
 
   const showNode = (row) => {
-    let children = row.children;
-    let tempData = tableData;
-    let partners = tempData.filter((x) => x.isPartner === 1);
-    tempData = tempData.filter((x) => x.isPartner !== 1);
-    for (let i = 0; i < partners.length; i++) {
-      //get name of parent node
-      //make partner object an attribute of parent node (partnerinfo)
-      for (let x = 0; x < tempData.length; x++) {
-        if (tempData[x].id === partners[i].pid) {
-          tempData[x].partnerinfo = partners[i];
+    try {
+      let children = row.children;
+      let tempData = tableData;
+      let partners = tempData.filter((x) => x.isPartner === 1);
+      tempData = tempData.filter((x) => x.isPartner !== 1);
+      for (let i = 0; i < partners.length; i++) {
+        //get name of parent node
+        //make partner object an attribute of parent node (partnerinfo)
+        for (let x = 0; x < tempData.length; x++) {
+          if (tempData[x].id === partners[i].pid) {
+            tempData[x].partnerinfo = partners[i];
+          }
         }
       }
-    }
-    setTreeData(tempData);
+      setTreeData(tempData);
 
-    //only runs if its a database entry
-    if (
-      !isNaN(row.firstChild.textContent) &&
-      row.firstChild.textContent !== "0"
-    ) {
-      setcurrentRow(row);
+      //only runs if its a database entry
+      if (
+        !isNaN(row.firstChild.textContent) &&
+        row.firstChild.textContent !== "0"
+      ) {
+        setcurrentRow(row);
 
-      $("#card-container").css("display", "flex");
-      let thisnode = getNode(Number(row.firstChild.textContent));
-      let node = {
-        id: children[0].textContent,
-        generation: children[1].textContent,
-        name: children[2].textContent,
-        birthdate: children[3].textContent,
-        parent: children[4].textContent,
-        partner: children[5].textContent,
-        isPartner: thisnode.isPartner,
-      };
+        $("#card-container").css("display", "flex");
+        let thisnode = getNode(Number(row.firstChild.textContent));
+        let node = {
+          id: children[0].textContent,
+          generation: children[1].textContent,
+          name: children[2].textContent,
+          birthdate: children[3].textContent,
+          parent: children[4].textContent,
+          partner: children[5].textContent,
+          isPartner: thisnode.isPartner,
+        };
 
-      //check if extra details exists
+        //check if extra details exists
 
-      for (let i = 0; i < tableDataExtra.length; i++) {
-        if (tableDataExtra[i].id === Number(node.id)) {
-          node.extradetails = tableDataExtra[i];
+        for (let i = 0; i < tableDataExtra.length; i++) {
+          if (tableDataExtra[i].id === Number(node.id)) {
+            node.extradetails = tableDataExtra[i];
+          }
         }
-      }
 
-      //update current node json object
-      setNodestate(node);
-    }
+        //update current node json object
+        setNodestate(node);
+      }
+    } catch {}
   };
 
   const closePopups = () => {

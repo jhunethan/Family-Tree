@@ -59,8 +59,8 @@ function Create(props) {
 
   const successAdd = () => {
     try {
-      document.getElementsByClassName("Create")[0].style.display = "none";
-      $("#Modal").style.display = "none";
+      $("div.Create").css("display", "none");
+      $("#Modal").css("display", "none");
     } catch {}
 
     setTimeout(() => {
@@ -73,15 +73,19 @@ function Create(props) {
     let parentInputC = $("#parentInputC");
     let check1,
       check2 = false;
-    if (node.isPartner === 0 && whitespace(parentInputC.val()) !== "") {
-      check1 = true;
-    } else {
+
+    //check child or partner
+    if (document.getElementById("toggle-slide").checked) node.isPartner = 1;
+
+    if (node.isPartner === 1 && whitespace(parentInputC.val()).length < 1) {
       check1 = false;
       parentInputC.css("border-bottom", "2px solid red");
       parentInputC.attr(
         "placeholder",
         "This field cant be empty when partner is chosen"
       );
+    } else {
+      check1 = true;
     }
     if (whitespace(nameinput.val()) !== "") {
       whitespace(node.generation);
@@ -116,11 +120,10 @@ function Create(props) {
   }
 
   const submit = () => {
+    inputChangedHandler();
     if (node.isPartner === 0) {
       node.parent = node.parentNode;
     }
-
-    inputChangedHandler();
     setTimeout(() => {
       if (validation() && checkParent()) {
         Axios.post("https://layfamily.herokuapp.com/api/insert", {

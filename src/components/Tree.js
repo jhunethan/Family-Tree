@@ -3,7 +3,9 @@ import * as d3 from "d3";
 import Axios from "axios";
 import * as $ from "jquery";
 import "../css/Tree.css";
+
 import NodeCard from "./NodeCard";
+import Create from "./Create.js";
 import Modal from "./Modal";
 import Edit from "./Edit";
 import EditExtra from "./EditExtra";
@@ -15,7 +17,7 @@ var datalistarr,
 
 export default function Tree() {
   const [update, setUpdate] = useState(false);
-  const [datalist, setDatalist] = useState([])
+  const [datalist, setDatalist] = useState([]);
   const [tableData, setTableData] = useState([]);
   var [radiochecked, setRadiochecked] = useState(true);
   const [InfoCard, setInfoCard] = useState({
@@ -32,16 +34,17 @@ export default function Tree() {
 
   useEffect(() => {
     Axios.get("https://layfamily.herokuapp.com/api/get").then((result) => {
+      console.log("got data");
       setTableData(result.data);
     });
   }, [update]);
 
   useEffect(() => {
     //clear tree
-    $("svg").html("");
+    $("#Tree").html("");
     //if tabledata is updated, check if the tree exists, else do nothing
     var intervalId = setInterval(function () {
-      if ($("#Tree").children().length <= 1) {
+      if ($("#Tree").children().length < 1) {
         try {
           buildTree();
         } catch {}
@@ -57,7 +60,7 @@ export default function Tree() {
   };
 
   const closePopups = () => {
-    // $("div.Create").css("display", "none");
+    $("div.Create").css("display", "none");
     $("#editForm").css("display", "none");
     $("#deleteConfirmMenu").css("display", "none");
     $("div.edit-container").css("display", "none");
@@ -132,7 +135,7 @@ export default function Tree() {
     .scaleExtent([0.1, 1])
     .on("zoom", zoomed);
 
-  var svg = d3.select("#Tree").append("svg");
+  var svg = d3.select("#Tree")
 
   const buildTree = () => {
     //reconvert tabledata to check for updates
@@ -154,6 +157,8 @@ export default function Tree() {
 
     height = $("#Tree").height();
     width = $("#Tree").width();
+
+    svg = d3.select("#Tree").append("svg");
 
     var treeLayout = d3.tree();
     treeLayout.nodeSize([750, 350]);
@@ -647,6 +652,37 @@ export default function Tree() {
     $("div.edit-container").css("display", "flex");
   };
 
+  const resetCreateFields = () => {
+    let str = "";
+    let temparr = [];
+    let list = document.getElementById("parentSearchDataList");
+    //populate parentSearchDataList
+    for (const x of tableData) {
+      temparr.push(`${x.generation} ${x.name}`);
+    }
+    for (var i = 0; i < temparr.length; ++i) {
+      str += '<option value="' + temparr[i] + '" />';
+    }
+    list.innerHTML = str;
+    try {
+      $("#toggle-slide").checked = false;
+      $("div.Create").css("display", "block");
+      $("#Modal").css("display", "block");
+      $("#nameInputC")
+        .attr("placeholder", "")
+        .val("")
+        .css("border-bottom", "2px solid #bebed2");
+      $("#genInputC").val("");
+      $("#birthdateInputC").val("");
+      $("#parentInputC")
+        .val("")
+        .css("border-bottom", "2px solid #bebed2")
+        .attr("placeholder", "");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div>
       <div className="datalist">
@@ -655,7 +691,7 @@ export default function Tree() {
           className="datalist-input"
           type="text"
           name="searchtree"
-          placeholder="Search Here"
+          placeholder="Search by Name or Birthdate"
           list="datalist-ul"
           onClick={() => {
             populateDatalist();
@@ -679,8 +715,21 @@ export default function Tree() {
         </button>
         <datalist id="datalist-ul" className="datalist-ul"></datalist>
       </div>
+      <button className="create-button" onClick={() => resetCreateFields()}>
+        Add New
+      </button>
+      <button className="refresh-button" onClick={() => updateTree()}>
+        ⟳
+      </button>
       <NodeCard node={InfoCard} treeData={tableData} edit={() => openNode()} />
       <div id="Tree"></div>
+      <Create
+        data={tableData}
+        getPID={getPID}
+        update={() => {
+          updateTree();
+        }}
+      />
       <Edit
         getPID={getPID}
         radiochecked={radiochecked}

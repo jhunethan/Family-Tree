@@ -115,6 +115,8 @@ export default function Edit(props) {
   var closeEditMenu = () => {
     $("#editForm").css("display", "none");
     $("#Modal").css("display", "none");
+    $("div.edit-container").css("display", "none");
+    $("#card-container").css("display", "none");
     //wait for Axios update then update
     setTimeout(() => {
       props.update();

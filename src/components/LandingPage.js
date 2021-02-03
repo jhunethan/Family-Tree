@@ -24,8 +24,18 @@ export default function LandingPage() {
             </button>
           </Link>
         </div>
+        <h1 className="about-header">Edit History</h1>
         <section className="about-section">
-          <p>ᐯ</p>
+          <div className="stat-card users"></div>
+          <div className="stat-card members"></div>
+          <div className="edit-history">
+            Reprehenderit nisi Lorem sint pariatur consequat enim ut enim culpa.
+            Laboris exercitation proident nulla duis eiusmod do dolore est
+            consequat non laborum. Minim consequat fugiat laboris id mollit qui
+            mollit fugiat pariatur sint aliquip sint do qui. Mollit enim nostrud
+            id nulla est. Elit fugiat ex Lorem aute occaecat dolore sint.
+            Proident sit do proident duis nostrud. Mollit et veniam sint in.
+          </div>
         </section>
       </section>
     </div>
