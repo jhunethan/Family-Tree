@@ -101,6 +101,20 @@ function Create(props) {
     }
   };
 
+  function checkParent() {
+    let element = $("#parentInputC");
+    for (const x of props.data) {
+      let namecheck = x.generation + " " + x.name;
+      if (element.val() === namecheck) return true;
+      if (x.name === element.val()) return true;
+    }
+    if ($.trim(element.val()) === "") return true;
+    element.css("border-bottom", "2px solid red");
+    element.val("");
+    element.attr("placeholder", "parent not in database");
+    return false;
+  }
+
   const submit = () => {
     if (node.isPartner === 0) {
       node.parent = node.parentNode;
@@ -108,7 +122,7 @@ function Create(props) {
 
     inputChangedHandler();
     setTimeout(() => {
-      if (validation()) {
+      if (validation() && checkParent()) {
         Axios.post("https://layfamily.herokuapp.com/api/insert", {
           pid: sendNode.pid,
           generation: sendNode.generation,

@@ -17,6 +17,7 @@ export default function Table() {
   const [nodestate, setNodestate] = useState(0);
   var [radiochecked, setRadiochecked] = useState(true);
   const [currentRow, setcurrentRow] = useState();
+  const [datalist, setDatalist] = useState([])
 
   const switchRadio = () => {
     setRadiochecked(!radiochecked);
@@ -82,14 +83,14 @@ export default function Table() {
 
   const resetCreateFields = () => {
     let str = "";
-    let datalistarr = [];
+    let temparr = [];
     let list = document.getElementById("parentSearchDataList");
     //populate parentSearchDataList
     for (const x of tableData) {
-      datalistarr.push(`${x.generation} ${x.name}`);
+      temparr.push(`${x.generation} ${x.name}`);
     }
-    for (var i = 0; i < datalistarr.length; ++i) {
-      str += '<option value="' + datalistarr[i] + '" />';
+    for (var i = 0; i < temparr.length; ++i) {
+      str += '<option value="' + temparr[i] + '" />';
     }
     list.innerHTML = str;
     try {
@@ -111,20 +112,57 @@ export default function Table() {
     }
   };
 
+  const removeChildren = (id, arr) => {
+    let children = arr.filter((x) => {
+      return x.pid === Number(id);
+    });
+    arr = arr.filter((x) => {
+      return x.pid !== Number(id);
+    });
+    try {
+      if (children.length > 0) {
+        for (let i = 0; i < children.length; i++) {
+          arr = removeChildren(children[i].id, arr);
+        }
+      }
+    } catch {}
+    return arr;
+  };
+
   const openNode = (row) => {
     $("#parentInput").css("border-bottom", "2px solid #bebed2");
     $("#parentInput").val("");
     $("#parentInput").attr("placeholder", "Parent/Partner");
 
-    let str = "";
-    let datalistarr = [];
+    let str,
+      id = "";
     let list = document.getElementById("parentSearchDataList");
     //populate parentSearchDataList
-    for (const x of tableData) {
-      datalistarr.push(`${x.generation} ${x.name}`);
+    let temparr = tableData;
+    try {
+      if (nodestate.isPartner === 1) {
+        id = null;
+        for (let i = 0; i < tableData.length; i++) {
+          let name = `${tableData[i].generation} ${tableData[i].name}`;
+          if (nodestate.partner === name) {
+            id = tableData[i].id;
+          } else {
+            if (nodestate.partner === tableData[i].name) id = tableData[i].id;
+          }
+        }
+      } else id = nodestate.id;
+    } catch {
+      id = nodestate.id;
     }
-    for (var i = 0; i < datalistarr.length; ++i) {
-      str += '<option value="' + datalistarr[i] + '" />';
+    temparr = removeChildren(id, temparr);
+    setDatalist(temparr);
+    for (var i = 0; i < temparr.length; ++i) {
+      str +=
+        '<option value="' +
+        temparr[i].generation +
+        " " +
+        temparr[i].name +
+        '" />';
     }
     list.innerHTML = str;
 
@@ -226,6 +264,7 @@ export default function Table() {
       </div>
       <Modal close={closePopups} />
       <Create
+        data={tableData}
         getPID={getPID}
         update={() => {
           updateTable();
@@ -236,6 +275,7 @@ export default function Table() {
         radiochecked={radiochecked}
         switchRadio={switchRadio}
         data={tableData}
+        datalist={datalist}
         nodedata={nodestate}
         update={() => {
           updateTable();

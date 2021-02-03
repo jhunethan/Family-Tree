@@ -87,7 +87,6 @@ function NodeCardDetails(props) {
         return null;
       }
     case "extranames":
-      console.log(props.node);
       try {
         let extranames = props.node.extradetails.extranames;
 
@@ -162,8 +161,7 @@ function ImmediateFamily(props) {
             </div>
           );
         }
-      } catch (error) {
-        console.log(error);
+      } catch {
         if (props.node.parent !== undefined && props.node.parent !== "") {
           return (
             <div className="card-parents card-related">

@@ -78,7 +78,7 @@ export default function Edit(props) {
 
   function checkParent() {
     let element = $("#parentInput");
-    for (const x of props.data) {
+    for (const x of props.datalist) {
       let namecheck = x.generation + " " + x.name;
       if (element.val() === namecheck) return true;
       if (x.name === element.val()) return true;

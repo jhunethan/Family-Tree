@@ -15,6 +15,7 @@ var datalistarr,
 
 export default function Tree() {
   const [update, setUpdate] = useState(false);
+  const [datalist, setDatalist] = useState([])
   const [tableData, setTableData] = useState([]);
   var [radiochecked, setRadiochecked] = useState(true);
   const [InfoCard, setInfoCard] = useState({
@@ -579,22 +580,57 @@ export default function Tree() {
     $("#parentInput").val(pval);
   };
 
+  const removeChildren = (id, arr) => {
+    let children = arr.filter((x) => {
+      return x.pid === Number(id);
+    });
+    arr = arr.filter((x) => {
+      return x.pid !== Number(id);
+    });
+    try {
+      if (children.length > 0) {
+        for (let i = 0; i < children.length; i++) {
+          arr = removeChildren(children[i].id, arr);
+        }
+      }
+    } catch {}
+    return arr;
+  };
+
   const openNode = () => {
     $("#parentInput").css("border-bottom", "2px solid #bebed2");
     $("#parentInput").val("");
     $("#parentInput").attr("placeholder", "Parent/Partner");
     let node;
-    let str = "";
-    let datalistarr = [];
-    let data = tableData;
+    let str,
+      id = "";
     let list = document.getElementById("parentSearchDataList");
-
     //populate parentSearchDataList
-    for (const x of data) {
-      datalistarr.push(`${x.generation} ${x.name}`);
+    let temparr = tableData;
+    try {
+      if (InfoCard.isPartner === 1) {
+        id = null;
+        for (let i = 0; i < tableData.length; i++) {
+          let name = `${tableData[i].generation} ${tableData[i].name}`;
+          if (InfoCard.partner === name) {
+            id = tableData[i].id;
+          } else {
+            if (InfoCard.partner === tableData[i].name) id = tableData[i].id;
+          }
+        }
+      } else id = InfoCard.id;
+    } catch {
+      id = InfoCard.id;
     }
-    for (var i = 0; i < datalistarr.length; ++i) {
-      str += '<option value="' + datalistarr[i] + '" />';
+    temparr = removeChildren(id, temparr);
+    setDatalist(temparr);
+    for (var i = 0; i < temparr.length; ++i) {
+      str +=
+        '<option value="' +
+        temparr[i].generation +
+        " " +
+        temparr[i].name +
+        '" />';
     }
     list.innerHTML = str;
 
@@ -650,6 +686,7 @@ export default function Tree() {
         radiochecked={radiochecked}
         switchRadio={switchRadio}
         data={tableData}
+        datalist={datalist}
         nodedata={InfoCard}
         update={() => {
           updateTree();
