@@ -17,8 +17,11 @@ overflow-y: auto;
 }
 
 .form-header {
-  padding: 5px;
-  font-weight: 600;
+  font-size: 18px;
+  margin: 10px 0;
+  padding-bottom: 10px;
+  width: 180px;
+  border-bottom: 3px solid #78788c;
 }
 
 .extra-details-label {

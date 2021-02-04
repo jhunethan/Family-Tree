@@ -6,6 +6,8 @@ import "../css/EditExtra.css";
 
 export default function EditExtra(props) {
   const [descriptionlimit, setdescriptionlimit] = useState(0);
+  const [changes, setchanges] = useState("");
+  const [changed, setChanged] = useState(false);
   const [nodeInput, setNodeInput] = useState({
     location: "",
     extranames: "",
@@ -13,13 +15,75 @@ export default function EditExtra(props) {
     description: "",
   });
 
+  const checkChanges = () => {
+    let arr = [];
+    setChanged(false);
+    try {
+      if (
+        props.currentNode.extradetails.birthplace !==
+        $("#birthplace-input").val()
+      ) {
+        arr.push("birthplace");
+        setChanged(true);
+      }
+      if (
+        props.currentNode.extradetails.location !== $("#location-input").val()
+      ) {
+        arr.push("location");
+        setChanged(true);
+      }
+      if (
+        props.currentNode.extradetails.extranames !==
+        $("#extranames-input").val()
+      ) {
+        arr.push("extranames");
+        setChanged(true);
+      }
+      if (props.currentNode.extradetails.fblink !== $("#fblink-input").val()) {
+        arr.push("fblink");
+        setChanged(true);
+      }
+      if (
+        props.currentNode.extradetails.description !==
+        $("textarea.description-input").val()
+      ) {
+        arr.push("description");
+        setChanged(true);
+      }
+    } catch {
+      if ($("#birthplace-input").val().length > 0) {
+        arr.push("birthplace");
+        setChanged(true);
+      }
+      if ($("#location-input").val().length > 0) {
+        arr.push("location");
+        setChanged(true);
+      }
+      if ($("#extranames-input").val().length > 0) {
+        arr.push("extranames");
+        setChanged(true);
+      }
+      if ($("#fblink-input").val().length > 0) {
+        arr.push("fblink");
+        setChanged(true);
+      }
+      if ($("textarea.description-input").val().length > 0) {
+        arr.push("description");
+        setChanged(true);
+      }
+    }
+    console.log(arr.join(","));
+    setchanges(arr.join(","));
+  };
+
   const inputHandler = () => {
+    checkChanges();
     //get
-    let birthplace = $("#birthplace-input").val();
-    let location = $("#location-input").val();
-    let extranames = $("#extranames-input").val();
-    let fblink = $("#fblink-input").val();
-    let description = $("textarea.description-input").val();
+    let birthplace = $.trim($("#birthplace-input").val());
+    let location = $.trim($("#location-input").val());
+    let extranames = $.trim($("#extranames-input").val());
+    let fblink = $.trim($("#fblink-input").val());
+    let description = $.trim($("textarea.description-input").val());
     //set nodeInput
     setNodeInput({
       birthplace: birthplace,
@@ -40,29 +104,32 @@ export default function EditExtra(props) {
     setdescriptionlimit(numOfWords);
   };
 
-  const closeEditMenu = () =>{
-    $("#edit-container").css("display","none");
-  }
+  const closeEditMenu = () => {
+    $("#edit-container").css("display", "none");
+  };
 
   const submit = () => {
     let id = props.currentNode.id;
     inputHandler();
-    Axios.post("https://layfamily.herokuapp.com/api/updateextra", {
-      id: id,
-      birthplace: nodeInput.birthplace,
-      location: nodeInput.location,
-      extranames: nodeInput.extranames,
-      fblink: nodeInput.fblink,
-      description: nodeInput.description,
-    }).then(closeEditMenu());
+    if (changed) {
+      Axios.post("http://localhost:5000/api/updateextra", {
+        id: id,
+        birthplace: nodeInput.birthplace,
+        location: nodeInput.location,
+        extranames: nodeInput.extranames,
+        fblink: nodeInput.fblink,
+        description: nodeInput.description,
+        author: "default author",
+        changes: changes,
+      }).then(closeEditMenu());
+    } else {
+      alert("no further details changes detected");
+    }
   };
 
   return (
     <div className="edit-container">
-      <h1 className="form-header">
-        Further Details <br />
-        {props.currentNode.generation} {props.currentNode.name}
-      </h1>
+      <h1 className="form-header">Extra Details</h1>
       <label htmlFor="birthplace-input" className="extra-details-label">
         Place of Birth
       </label>

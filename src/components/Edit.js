@@ -5,6 +5,7 @@ import * as $ from "jquery";
 
 export default function Edit(props) {
   const [changed, setChanged] = useState(false);
+  const [changes, setChanges] = useState("");
   const [nodeInput, setNodeInput] = useState({
     id: 0,
     generation: "",
@@ -54,26 +55,52 @@ export default function Edit(props) {
   }
 
   function CheckInput() {
+    setChanges("");
+    let changesStack = [];
     setChanged(false);
-    if ($("genInput").val() !== props.nodedata.generation) {
+    if ($("#genInput").val() !== props.nodedata.generation) {
       setChanged(true);
+      changesStack.push("gen");
     }
-    if ($("name").val() !== props.nodedata.name) {
+    if ($("#name").val() !== props.nodedata.name) {
       setChanged(true);
+      changesStack.push("name");
     }
-    if ($("birthdate").val() !== props.nodedata.birthdate) {
+    if ($("#birthdate").val() !== props.nodedata.birthdate) {
       setChanged(true);
+      changesStack.push("birthdate");
     }
     // eslint-disable-next-line
-    if ($("parentInput").val() != props.nodedata.pid) {
+    if (
+      $("#parentInput").val() !== props.nodedata.parent &&
+      (props.nodedata.partner === null || props.nodedata.partner === "")
+    ) {
       setChanged(true);
+      changesStack.push("parent-node");
     }
-    if (getRadioVal === "partner" && props.nodedata.isPartner !== 1) {
+    if (
+      $("#parentInput").val() !== props.nodedata.partner &&
+      (props.nodedata.parent === null || props.nodedata.parent === "")
+    ) {
       setChanged(true);
+      changesStack.push("parent-node");
     }
-    if (getRadioVal === "child" && props.nodedata.isPartner !== 0) {
+    if (
+      getRadioVal("option-1", "option-2") === "partner" &&
+      props.nodedata.isPartner !== 1
+    ) {
       setChanged(true);
+      changesStack.push("isPartner");
     }
+    if (
+      getRadioVal("option-1", "option-2") === "child" &&
+      props.nodedata.isPartner !== 0
+    ) {
+      setChanged(true);
+      changesStack.push("isChild");
+    }
+    setChanges(changesStack.join(","));
+    console.log(changes);
   }
 
   function checkParent() {
@@ -96,7 +123,7 @@ export default function Edit(props) {
     console.log(`changed=${changed}  checkParent=${check}`);
     if (changed === true && check) {
       //save
-      Axios.post("https://layfamily.herokuapp.com/api/update", {
+      Axios.post("http://localhost:5000/api/update", {
         id: nodeInput.id,
         generation: nodeInput.generation,
         name: nodeInput.name,
@@ -105,6 +132,8 @@ export default function Edit(props) {
         isPartner: nodeInput.isPartner,
         parent: nodeInput.parent,
         partner: nodeInput.partner,
+        author: "default author",
+        changes: changes,
       }).then(closeEditMenu());
     } else {
       //alert no changes made
@@ -132,7 +161,7 @@ export default function Edit(props) {
 
     if (userValidation.val() === "confirm") {
       //delete node
-      Axios.post("https://layfamily.herokuapp.com/api/delete", {
+      Axios.post("http://localhost:5000/api/delete", {
         id: props.nodedata.id,
       });
 

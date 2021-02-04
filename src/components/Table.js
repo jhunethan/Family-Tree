@@ -23,10 +23,10 @@ export default function Table() {
     setRadiochecked(!radiochecked);
   };
   useEffect(() => {
-    Axios.get("https://layfamily.herokuapp.com/api/get").then((result) => {
+    Axios.get("http://localhost:5000/api/get").then((result) => {
       setTableData(result.data);
     });
-    Axios.get("https://layfamily.herokuapp.com/api/getextra").then((result) => {
+    Axios.get("http://localhost:5000/api/getextra").then((result) => {
       settableDataExtra(result.data);
     });
   }, [update]);

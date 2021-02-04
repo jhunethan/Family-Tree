@@ -14,9 +14,10 @@ body {
 }
 
 .container {
-  margin: 2vh 5vh 5vh 35vh;
+  margin: 2vh auto 5vh auto;
   padding: 2.5vh;
-  width: 1000px;
+  width: 100%;
+  max-width: 1000px;
   background-color: #fff;
   border-radius: 5px;
   filter: drop-shadow(10px 10px 5px rgba(65, 65, 65, 0.322));
@@ -36,7 +37,8 @@ body {
 
 .container-top {
   display: flex;
-  width: 1000px;
+  width: 100%;
+  flex-wrap: wrap;
 }
 
 .left {
@@ -47,14 +49,13 @@ body {
 .right {
   display: flex;
   flex-direction: column-reverse;
+  min-width: 250px;
   width: 300px;
-  margin-right: 10px;
 }
 
 #createNew {
   margin-top: 1rem;
   font-size: 0.95rem;
-  width: 200px;
   background-color: #111;
   color: #fff;
   padding: 0.6rem 1rem;
@@ -82,7 +83,7 @@ table {
   border-collapse: collapse;
   width: 100%;
   max-width: 1000px;
-  margin: 5px;
+  margin: 5px auto;
 }
 td,
 th {
