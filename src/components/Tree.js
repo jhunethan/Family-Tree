@@ -141,7 +141,7 @@ export default function Tree() {
     //reconvert tabledata to check for updates
     converttreeData();
 
-    Axios.get("http://localhost:5000/api/getextra").then((result) => {
+    Axios.get("http://localhost:5000/api/get/extra").then((result) => {
       let extradetails = result.data;
       let tempData = tableData;
 

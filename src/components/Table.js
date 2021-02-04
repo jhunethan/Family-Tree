@@ -26,7 +26,7 @@ export default function Table() {
     Axios.get("http://localhost:5000/api/get").then((result) => {
       setTableData(result.data);
     });
-    Axios.get("http://localhost:5000/api/getextra").then((result) => {
+    Axios.get("http://localhost:5000/api/get/extra").then((result) => {
       settableDataExtra(result.data);
     });
   }, [update]);
@@ -251,7 +251,7 @@ export default function Table() {
                 updateTable();
               }}
             >
-              Update Table
+              ⟳
             </button>
           </div>
           <div className="right">
