@@ -134,6 +134,7 @@ function Create(props) {
           parent: sendNode.parent,
           partner: sendNode.partner,
           isPartner: sendNode.isPartner,
+          author: "default author",
         }).then(successAdd());
       }
     }, 500);

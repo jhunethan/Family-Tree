@@ -111,7 +111,7 @@ text {
   position: absolute;
   top: 20px;
   right: 50px;
-  z-index: 2;
+  z-index: 3;
 
   background-color: #fff200;
   padding: 10px 20px;
