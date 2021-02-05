@@ -8,7 +8,6 @@ import NodeCard from "./NodeCard";
 import Create from "./Create.js";
 import Modal from "./Modal";
 import Edit from "./Edit";
-import EditExtra from "./EditExtra";
 
 var height;
 var width;
@@ -582,6 +581,19 @@ export default function Tree(props) {
 
     let pval = node.isPartner ? node.partner : node.parent;
     $("#parentInput").val(pval);
+
+    try {
+      $("#birthplace-input").val(node.extradetails.birthplace);
+      $("#location-input").val(node.extradetails.location);
+      $("#extranames-input").val(node.extradetails.extranames);
+      $("#fblink-input").val(node.extradetails.fblink);
+      $("textarea.description-input").val(node.extradetails.description);
+    } catch {
+      $("#location-input").val("");
+      $("#extranames-input").val("");
+      $("#fblink-input").val("");
+      $("textarea.description-input").val("");
+    }
   };
 
   const removeChildren = (id, arr) => {
@@ -677,9 +689,7 @@ export default function Tree(props) {
         .val("")
         .css("border-bottom", "2px solid #bebed2")
         .attr("placeholder", "");
-    } catch (err) {
-      console.log(err);
-    }
+    } catch {}
   };
 
   return (
@@ -740,7 +750,6 @@ export default function Tree(props) {
           updateTree();
         }}
       />
-      <EditExtra currentNode={InfoCard} />
       <Modal close={closePopups} />
     </div>
   );

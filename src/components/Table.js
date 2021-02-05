@@ -6,7 +6,6 @@ import { ReactTable } from "./React-Table-Components/ReactTable";
 import Create from "./Create.js";
 import Modal from "./Modal";
 import Edit from "./Edit";
-import EditExtra from "./EditExtra";
 import NodeCard from "./NodeCard";
 
 export default function Table(props) {
@@ -107,9 +106,7 @@ export default function Table(props) {
         .val("")
         .css("border-bottom", "2px solid #bebed2")
         .attr("placeholder", "");
-    } catch (err) {
-      console.log(err);
-    }
+    } catch {}
   };
 
   const removeChildren = (id, arr) => {
@@ -291,7 +288,6 @@ export default function Table(props) {
           openNode(currentRow);
         }}
       />
-      <EditExtra currentNode={nodestate} />
     </div>
   );
 }

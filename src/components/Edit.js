@@ -8,8 +8,11 @@ export default function Edit(props) {
   const [cookies] = useCookies(["author"]);
   const [changed, setChanged] = useState(false);
   const [changes, setChanges] = useState("");
+  const [extrachanges, setExtrachanges] = useState("");
+  const [extrachanged, setExtrachanged] = useState(false);
+  const [descriptionlimit, setdescriptionlimit] = useState(0);
   const [nodeInput, setNodeInput] = useState({
-    id: 0,
+    id: props.nodedata.id,
     generation: "",
     name: "",
     birthdate: "",
@@ -17,6 +20,10 @@ export default function Edit(props) {
     isPartner: 0,
     parent: "",
     partner: "",
+    location: "",
+    extranames: "",
+    fblink: "",
+    description: "",
   });
 
   var inputChangedHandler = () => {
@@ -102,7 +109,6 @@ export default function Edit(props) {
       changesStack.push("isChild");
     }
     setChanges(changesStack.join(","));
-    console.log(changes);
   }
 
   function checkParent() {
@@ -122,7 +128,6 @@ export default function Edit(props) {
   function saveEdit() {
     let check = false;
     check = checkParent();
-    console.log(`changed=${changed}  checkParent=${check}`);
     if (changed === true && check) {
       //save
       Axios.post("http://localhost:5000/api/update", {
@@ -139,9 +144,24 @@ export default function Edit(props) {
       }).then(closeEditMenu());
     } else {
       //alert no changes made
-      console.log("error, no changes made");
+    }
+    extraInputHandler();
+    if (extrachanged) {
+      Axios.post("http://localhost:5000/api/updateextra", {
+        id: props.nodedata.id,
+        birthplace: nodeInput.birthplace,
+        location: nodeInput.location,
+        extranames: nodeInput.extranames,
+        fblink: nodeInput.fblink,
+        description: nodeInput.description,
+        author: cookies.author,
+        changes: extrachanges,
+      }).then(closeEditMenu());
+    } else {
+      alert("no further details changes detected");
     }
     setChanged(false);
+    setExtrachanged(false);
   }
   var closeEditMenu = () => {
     $("#editForm").css("display", "none");
@@ -151,7 +171,7 @@ export default function Edit(props) {
     //wait for Axios update then update
     setTimeout(() => {
       props.update();
-    }, 200);
+    }, 1000);
   };
 
   function cancelDeleteConfirm() {
@@ -188,6 +208,94 @@ export default function Edit(props) {
     $("#deleteTextbox").css("border-bottom", "2px solid #bebed2");
   };
 
+  const extraInputHandler = () => {
+    checkExtraChanges();
+    //get
+    let birthplace = $.trim($("#birthplace-input").val());
+    let location = $.trim($("#location-input").val());
+    let extranames = $.trim($("#extranames-input").val());
+    let fblink = $.trim($("#fblink-input").val());
+    let description = $.trim($("textarea.description-input").val());
+    //set nodeInput
+    let tempnode = nodeInput;
+    tempnode.birthplace = birthplace;
+    tempnode.location = location;
+    tempnode.extranames = extranames;
+    tempnode.fblink = fblink;
+    tempnode.description = description;
+    setNodeInput(tempnode);
+  };
+
+  const descriptionHandler = () => {
+    extraInputHandler();
+    var numOfWords = $("textarea.description-input")
+      .val()
+      .replace(/^[\s,.;]+/, "")
+      .replace(/[\s,.;]+$/, "")
+      .split(/[\s,.;]+/).length;
+    setdescriptionlimit(numOfWords);
+  };
+
+  const checkExtraChanges = () => {
+    let arr = [];
+    setExtrachanged(false);
+    try {
+      if (
+        props.nodedata.extradetails.birthplace !==
+        $("#birthplace-input").val()
+      ) {
+        arr.push("birthplace");
+        setExtrachanged(true);
+      }
+      if (
+        props.nodedata.extradetails.location !== $("#location-input").val()
+      ) {
+        arr.push("location");
+        setExtrachanged(true);
+      }
+      if (
+        props.nodedata.extradetails.extranames !==
+        $("#extranames-input").val()
+      ) {
+        arr.push("extranames");
+        setExtrachanged(true);
+      }
+      if (props.nodedata.extradetails.fblink !== $("#fblink-input").val()) {
+        arr.push("fblink");
+        setExtrachanged(true);
+      }
+      if (
+        props.nodedata.extradetails.description !==
+        $("textarea.description-input").val()
+      ) {
+        arr.push("description");
+        setExtrachanged(true);
+      }
+    } catch {
+      if ($("#birthplace-input").val().length > 0) {
+        arr.push("birthplace");
+        setExtrachanged(true);
+      }
+      if ($("#location-input").val().length > 0) {
+        arr.push("location");
+        setExtrachanged(true);
+      }
+      if ($("#extranames-input").val().length > 0) {
+        arr.push("extranames");
+        setExtrachanged(true);
+      }
+      if ($("#fblink-input").val().length > 0) {
+        arr.push("fblink");
+        setExtrachanged(true);
+      }
+      if ($("textarea.description-input").val().length > 0) {
+        arr.push("description");
+        setExtrachanged(true);
+      }
+    }
+    setExtrachanges(arr.join(","));
+  };
+
   return (
     <div id="Edit">
       <div id="editForm">
@@ -195,7 +303,6 @@ export default function Edit(props) {
         <button type="submit" id="deleteNode" onClick={deleteNode}>
           Delete
         </button>
-
         <p type="Generation">
           <input
             id="genInput"
@@ -241,9 +348,7 @@ export default function Edit(props) {
             }}
           />
         </p>
-
         {/* Search for parent autocomplete */}
-
         <p type="Parent/Partner">
           <input
             id="parentInput"
@@ -261,7 +366,6 @@ export default function Edit(props) {
           ></input>
           <datalist id="parentSearchDataList"></datalist>
         </p>
-
         <div className="radio-toggles">
           <input
             onClick={props.switchRadio}
@@ -284,6 +388,58 @@ export default function Edit(props) {
           />
           <label htmlFor="option-2">Partner</label>
           <div className="slide-item"></div>
+        </div>
+        <div className="edit-container">
+          <label htmlFor="birthplace-input" className="extra-details-label">
+            Place of Birth
+          </label>
+          <input
+            type="text"
+            name="birthplace-input"
+            id="birthplace-input"
+            className="extra-details-input"
+            onChange={extraInputHandler}
+          />
+          <label htmlFor="location-input" className="extra-details-label">
+            Current Location
+          </label>
+          <input
+            type="text"
+            name="location-input"
+            id="location-input"
+            className="extra-details-input"
+            onChange={extraInputHandler}
+          />
+          <label htmlFor="extranames-input" className="extra-details-label">
+            Additional Names
+          </label>
+          <input
+            type="text"
+            name="extranames-input"
+            id="extranames-input"
+            className="extra-details-input"
+            onChange={extraInputHandler}
+          />{" "}
+          <label htmlFor="fblink-input" className="extra-details-label">
+            Facebook Link
+          </label>
+          <input
+            type="text"
+            name="fblink-input"
+            id="fblink-input"
+            className="extra-details-input"
+            onChange={extraInputHandler}
+          />
+          <label htmlFor="description-input" className="extra-details-label">
+            Description ( {descriptionlimit}/250 words )
+          </label>
+          <textarea
+            type="text"
+            name="description-input"
+            className="extra-details-input description-input"
+            placeholder="description up to 250 words..."
+            onChange={descriptionHandler}
+          />
         </div>
         <button type="button" id="save" onClick={saveEdit}>
           Save Changes
@@ -312,7 +468,7 @@ export default function Edit(props) {
               confirmDeletion();
             }
           }}
-        ></input>{" "}
+        ></input>
         <div id="deleteButtonContainer">
           <button type="button" onClick={cancelDeleteConfirm}>
             Cancel

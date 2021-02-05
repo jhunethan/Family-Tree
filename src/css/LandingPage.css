@@ -2,7 +2,7 @@
 
 * {
   scroll-behavior: smooth;
-  font-family: "Montserrat", sans-serif;
+  font-family: Didact Gothic;
 }
 .wrapper {
   position: absolute;
@@ -37,17 +37,16 @@
 .header h1 {
   font-size: 3rem;
   font-weight: 600;
-  letter-spacing: 0.3rem;
+  letter-spacing: 0.2rem;
   padding: 0 20px 8px;
   margin: 10px;
   text-decoration: underline red;
   user-select: none;
 }
 .header p {
-  font-family: Didact Gothic;
   font-size: 1.5rem;
   font-weight: 600;
-  letter-spacing: 0.3rem;
+  letter-spacing: 0.1rem;
   padding: 10px 15px;
   filter: drop-shadow(5px 5px 5px rgba(65, 65, 65, 0.322));
   user-select: none;

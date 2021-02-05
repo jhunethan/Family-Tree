@@ -170,7 +170,7 @@ export default function LandingPage(props) {
           <h1>Lay Family Database</h1>
           <LandingNavigation resetName={resetName} />
         </div>
-        <h1 className="about-header">Edit History</h1>
+        <h1 className="about-header">Edit Historyb.</h1>
         <section className="about-section">
           <div className="stats-container">
             <div className="stat-card users">
