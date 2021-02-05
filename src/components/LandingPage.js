@@ -32,8 +32,10 @@ function Edits(props) {
 }
 
 function EditHistory(props) {
+  var dateFormat = require("dateformat");
+
   let count = 0;
-  let slicesize = [props.pagesize * 25, (props.pagesize + 1) * 25];
+  let slicesize = [props.pagesize * 10, (props.pagesize + 1) * 10];
   return (
     <div className="edit-history">
       {props.editHistory.slice(slicesize[0], slicesize[1]).map((x) => {
@@ -42,9 +44,9 @@ function EditHistory(props) {
 
         return (
           <div className="history-container" key={count}>
-            <p>{x.time}</p>
+            <p>{dateFormat(x.time, "dS mmmm [HH:MM]")}</p>
             <p>
-              {x.author} made the following changes to {id}
+              <strong>{x.author}</strong> made the following changes to {id}
             </p>
             <Edits data={x} />
           </div>
@@ -67,7 +69,7 @@ export default function LandingPage() {
   const changePage = (operator) => {
     if (page >= 0) {
       if (operator === "+") {
-        if (page < editHistory.length / 25 - 1) setPage((prev) => prev + 1);
+        if (page < editHistory.length / 10 - 1) setPage((prev) => prev + 1);
       } else {
         if (page !== 0) setPage((prev) => prev - 1);
       }
@@ -101,7 +103,7 @@ export default function LandingPage() {
               placeholder="Enter your name here"
               className="author-input"
             />
-            <button id="landingButton" onClick={()=>setauthor()}>
+            <button id="landingButton" onClick={() => setauthor()}>
               Enter Name
             </button>
           </div>
@@ -138,7 +140,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div>
-            <h1 className="center">Edit History</h1>
+            <h1 className="center">Edit History (Last 30 Days)</h1>
             <div className="page-container">
               <button onClick={() => changePage("-")}>Previous</button>
               <div className="page-number">Page {page + 1}</div>
