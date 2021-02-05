@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import "../css/Edit.css";
 import Axios from "axios";
 import * as $ from "jquery";
+import { useCookies } from "react-cookie";
 
 export default function Edit(props) {
+  const [cookies] = useCookies(["author"]);
   const [changed, setChanged] = useState(false);
   const [changes, setChanges] = useState("");
   const [nodeInput, setNodeInput] = useState({
@@ -132,7 +134,7 @@ export default function Edit(props) {
         isPartner: nodeInput.isPartner,
         parent: nodeInput.parent,
         partner: nodeInput.partner,
-        author: props.author,
+        author: cookies.author,
         changes: changes,
       }).then(closeEditMenu());
     } else {
@@ -163,7 +165,7 @@ export default function Edit(props) {
       //delete node
       Axios.post("http://localhost:5000/api/delete", {
         id: props.nodedata.id,
-        author: props.author,
+        author: cookies.author,
       });
 
       cancelDeleteConfirm();

@@ -3,8 +3,7 @@ import "../css/LandingPage.css";
 import { Link } from "react-router-dom";
 import Axios from "axios";
 import * as $ from "jquery";
-
-import { MyContext } from "../App";
+import { useCookies } from "react-cookie";
 
 function Edits(props) {
   let changes = [];
@@ -59,10 +58,35 @@ function EditHistory(props) {
 }
 
 function LandingNavigation(props) {
+  const [cookies, setCookie] = useCookies(["author"]);
+  let authorInput, landingNavigation = "";
+  console.log(cookies.author)
+
+  const changeAuthor = (newAuthor) => {
+    //use context to set author as state of App.js
+    //validation
+    if ($.trim(newAuthor).length > 1) {
+      //set using function in App.js so it can be passed down
+      setCookie("author", newAuthor, { path: "/" });
+      $("div.author-input").addClass("hidden");
+      $("div.landing-navigation").removeClass("hidden");
+    } else {
+      //empty invalid input
+    }
+  };
+
+  if (cookies.author === undefined) {
+    authorInput = "author-input";
+    landingNavigation = "landing-navigation hidden";
+  } else {
+    authorInput = "author-input hidden";
+    landingNavigation = "landing-navigation";
+  }
+
   return (
     <div>
       {" "}
-      <div className="author-input">
+      <div className={authorInput}>
         <input
           type="text"
           placeholder="Enter your name here"
@@ -73,18 +97,19 @@ function LandingNavigation(props) {
               // Cancel the default action, if needed
               event.preventDefault();
               // Focus on next element
-              props.setauthor();
+              changeAuthor($("input.author-input").val());
             }
           }}
         />
-        <button id="landingButton" onClick={() => props.setauthor()}>
+        <button
+          id="landingButton"
+          onClick={() => changeAuthor($("input.author-input").val())}
+        >
           Enter Name
         </button>
       </div>
-      <div className="landing-navigation hidden">
-        <MyContext.Consumer>
-          {(author) => <p>Welcome {author}</p>}
-        </MyContext.Consumer>
+      <div className={landingNavigation}>
+        <p>Welcome {cookies.author}</p>
         <Link to="/table">
           <button type="button" id="landingButton">
             View Table
@@ -132,20 +157,6 @@ export default function LandingPage(props) {
     });
   }, [update]);
 
-  const setauthor = () => {
-    //use context to set author as state of App.js
-    let value = $("input.author-input").val();
-    //validation
-    if ($.trim(value).length > 1) {
-      //set using function in App.js so it can be passed down
-      props.setAuthor($("input.author-input").val());
-      $("div.author-input").addClass("hidden");
-      $("div.landing-navigation").removeClass("hidden");
-    } else {
-      //empty invalid input
-    }
-  };
-
   const resetName = () => {
     $("div.author-input").removeClass("hidden");
     $("div.landing-navigation").addClass("hidden");
@@ -157,18 +168,16 @@ export default function LandingPage(props) {
       <section className="content-container">
         <div className="header">
           <h1>Lay Family Database</h1>
-          <LandingNavigation resetName={resetName} setauthor={setauthor}/>
+          <LandingNavigation resetName={resetName} />
         </div>
-        <h1 className="about-header">Statistics</h1>
+        <h1 className="about-header">Database Info</h1>
         <section className="about-section">
           <div className="stats-container">
             <div className="stat-card users">
-              {" "}
               <button onClick={updatehistory}>⟳</button>
               <h1>Total Users?</h1>
             </div>
             <div className="stat-card members">
-              {" "}
               <h1>Family Members in Database</h1>
               <h2 className="edit-freq-display">{databasesize}</h2>
             </div>

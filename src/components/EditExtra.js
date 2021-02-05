@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import Axios from "axios";
 import * as $ from "jquery";
+import { useCookies } from "react-cookie";
 
 import "../css/EditExtra.css";
 
 export default function EditExtra(props) {
+  const [cookies] = useCookies(["author"]);
   const [descriptionlimit, setdescriptionlimit] = useState(0);
   const [changes, setchanges] = useState("");
   const [changed, setChanged] = useState(false);
@@ -119,7 +121,7 @@ export default function EditExtra(props) {
         extranames: nodeInput.extranames,
         fblink: nodeInput.fblink,
         description: nodeInput.description,
-        author: props.author,
+        author: cookies.author,
         changes: changes,
       }).then(closeEditMenu());
     } else {

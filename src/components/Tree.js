@@ -728,7 +728,6 @@ export default function Tree(props) {
         update={() => {
           updateTree();
         }}
-        author={props.author}
       />
       <Edit
         getPID={getPID}
@@ -740,9 +739,8 @@ export default function Tree(props) {
         update={() => {
           updateTree();
         }}
-        author={props.author}
       />
-      <EditExtra currentNode={InfoCard} author={props.author} />
+      <EditExtra currentNode={InfoCard} />
       <Modal close={closePopups} />
     </div>
   );

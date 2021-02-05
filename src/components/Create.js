@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import "../css/Create.css";
 import Axios from "axios";
 import * as $ from "jquery";
+import { useCookies } from "react-cookie";
 
 function Create(props) {
+  const [cookies] = useCookies(["author"]);
+
   const [sendNode, setsendNode] = useState({
     pid: 0,
     generation: "",
@@ -134,7 +137,7 @@ function Create(props) {
           parent: sendNode.parent,
           partner: sendNode.partner,
           isPartner: sendNode.isPartner,
-          author: props.author,
+          author: cookies.author,
         }).then(successAdd());
       }
     }, 500);

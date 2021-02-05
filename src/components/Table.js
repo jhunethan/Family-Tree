@@ -271,7 +271,6 @@ export default function Table(props) {
         update={() => {
           updateTable();
         }}
-        author={props.author}
       />
       <Edit
         getPID={getPID}
@@ -283,7 +282,6 @@ export default function Table(props) {
         update={() => {
           updateTable();
         }}
-        author={props.author}
       />
       <NodeCard
         node={nodestate}
@@ -293,7 +291,7 @@ export default function Table(props) {
           openNode(currentRow);
         }}
       />
-      <EditExtra currentNode={nodestate} author={props.author} />
+      <EditExtra currentNode={nodestate} />
     </div>
   );
 }
