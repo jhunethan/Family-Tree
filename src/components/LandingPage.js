@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../css/LandingPage.css";
 import { Link } from "react-router-dom";
 import Axios from "axios";
+import * as $ from "jquery";
 
 function Edits(props) {
   let changes = [];
@@ -82,22 +83,41 @@ export default function LandingPage() {
     });
   }, [update]);
 
+  const setauthor = () => {
+    //use context to set author as state of App.js
+    $("div.author-input").addClass("hidden");
+    $("div.landing-navigation").removeClass("hidden");
+  };
+
   return (
     <div className="wrapper">
       <section className="content-container">
         <div className="header">
           <h1>Lay Family Database</h1>
-          <p>Interactive visual representation</p>
-          <Link to="/table">
-            <button type="button" id="landingButton">
-              View Table
+
+          <div className="author-input">
+            <input
+              type="text"
+              placeholder="Enter your name here"
+              className="author-input"
+            />
+            <button id="landingButton" onClick={()=>setauthor()}>
+              Enter Name
             </button>
-          </Link>
-          <Link to="/tree">
-            <button type="button" id="landingButton">
-              View Tree
-            </button>
-          </Link>
+          </div>
+          <div className="landing-navigation hidden">
+            <p>Choose an option</p>
+            <Link to="/table">
+              <button type="button" id="landingButton">
+                View Table
+              </button>
+            </Link>
+            <Link to="/tree">
+              <button type="button" id="landingButton">
+                View Tree
+              </button>
+            </Link>
+          </div>
         </div>
         <h1 className="about-header">Statistics</h1>
         <section className="about-section">

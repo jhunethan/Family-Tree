@@ -197,3 +197,15 @@
 .center{
   text-align: center;
 }
+
+.author-input{
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  margin: 20px;
+  text-align: center;
+}
+
+.hidden{
+  display: none;
+}
