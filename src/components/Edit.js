@@ -241,21 +241,17 @@ export default function Edit(props) {
     setExtrachanged(false);
     try {
       if (
-        props.nodedata.extradetails.birthplace !==
-        $("#birthplace-input").val()
+        props.nodedata.extradetails.birthplace !== $("#birthplace-input").val()
       ) {
         arr.push("birthplace");
         setExtrachanged(true);
       }
-      if (
-        props.nodedata.extradetails.location !== $("#location-input").val()
-      ) {
+      if (props.nodedata.extradetails.location !== $("#location-input").val()) {
         arr.push("location");
         setExtrachanged(true);
       }
       if (
-        props.nodedata.extradetails.extranames !==
-        $("#extranames-input").val()
+        props.nodedata.extradetails.extranames !== $("#extranames-input").val()
       ) {
         arr.push("extranames");
         setExtrachanged(true);
@@ -298,14 +294,15 @@ export default function Edit(props) {
 
   return (
     <div id="Edit">
-      <div id="editForm">
-        <h2>Edit Details</h2>
+      <div id="editForm" className="form">
+        <h2 className="edit-header">Edit Details</h2>
         <button type="submit" id="deleteNode" onClick={deleteNode}>
           Delete
         </button>
         <p type="Generation">
           <input
             id="genInput"
+            className="extra-details-input"
             onChange={inputChangedHandler}
             onKeyUp={(event) => {
               // Number 13 is the "Enter" key on the keyboard
@@ -321,6 +318,7 @@ export default function Edit(props) {
         <p type="Name:">
           <input
             id="name"
+            className="extra-details-input"
             onChange={inputChangedHandler}
             onKeyUp={(event) => {
               // Number 13 is the "Enter" key on the keyboard
@@ -336,6 +334,7 @@ export default function Edit(props) {
         <p type="Date of Birth">
           <input
             id="birthdate"
+            className="extra-details-input"
             onChange={inputChangedHandler}
             placeholder="YYYY-MM-DD"
             onKeyUp={(event) => {
@@ -352,6 +351,7 @@ export default function Edit(props) {
         <p type="Parent/Partner">
           <input
             id="parentInput"
+            className="extra-details-input"
             placeholder="Name of Parent/ Partner"
             list="parentSearchDataList"
             onChange={inputChangedHandler}
@@ -389,58 +389,56 @@ export default function Edit(props) {
           <label htmlFor="option-2">Partner</label>
           <div className="slide-item"></div>
         </div>
-        <div className="edit-container">
-          <label htmlFor="birthplace-input" className="extra-details-label">
-            Place of Birth
-          </label>
-          <input
-            type="text"
-            name="birthplace-input"
-            id="birthplace-input"
-            className="extra-details-input"
-            onChange={extraInputHandler}
-          />
-          <label htmlFor="location-input" className="extra-details-label">
-            Current Location
-          </label>
-          <input
-            type="text"
-            name="location-input"
-            id="location-input"
-            className="extra-details-input"
-            onChange={extraInputHandler}
-          />
-          <label htmlFor="extranames-input" className="extra-details-label">
-            Additional Names
-          </label>
-          <input
-            type="text"
-            name="extranames-input"
-            id="extranames-input"
-            className="extra-details-input"
-            onChange={extraInputHandler}
-          />{" "}
-          <label htmlFor="fblink-input" className="extra-details-label">
-            Facebook Link
-          </label>
-          <input
-            type="text"
-            name="fblink-input"
-            id="fblink-input"
-            className="extra-details-input"
-            onChange={extraInputHandler}
-          />
-          <label htmlFor="description-input" className="extra-details-label">
-            Description ( {descriptionlimit}/250 words )
-          </label>
-          <textarea
-            type="text"
-            name="description-input"
-            className="extra-details-input description-input"
-            placeholder="description up to 250 words..."
-            onChange={descriptionHandler}
-          />
-        </div>
+        <label htmlFor="birthplace-input" className="extra-details-label">
+          Place of Birth
+        </label>
+        <input
+          type="text"
+          name="birthplace-input"
+          id="birthplace-input"
+          className="extra-details-input"
+          onChange={extraInputHandler}
+        />
+        <label htmlFor="location-input" className="extra-details-label">
+          Current Location
+        </label>
+        <input
+          type="text"
+          name="location-input"
+          id="location-input"
+          className="extra-details-input"
+          onChange={extraInputHandler}
+        />
+        <label htmlFor="extranames-input" className="extra-details-label">
+          Additional Names
+        </label>
+        <input
+          type="text"
+          name="extranames-input"
+          id="extranames-input"
+          className="extra-details-input"
+          onChange={extraInputHandler}
+        />{" "}
+        <label htmlFor="fblink-input" className="extra-details-label">
+          Facebook Link
+        </label>
+        <input
+          type="text"
+          name="fblink-input"
+          id="fblink-input"
+          className="extra-details-input"
+          onChange={extraInputHandler}
+        />
+        <label htmlFor="description-input" className="extra-details-label">
+          Description ( {descriptionlimit}/250 words )
+        </label>
+        <textarea
+          type="text"
+          name="description-input"
+          className="extra-details-input description-input"
+          placeholder="description up to 250 words..."
+          onChange={descriptionHandler}
+        />
         <button type="button" id="save" onClick={saveEdit}>
           Save Changes
         </button>
@@ -449,7 +447,7 @@ export default function Edit(props) {
         </button>
       </div>
 
-      <div id="deleteConfirmMenu">
+      <div id="deleteConfirmMenu" className="form">
         <div>
           Are you Sure? <br />
           Type "confirm" below to delete
