@@ -42,12 +42,12 @@ function EditHistory(props) {
       {props.editHistory.slice(slicesize[0], slicesize[1]).map((x) => {
         let id = x.id !== 0 ? x.id : x.changes;
         count += 1;
-
         return (
           <div className="history-container" key={count}>
             <p>{dateFormat(x.time, "dS mmmm [HH:MM]")}</p>
             <p>
-              <strong>{x.author}</strong> made the following changes to {id}
+              <strong>{x.author}</strong> made the following changes to node{" "}
+              {id}
             </p>
             <Edits data={x} />
           </div>
@@ -59,8 +59,8 @@ function EditHistory(props) {
 
 function LandingNavigation(props) {
   const [cookies, setCookie] = useCookies(["author"]);
-  let authorInput, landingNavigation = "";
-  console.log(cookies.author)
+  let authorInput,
+    landingNavigation = "";
 
   const changeAuthor = (newAuthor) => {
     //use context to set author as state of App.js
@@ -170,7 +170,7 @@ export default function LandingPage(props) {
           <h1>Lay Family Database</h1>
           <LandingNavigation resetName={resetName} />
         </div>
-        <h1 className="about-header">Database Info</h1>
+        <h1 className="about-header">Edit History</h1>
         <section className="about-section">
           <div className="stats-container">
             <div className="stat-card users">
