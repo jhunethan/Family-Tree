@@ -15,7 +15,7 @@ var width;
 var datalistarr,
   treeData = [];
 
-export default function Tree() {
+export default function Tree(props) {
   const [update, setUpdate] = useState(false);
   const [datalist, setDatalist] = useState([]);
   const [tableData, setTableData] = useState([]);
@@ -134,7 +134,7 @@ export default function Tree() {
     .scaleExtent([0.1, 1])
     .on("zoom", zoomed);
 
-  var svg = d3.select("#Tree")
+  var svg = d3.select("#Tree");
 
   const buildTree = () => {
     //reconvert tabledata to check for updates
@@ -728,6 +728,7 @@ export default function Tree() {
         update={() => {
           updateTree();
         }}
+        author={props.author}
       />
       <Edit
         getPID={getPID}
@@ -739,8 +740,9 @@ export default function Tree() {
         update={() => {
           updateTree();
         }}
+        author={props.author}
       />
-      <EditExtra currentNode={InfoCard} />
+      <EditExtra currentNode={InfoCard} author={props.author} />
       <Modal close={closePopups} />
     </div>
   );

@@ -134,7 +134,7 @@ function Create(props) {
           parent: sendNode.parent,
           partner: sendNode.partner,
           isPartner: sendNode.isPartner,
-          author: "default author",
+          author: props.author,
         }).then(successAdd());
       }
     }, 500);
@@ -143,7 +143,6 @@ function Create(props) {
   return (
     <div className="Create">
       <h2>Add New</h2>
-
       <p type="Generation">
         <input
           id="genInputC"

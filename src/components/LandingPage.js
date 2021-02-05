@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import Axios from "axios";
 import * as $ from "jquery";
 
+import { MyContext } from "../App";
+
 function Edits(props) {
   let changes = [];
 
@@ -56,7 +58,52 @@ function EditHistory(props) {
   );
 }
 
-export default function LandingPage() {
+function LandingNavigation(props) {
+  return (
+    <div>
+      {" "}
+      <div className="author-input">
+        <input
+          type="text"
+          placeholder="Enter your name here"
+          className="author-input"
+          onKeyUp={(event) => {
+            // Number 13 is the "Enter" key on the keyboard
+            if (event.key === "Enter") {
+              // Cancel the default action, if needed
+              event.preventDefault();
+              // Focus on next element
+              props.setauthor();
+            }
+          }}
+        />
+        <button id="landingButton" onClick={() => props.setauthor()}>
+          Enter Name
+        </button>
+      </div>
+      <div className="landing-navigation hidden">
+        <MyContext.Consumer>
+          {(author) => <p>Welcome {author}</p>}
+        </MyContext.Consumer>
+        <Link to="/table">
+          <button type="button" id="landingButton">
+            View Table
+          </button>
+        </Link>
+        <Link to="/tree">
+          <button type="button" id="landingButton">
+            View Tree
+          </button>
+        </Link>
+        <div className="reset-button" onClick={() => props.resetName()}>
+          Not You? Click to re-enter name
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function LandingPage(props) {
   const [update, setupdate] = useState(0);
   const [editHistory, setEditHistory] = useState([]);
   const [databasesize, setDatabasesize] = useState(0);
@@ -87,8 +134,22 @@ export default function LandingPage() {
 
   const setauthor = () => {
     //use context to set author as state of App.js
-    $("div.author-input").addClass("hidden");
-    $("div.landing-navigation").removeClass("hidden");
+    let value = $("input.author-input").val();
+    //validation
+    if ($.trim(value).length > 1) {
+      //set using function in App.js so it can be passed down
+      props.setAuthor($("input.author-input").val());
+      $("div.author-input").addClass("hidden");
+      $("div.landing-navigation").removeClass("hidden");
+    } else {
+      //empty invalid input
+    }
+  };
+
+  const resetName = () => {
+    $("div.author-input").removeClass("hidden");
+    $("div.landing-navigation").addClass("hidden");
+    $("input.author-input").val("");
   };
 
   return (
@@ -96,30 +157,7 @@ export default function LandingPage() {
       <section className="content-container">
         <div className="header">
           <h1>Lay Family Database</h1>
-
-          <div className="author-input">
-            <input
-              type="text"
-              placeholder="Enter your name here"
-              className="author-input"
-            />
-            <button id="landingButton" onClick={() => setauthor()}>
-              Enter Name
-            </button>
-          </div>
-          <div className="landing-navigation hidden">
-            <p>Choose an option</p>
-            <Link to="/table">
-              <button type="button" id="landingButton">
-                View Table
-              </button>
-            </Link>
-            <Link to="/tree">
-              <button type="button" id="landingButton">
-                View Tree
-              </button>
-            </Link>
-          </div>
+          <LandingNavigation resetName={resetName} setauthor={setauthor}/>
         </div>
         <h1 className="about-header">Statistics</h1>
         <section className="about-section">

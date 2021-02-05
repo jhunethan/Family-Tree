@@ -119,7 +119,7 @@ export default function EditExtra(props) {
         extranames: nodeInput.extranames,
         fblink: nodeInput.fblink,
         description: nodeInput.description,
-        author: "default author",
+        author: props.author,
         changes: changes,
       }).then(closeEditMenu());
     } else {

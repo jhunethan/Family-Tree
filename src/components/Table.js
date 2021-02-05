@@ -9,7 +9,7 @@ import Edit from "./Edit";
 import EditExtra from "./EditExtra";
 import NodeCard from "./NodeCard";
 
-export default function Table() {
+export default function Table(props) {
   const [update, setUpdate] = useState(0);
   const [tableData, setTableData] = useState([]);
   const [TreeData, setTreeData] = useState([]);
@@ -271,6 +271,7 @@ export default function Table() {
         update={() => {
           updateTable();
         }}
+        author={props.author}
       />
       <Edit
         getPID={getPID}
@@ -282,6 +283,7 @@ export default function Table() {
         update={() => {
           updateTable();
         }}
+        author={props.author}
       />
       <NodeCard
         node={nodestate}
@@ -291,7 +293,7 @@ export default function Table() {
           openNode(currentRow);
         }}
       />
-      <EditExtra currentNode={nodestate} />
+      <EditExtra currentNode={nodestate} author={props.author} />
     </div>
   );
 }

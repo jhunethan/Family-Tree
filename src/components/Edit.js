@@ -132,7 +132,7 @@ export default function Edit(props) {
         isPartner: nodeInput.isPartner,
         parent: nodeInput.parent,
         partner: nodeInput.partner,
-        author: "default author",
+        author: props.author,
         changes: changes,
       }).then(closeEditMenu());
     } else {
@@ -163,7 +163,7 @@ export default function Edit(props) {
       //delete node
       Axios.post("http://localhost:5000/api/delete", {
         id: props.nodedata.id,
-        author: "default author",
+        author: props.author,
       });
 
       cancelDeleteConfirm();

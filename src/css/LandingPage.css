@@ -109,7 +109,7 @@
 
 .about-header {
   display: block;
-  margin: 15vh auto 0 10px;
+  margin: 25vh auto 0 10px;
   width: 150px;
   padding: 20px;
   border-radius: 5px 5px 0 0;
@@ -128,7 +128,7 @@
   border: 2px solid black;
 }
 
-.stat-card>*{
+.stat-card > * {
   margin: 20px auto;
   padding: 10px;
 }
@@ -164,24 +164,24 @@
   pointer-events: none;
 }
 
-.edit-freq-display{
+.edit-freq-display {
   font-size: 30px;
 }
 
-.page-container{
+.page-container {
   display: flex;
   gap: 10px;
 }
 
-.page-number{
+.page-number {
   padding: 10px;
 }
 
-.center{
+.center {
   text-align: center;
 }
 
-.author-input{
+.author-input {
   display: flex;
   flex-direction: column;
   padding: 20px;
@@ -190,6 +190,13 @@
   text-align: center;
 }
 
-.hidden{
+.hidden {
   display: none;
+}
+
+.reset-button {
+  font-size: 14px;
+  user-select: none;
+  margin: 30px 0 0px 0;
+  cursor: pointer;
 }
