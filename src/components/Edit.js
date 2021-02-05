@@ -179,12 +179,11 @@ export default function Edit(props) {
     //hide edit menu
     $("#editForm").css("display", "none");
     //show confirm menu and reset default values
-    let userValidation = $("deleteTextbox");
 
     $("#deleteConfirmMenu").css("display", "block");
-    userValidation.val("");
-    userValidation.attr("placeholder", "type here");
-    userValidation.css("border-bottom", "2px solid #bebed2");
+    $("#deleteTextbox").val("");
+    $("#deleteTextbox").attr("placeholder", "type here");
+    $("#deleteTextbox").css("border-bottom", "2px solid #bebed2");
   };
 
   return (
@@ -299,6 +298,7 @@ export default function Edit(props) {
         </div>
         <input
           type="text"
+          autoComplete="off"
           id="deleteTextbox"
           placeholder="type here"
           onKeyUp={(event) => {
