@@ -112,10 +112,16 @@
   user-select: none;
 }
 
-.stats-container{
+.stats-container {
   display: flex;
+  flex-wrap: wrap;
+
   gap: 10px;
   padding: 20px;
+}
+
+.stats-container > * {
+  margin: 0 auto;
 }
 
 .about-header {
@@ -131,7 +137,7 @@
 
 .stat-card {
   height: 200px;
-  width: 300px;
+  min-width: 300px;
 
   border-radius: 5px;
   border: 2px solid black;
@@ -139,16 +145,31 @@
 
 .edit-history {
   max-width: 60vw;
-
-  padding: 30px;
+  transition: all 0.5s;
 }
 
-.history-container{
-  width: 100vw;
-  max-width: 400px;
+@media only screen and (max-width: 500px) {
+  .edit-history {
+    margin: 0;
+  }
+}
 
+.history-container {
+  min-width: 300px;
+  max-height: 650px;
+
+  overflow: auto;
   border-radius: 4px;
   padding: 20px;
-  margin: 10px;
+  margin: 10px 0;
   border: 2px black solid;
+}
+
+.history-edits {
+  color: black;
+  border-left: grey 2px solid;
+}
+
+.history-edits:hover {
+  pointer-events: none;
 }

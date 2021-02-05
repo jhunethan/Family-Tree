@@ -3,6 +3,31 @@ import "../css/LandingPage.css";
 import { Link } from "react-router-dom";
 import Axios from "axios";
 
+function Edits(props) {
+  let changes = [];
+
+  try {
+    if (props.data.changes.includes(",")) {
+      changes = props.data.changes.split(",");
+
+      console.log(changes);
+    } else {
+      changes[0] = props.data.changes;
+    }
+  } catch {
+    changes[0] = props.data.changes;
+  }
+  if (props.data.method === "delete")
+    changes[0] = `deleted node with ID ${props.data.id}`;
+  return (
+    <ul>
+      {changes.map((n,index) => {
+        return <li className="history-edits" key={index}>{n}</li>;
+      })}
+    </ul>
+  );
+}
+
 function EditHistory(props) {
   let count = 0;
 
@@ -12,25 +37,13 @@ function EditHistory(props) {
         let id = x.id !== 0 ? x.id : x.changes;
         count += 1;
 
-        let changes;
-        try {
-          if (x.changes.include(",")) {
-            changes = x.changes.split(",");
-          } else {
-            changes = x.changes;
-          }
-        } catch {
-          changes = x.changes;
-        }
-        if(x.method === "delete") changes = `deleted node with ID ${x.id}`
-
         return (
           <div className="history-container" key={count}>
             <p>{x.time}</p>
             <p>
               {x.author} made the following changes to {id}
             </p>
-            <div>{changes}</div>
+            <Edits data={x} />
           </div>
         );
       })}

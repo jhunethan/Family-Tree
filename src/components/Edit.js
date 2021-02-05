@@ -60,7 +60,7 @@ export default function Edit(props) {
     setChanged(false);
     if ($("#genInput").val() !== props.nodedata.generation) {
       setChanged(true);
-      changesStack.push("gen");
+      changesStack.push("generation");
     }
     if ($("#name").val() !== props.nodedata.name) {
       setChanged(true);

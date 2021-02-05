@@ -34,7 +34,6 @@ export default function Tree() {
 
   useEffect(() => {
     Axios.get("http://localhost:5000/api/get").then((result) => {
-      console.log("got data");
       setTableData(result.data);
     });
   }, [update]);
