@@ -9,8 +9,6 @@ function Edits(props) {
   try {
     if (props.data.changes.includes(",")) {
       changes = props.data.changes.split(",");
-
-      console.log(changes);
     } else {
       changes[0] = props.data.changes;
     }
@@ -21,8 +19,12 @@ function Edits(props) {
     changes[0] = `deleted node with ID ${props.data.id}`;
   return (
     <ul>
-      {changes.map((n,index) => {
-        return <li className="history-edits" key={index}>{n}</li>;
+      {changes.map((n, index) => {
+        return (
+          <li className="history-edits" key={index}>
+            {n}
+          </li>
+        );
       })}
     </ul>
   );
@@ -30,10 +32,10 @@ function Edits(props) {
 
 function EditHistory(props) {
   let count = 0;
-
+  let slicesize = [props.pagesize * 25, (props.pagesize + 1) * 25];
   return (
     <div className="edit-history">
-      {props.editHistory.reverse().map((x) => {
+      {props.editHistory.slice(slicesize[0], slicesize[1]).map((x) => {
         let id = x.id !== 0 ? x.id : x.changes;
         count += 1;
 
@@ -54,14 +56,29 @@ function EditHistory(props) {
 export default function LandingPage() {
   const [update, setupdate] = useState(0);
   const [editHistory, setEditHistory] = useState([]);
+  const [databasesize, setDatabasesize] = useState(0);
+  const [page, setPage] = useState(0);
 
   const updatehistory = () => {
     setupdate((prev) => prev + 1);
   };
 
+  const changePage = (operator) => {
+    if (page >= 0) {
+      if (operator === "+") {
+        if (page < editHistory.length / 25 - 1) setPage((prev) => prev + 1);
+      } else {
+        if (page !== 0) setPage((prev) => prev - 1);
+      }
+    }
+  };
+
   useEffect(() => {
     Axios.get("http://localhost:5000/api/get/edithistory").then((result) => {
-      setEditHistory(result.data);
+      setEditHistory(result.data.reverse());
+    });
+    Axios.get("http://localhost:5000/api/get").then((result) => {
+      setDatabasesize(result.data.length);
     });
   }, [update]);
 
@@ -82,18 +99,34 @@ export default function LandingPage() {
             </button>
           </Link>
         </div>
-        <h1 className="about-header">Edit History</h1>
+        <h1 className="about-header">Statistics</h1>
         <section className="about-section">
           <div className="stats-container">
             <div className="stat-card users">
               {" "}
               <button onClick={updatehistory}>⟳</button>
+              <h1>Total Users?</h1>
             </div>
-            <div className="stat-card members"></div>
-            <div className="stat-card edits-freq"></div>
+            <div className="stat-card members">
+              {" "}
+              <h1>Family Members in Database</h1>
+              <h2 className="edit-freq-display">{databasesize}</h2>
+            </div>
+            <div className="stat-card edits-freq">
+              <h1>Edits this month</h1>
+              <h2 className="edit-freq-display">{editHistory.length}</h2>
+            </div>
+          </div>
+          <div>
+            <h1 className="center">Edit History</h1>
+            <div className="page-container">
+              <button onClick={() => changePage("-")}>Previous</button>
+              <div className="page-number">Page {page + 1}</div>
+              <button onClick={() => changePage("+")}>Next</button>
+            </div>
           </div>
 
-          <EditHistory editHistory={editHistory}> </EditHistory>
+          <EditHistory editHistory={editHistory} pagesize={page} />
         </section>
       </section>
     </div>

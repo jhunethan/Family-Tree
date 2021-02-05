@@ -121,7 +121,7 @@
 }
 
 .stats-container > * {
-  margin: 0 auto;
+  margin: 10px auto;
 }
 
 .about-header {
@@ -136,11 +136,18 @@
 }
 
 .stat-card {
+  display: flex;
+  flex-direction: column;
   height: 200px;
   min-width: 300px;
 
   border-radius: 5px;
   border: 2px solid black;
+}
+
+.stat-card>*{
+  margin: 20px auto;
+  padding: 10px;
 }
 
 .edit-history {
@@ -172,4 +179,21 @@
 
 .history-edits:hover {
   pointer-events: none;
+}
+
+.edit-freq-display{
+  font-size: 30px;
+}
+
+.page-container{
+  display: flex;
+  gap: 10px;
+}
+
+.page-number{
+  padding: 10px;
+}
+
+.center{
+  text-align: center;
 }
