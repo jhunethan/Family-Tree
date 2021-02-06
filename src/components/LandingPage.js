@@ -65,9 +65,14 @@ function LandingNavigation(props) {
   const changeAuthor = (newAuthor) => {
     //use context to set author as state of App.js
     //validation
-    if ($.trim(newAuthor).length > 1) {
+
+    let author = $.trim(newAuthor).replace(/\w\S*/g, (w) =>
+      w.replace(/^\w/, (c) => c.toUpperCase())
+    );
+
+    if (author.length > 1) {
       //set using function in App.js so it can be passed down
-      setCookie("author", newAuthor, { path: "/" });
+      setCookie("author", author, { path: "/" });
       $("div.author-input").addClass("hidden");
       $("div.landing-navigation").removeClass("hidden");
     } else {

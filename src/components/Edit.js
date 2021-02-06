@@ -359,7 +359,7 @@ export default function Edit(props) {
                 // Cancel the default action, if needed
                 event.preventDefault();
                 // Focus on next element
-                saveEdit();
+                document.getElementById("birthplace-input").focus();
               }
             }}
           ></input>
@@ -397,6 +397,14 @@ export default function Edit(props) {
           id="birthplace-input"
           className="extra-details-input"
           onChange={extraInputHandler}
+          onKeyUp={(event) => {
+            if (event.key === "Enter") {
+              // Cancel the default action, if needed
+              event.preventDefault();
+              // Focus on next element
+              document.getElementById("location-input").focus();
+            }
+          }}
         />
         <label htmlFor="location-input" className="extra-details-label">
           Current Location
@@ -407,6 +415,14 @@ export default function Edit(props) {
           id="location-input"
           className="extra-details-input"
           onChange={extraInputHandler}
+          onKeyUp={(event) => {
+            if (event.key === "Enter") {
+              // Cancel the default action, if needed
+              event.preventDefault();
+              // Focus on next element
+              document.getElementById("extranames-input").focus();
+            }
+          }}
         />
         <label htmlFor="extranames-input" className="extra-details-label">
           Additional Names
@@ -417,6 +433,14 @@ export default function Edit(props) {
           id="extranames-input"
           className="extra-details-input"
           onChange={extraInputHandler}
+          onKeyUp={(event) => {
+            if (event.key === "Enter") {
+              // Cancel the default action, if needed
+              event.preventDefault();
+              // Focus on next element
+              document.getElementById("fblink-input").focus();
+            }
+          }}
         />{" "}
         <label htmlFor="fblink-input" className="extra-details-label">
           Facebook Link
@@ -427,6 +451,14 @@ export default function Edit(props) {
           id="fblink-input"
           className="extra-details-input"
           onChange={extraInputHandler}
+          onKeyUp={(event) => {
+            if (event.key === "Enter") {
+              // Cancel the default action, if needed
+              event.preventDefault();
+              // Focus on next element
+              document.getElementsByClassName("description-input")[0].focus();
+            }
+          }}
         />
         <label htmlFor="description-input" className="extra-details-label">
           Description ( {descriptionlimit}/250 words )

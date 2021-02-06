@@ -28,40 +28,34 @@ const getChildren = (id, data) => {
 function NodeCardDetails(props) {
   switch (props.method) {
     case "birthdate":
-      if (props.node.birthdate !== "") {
-        try {
+      try {
+        if (
+          props.node.extradetails.birthplace !== "" &&
+          props.node.birthdate !== ""
+        ) {
           return (
             <section>
               <h2>Born</h2>
               <p>
-                <strong>{props.node.birthdate}</strong> in{" "}
-                <strong>{props.node.extradetails.birthplace}</strong>
+                {props.node.birthdate} in {props.node.extradetails.birthplace}
               </p>
             </section>
           );
-        } catch {
+        } else if (props.node.extradetails.birthplace !== "") {
           return (
             <section>
               <h2>Born</h2>
-              <p>{props.node.birthdate}</p>
+              <p>in {props.node.extradetails.birthplace}</p>
             </section>
           );
         }
-      } else {
-        try {
-          return (
-            <section>
-              <h2>Born</h2>
-              <p>
-                in <strong>{props.node.extradetails.birthplace}</strong>
-              </p>
-            </section>
-          );
-        } catch {
-          return null;
-        }
-      }
-
+      } catch {}
+      return (
+        <section>
+          <h2>Born</h2>
+          <p>{props.node.birthdate}</p>
+        </section>
+      );
     case "generation":
       if (props.node.generation !== "") {
         return (
@@ -148,16 +142,19 @@ function ImmediateFamily(props) {
   switch (props.method) {
     case "parents":
       try {
-        if (props.node.isPartner === 1) return null;
-      } catch {}
-      try {
         let parent = getNode(props.node.parent, props.treeData);
+        let partner;
+        try {
+          partner = `${parent.partnerinfo.name} (${parent.partnerinfo.extradetails.extranames})`;
+        } catch {
+          partner = parent.partnerinfo.name;
+        }
         if (parent.partnerinfo.name !== "") {
           return (
             <div className="card-parents card-related">
               <h2>Known Parents</h2>
               <p>{props.node.parent}</p>
-              <p>{parent.partnerinfo.name}</p>
+              <p>{partner}</p>
             </div>
           );
         }
