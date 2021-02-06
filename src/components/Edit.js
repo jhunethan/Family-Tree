@@ -158,7 +158,6 @@ export default function Edit(props) {
         changes: extrachanges,
       }).then(closeEditMenu());
     } else {
-      alert("no further details changes detected");
     }
     setChanged(false);
     setExtrachanged(false);
