@@ -373,7 +373,7 @@ export default function Tree(props) {
           return "";
         }
       })
-      .call(wrap, 200);
+      .call(wrap, 150);
     partnerText
       .enter()
       .append("text")
@@ -390,7 +390,7 @@ export default function Tree(props) {
           return "";
         }
       })
-      .call(wrap, 200);
+      .call(wrap, 150);
     var text = d3
       .select("svg g.nodes")
       .selectAll("text .node")
@@ -412,7 +412,7 @@ export default function Tree(props) {
       .text(function (d) {
         return d.data.birthdate;
       })
-      .call(wrap, 200);
+      .call(wrap, 150);
     text
       .enter()
       .append("text")
@@ -430,7 +430,7 @@ export default function Tree(props) {
       .text(function (d) {
         return d.data.generation;
       })
-      .call(wrap, 200);
+      .call(wrap, 150);
     text
       .enter()
       .append("text")
@@ -448,7 +448,7 @@ export default function Tree(props) {
       .text(function (d) {
         return d.data.name;
       })
-      .call(wrap, 200);
+      .call(wrap, 150);
 
     links = d3.select("svg g.links").selectAll("path").data(linksData);
     links
