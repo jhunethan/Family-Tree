@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import * as $ from "jquery";
+import Axios from "axios";
 
 import "../css/NodeCard.css";
 import placeholder from "../css/person-placeholder.jpg";
@@ -50,12 +51,15 @@ function NodeCardDetails(props) {
           );
         }
       } catch {}
-      return (
-        <section>
-          <h2>Born</h2>
-          <p>{props.node.birthdate}</p>
-        </section>
-      );
+      if (props.node.birthdate !== "") {
+        return (
+          <section>
+            <h2>Born</h2>
+            <p>{props.node.birthdate}</p>
+          </section>
+        );
+      }
+      return null;
     case "generation":
       if (props.node.generation !== "") {
         return (
@@ -225,6 +229,7 @@ function ImmediateFamily(props) {
 
 export default function NodeCard(props) {
   const [cardexpanded, setcardexpanded] = useState(false);
+  const [image, setImage] = useState(undefined);
 
   const transform = () => {
     if (!cardexpanded) {
@@ -241,6 +246,18 @@ export default function NodeCard(props) {
       setcardexpanded(false);
     }
   };
+
+  const inputFileHandler = (event) => {
+    setImage(event.target.files[0]);
+  };
+
+  const submit = () => {
+    var fd = new FormData();
+    fd.append("file", image);
+    const config = { headers: { "Content-Type": "multipart/form-data" } };
+    Axios.post("http://localhost:5000/api/upload", fd, config);
+  };
+
   return (
     <div id="card-container">
       <div className="card-nav">
@@ -263,6 +280,8 @@ export default function NodeCard(props) {
         <section className="top-card">
           <img src={placeholder} alt="user" />
         </section>
+        <input type="file" id="uploadfile" onChange={inputFileHandler} />
+        <input type="submit" onClick={() => submit()} />
         <section className="middle-card">
           <h1 className="card-subtitle">
             {props.node.generation} {props.node.name}
