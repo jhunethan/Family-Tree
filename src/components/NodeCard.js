@@ -231,29 +231,26 @@ export default function NodeCard(props) {
   const [progress, setProgress] = useState("");
 
   useEffect(() => {
-    let data = new FormData();
-    data.append("filename", "81-1-Screenshot_20191025-111850.png");
-    Axios.get("http://localhost:5000/api/get/photos/user",{
-      filename: "81-1-Screenshot_20191025-111850.png",
-      // responseType: "blob",
-    })
-    // .then((response) => {
-    //   let imgUrl = URL.createObjectURL(response.data);
-    //   setImageServed(imgUrl);
-    // });
+    try {
+      Axios.get("http://localhost:5000/api/get/photos/user", {
+        params: { filename: `ID${props.node.id}` },
+        responseType: "blob",
+      }).then((response) => {
+        let imgUrl = URL.createObjectURL(response.data);
+        setImageServed(imgUrl);
+      });
+    } catch (error) {}
   }, [props.node]);
 
   const transform = () => {
     if (!cardexpanded) {
       $("div.card-main").css("width", "100%");
-      $("#card-container").css("width", "100%");
-      $("#card-container").css("margin-left", "0px");
+      $("#card-container").css("width", "100%").css("margin-left", "0px");
       $("#card-expand").html("><");
       setcardexpanded(true);
     } else {
       $("div.card-main").css("width", 350);
-      $("#card-container").css("width", 350);
-      $("#card-container").css("margin-left", "10px");
+      $("#card-container").css("width", 350).css("margin-left", "10px");
       $("#card-expand").html("<>");
       setcardexpanded(false);
     }
@@ -267,17 +264,14 @@ export default function NodeCard(props) {
   const submit = (photonumber) => {
     var fd = new FormData();
     fd.append("file", image);
-    fd.append("photoname", `${props.node.id}-${photonumber}`);
+    fd.append("photoname", `ID${props.node.id}-${photonumber}`);
     Axios.post("http://localhost:5000/api/upload", fd, {
       onUploadProgress: (ProgressEvent) => {
         let progress =
           Math.round((ProgressEvent.loaded / ProgressEvent.total) * 100) + "%";
         setProgress(progress);
       },
-    }).catch((err) => {
-      setProgress("no file selected");
-      console.log(err);
-    });
+    }).catch(setProgress("no file selected"));
   };
 
   return (
