@@ -38,11 +38,10 @@ export default function Tree(props) {
   }, [update]);
 
   useEffect(() => {
-    //clear tree
-    $("#Tree").html("");
     //if tabledata is updated, check if the tree exists, else do nothing
     var intervalId = setInterval(function () {
       if ($("#Tree").children().length < 1) {
+        $("#Tree").html("");
         try {
           buildTree();
         } catch {}
@@ -164,7 +163,8 @@ export default function Tree(props) {
     var linksData = treeData.links();
 
     svg.attr("width", width).attr("height", height).call(zoom);
-
+    
+    // initial zoom .attr("transform","translate(100,50)scale(.25,.25)")
     var nodes = d3.select("svg").selectAll("g").data([0]);
     nodes.enter().append("g").attr("class", "links");
     nodes.enter().append("g").attr("class", "nodes");

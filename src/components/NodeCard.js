@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as $ from "jquery";
 import Axios from "axios";
 
@@ -51,15 +51,12 @@ function NodeCardDetails(props) {
           );
         }
       } catch {}
-      if (props.node.birthdate !== "") {
-        return (
-          <section>
-            <h2>Born</h2>
-            <p>{props.node.birthdate}</p>
-          </section>
-        );
-      }
-      return null;
+      return (
+        <section>
+          <h2>Born</h2>
+          <p>{props.node.birthdate}</p>
+        </section>
+      );
     case "generation":
       if (props.node.generation !== "") {
         return (
@@ -230,6 +227,21 @@ function ImmediateFamily(props) {
 export default function NodeCard(props) {
   const [cardexpanded, setcardexpanded] = useState(false);
   const [image, setImage] = useState(undefined);
+  const [imageServed, setImageServed] = useState(placeholder);
+  const [progress, setProgress] = useState("");
+
+  useEffect(() => {
+    let data = new FormData();
+    data.append("filename", "81-1-Screenshot_20191025-111850.png");
+    Axios.get("http://localhost:5000/api/get/photos/user",{
+      filename: "81-1-Screenshot_20191025-111850.png",
+      // responseType: "blob",
+    })
+    // .then((response) => {
+    //   let imgUrl = URL.createObjectURL(response.data);
+    //   setImageServed(imgUrl);
+    // });
+  }, [props.node]);
 
   const transform = () => {
     if (!cardexpanded) {
@@ -248,14 +260,24 @@ export default function NodeCard(props) {
   };
 
   const inputFileHandler = (event) => {
+    setProgress("");
     setImage(event.target.files[0]);
   };
 
-  const submit = () => {
+  const submit = (photonumber) => {
     var fd = new FormData();
     fd.append("file", image);
-    const config = { headers: { "Content-Type": "multipart/form-data" } };
-    Axios.post("http://localhost:5000/api/upload", fd, config);
+    fd.append("photoname", `${props.node.id}-${photonumber}`);
+    Axios.post("http://localhost:5000/api/upload", fd, {
+      onUploadProgress: (ProgressEvent) => {
+        let progress =
+          Math.round((ProgressEvent.loaded / ProgressEvent.total) * 100) + "%";
+        setProgress(progress);
+      },
+    }).catch((err) => {
+      setProgress("no file selected");
+      console.log(err);
+    });
   };
 
   return (
@@ -278,10 +300,11 @@ export default function NodeCard(props) {
       </div>
       <div className="card-main">
         <section className="top-card">
-          <img src={placeholder} alt="user" />
+          <img src={imageServed} alt="user" />
         </section>
         <input type="file" id="uploadfile" onChange={inputFileHandler} />
-        <input type="submit" onClick={() => submit()} />
+        <input type="submit" onClick={() => submit(1)} />
+        {progress}
         <section className="middle-card">
           <h1 className="card-subtitle">
             {props.node.generation} {props.node.name}
