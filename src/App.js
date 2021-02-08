@@ -13,7 +13,7 @@ export default function App() {
   return (
     <main>
       <CookiesProvider>
-        <Header />
+        <Header/>
         <Switch>
           <Route exact path="/" render={() => <LandingPage />} />
           <Route path="/table" render={() => <Table />} />

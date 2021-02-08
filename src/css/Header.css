@@ -17,36 +17,33 @@ nav {
 }
 
 
-ul {
+.nav-ul {
   display: flex;
+  margin: 0;
+  height: 100%;
+
   list-style-type: none;
   align-items: center;
 }
 
-li {
+.nav-link {
   text-decoration: none;
-  font-family: "Montserrat", sans-serif;
-  font-size: 16px;
+  user-select: none;
+  font-size: 24px;
   font-weight: 600;
   letter-spacing: 0.1rem;
+
+  margin: 0 50px;
+
   color: white;
-  border: 1px solid transparent;
-  padding: 5px;
-  margin: 0 5px;
-  width: 150px;
-  transition: 0.5s ease;
-  user-select: none;
 }
 
-li:hover {
-  cursor: pointer;
+.nav-link:hover{
+  border-bottom: 2px solid #fff200;
 }
 
-.nav-link {
-  transition: color 0.2s ease-in-out;
-  color: white;
-  font-size: 16px;
-  border-color: rgba(0, 0, 0, 0);
+.active{
+  border-bottom: 2px solid #ff8800;
 }
 
 a {

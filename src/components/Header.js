@@ -1,7 +1,18 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import * as $ from "jquery";
+
 import "../css/Header.css";
 
 export default function Header(props) {
+
+  const toggleActive = (tab) => {
+    if (!window.location.href.includes(tab)) {
+      $("#nav-link-one").toggleClass("active");
+      $("#nav-link-two").toggleClass("active");
+    }
+  };
+
   return (
     <nav>
       <div className="asidecontainer">
@@ -15,53 +26,29 @@ export default function Header(props) {
         </i>
 
         <a href="/" className="nav-logo">
-           LAY
+          LAY
         </a>
-        <ul className="nav-ul">
-          <li>
-            <button
-              type="button"
-              className="nav-link"
-              onClick={() => {
-                props.option1action();
-              }}
-            >
-              {props.option1text}
-            </button>
-          </li>
-          <li>
-            <button
-              type="button"
-              className="nav-link"
-              onClick={() => {
-                props.option2action();
-              }}
-            >
-              {props.option2text}
-            </button>
-          </li>
-          <li>
-            <button
-              type="button"
-              className="nav-link"
-              onClick={() => {
-                props.option3action();
-              }}
-            >
-              {props.option3text}
-            </button>
-          </li>
-          <li>
-            <button
-              type="button"
-              className="nav-link"
-              onClick={() => {
-                props.option4action();
-              }}
-            >
-              {props.option4text}
-            </button>
-          </li>
+        <ul className="nav-ul header-navigation hidden">
+          <Link
+            to="/table"
+            id="nav-link-one"
+            className="nav-link"
+            onClick={() => {
+              toggleActive("table");
+            }}
+          >
+            Table
+          </Link>
+          <Link
+            to="/tree"
+            id="nav-link-two"
+            className="nav-link active"
+            onClick={() => {
+              toggleActive("tree");
+            }}
+          >
+            Tree
+          </Link>
           <i
             className="far fa-times-circle"
             onClick={() => {

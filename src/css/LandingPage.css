@@ -189,7 +189,7 @@
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 .reset-button {

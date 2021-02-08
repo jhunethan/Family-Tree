@@ -80,6 +80,17 @@ function LandingNavigation(props) {
     }
   };
 
+  const setActive = (option) => {
+    if (option === "table") {
+      $("#nav-link-one").addClass("active");
+      $("#nav-link-two").removeClass("active");
+    } else {
+      $("#nav-link-one").removeClass("active");
+      $("#nav-link-two").addClass("active");
+    }
+    $("ul.header-navigation").removeClass("hidden");
+  };
+
   if (cookies.author === undefined) {
     authorInput = "author-input";
     landingNavigation = "landing-navigation hidden";
@@ -116,12 +127,20 @@ function LandingNavigation(props) {
       <div className={landingNavigation}>
         <p>Welcome {cookies.author}</p>
         <Link to="/table">
-          <button type="button" id="landingButton">
+          <button
+            type="button"
+            id="landingButton"
+            onClick={() => setActive("table")}
+          >
             View Table
           </button>
         </Link>
         <Link to="/tree">
-          <button type="button" id="landingButton">
+          <button
+            type="button"
+            id="landingButton"
+            onClick={() => setActive("tree")}
+          >
             View Tree
           </button>
         </Link>
@@ -166,7 +185,10 @@ export default function LandingPage(props) {
     $("div.author-input").removeClass("hidden");
     $("div.landing-navigation").addClass("hidden");
     $("input.author-input").val("");
+    $("ul.header-navigation").addClass("hidden");
   };
+
+  $("ul.header-navigation").addClass("hidden");
 
   return (
     <div className="wrapper">

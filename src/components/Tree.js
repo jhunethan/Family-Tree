@@ -163,7 +163,7 @@ export default function Tree(props) {
     var linksData = treeData.links();
 
     svg.attr("width", width).attr("height", height).call(zoom);
-    
+
     // initial zoom .attr("transform","translate(100,50)scale(.25,.25)")
     var nodes = d3.select("svg").selectAll("g").data([0]);
     nodes.enter().append("g").attr("class", "links");
@@ -691,6 +691,8 @@ export default function Tree(props) {
         .attr("placeholder", "");
     } catch {}
   };
+
+  $("ul.header-navigation").removeClass("hidden");
 
   return (
     <div>

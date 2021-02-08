@@ -235,6 +235,8 @@ export default function Table(props) {
     $("div.edit-container").css("display", "none");
   };
 
+  $("ul.header-navigation").removeClass("hidden");
+
   return (
     <div className="TableContainer">
       <div className="container">
@@ -244,6 +246,7 @@ export default function Table(props) {
             <p>Click the table to interact.</p>
             <button
               type="button"
+              className="refresh-table"
               onClick={() => {
                 updateTable();
               }}

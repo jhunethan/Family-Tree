@@ -98,6 +98,9 @@ text {
   color: black;
   background-color: #fff200;
   cursor: pointer;
+  border: 2px solid black;
+
+  transition: all 0.3s;
 }
 
 #datalistbutton:hover {
@@ -125,4 +128,9 @@ text {
 
   background-color: #fff200;
   padding: 10px 20px;
+  border: 2px solid black;
+  font-size: 16px;
+
+  cursor: pointer;
+  transition: all 0.3s;
 }

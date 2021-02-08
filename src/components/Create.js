@@ -223,12 +223,13 @@ function Create(props) {
         />
         <p> Partner</p>
       </div>
-      <button type="button" id="save" onClick={submit}>
+      <button type="button" id="save" className="create-button" onClick={submit}>
         Save Changes
       </button>
       <button
         type="button"
         id="cancel"
+        className="create-button"
         onClick={() => {
           try {
             document.getElementsByClassName("Create")[0].style.display = "none";
