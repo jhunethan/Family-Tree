@@ -121,7 +121,7 @@ export default function Edit(props) {
     if ($.trim(element.val()) === "") return true;
     element.css("border-bottom", "2px solid red");
     element.val("");
-    element.attr("placeholder", "parent not in database");
+    element.attr("placeholder", "invalid parent: click from list");
     return false;
   }
 
