@@ -155,17 +155,21 @@ export default function Tree(props) {
     height = $("#Tree").height();
     width = $("#Tree").width();
 
-    svg = d3.select("#Tree").append("svg").classed("svg-container", true);
+    svg = d3
+      .select("#Tree")
+      .call(zoom)
+      .append("svg")
+      .classed("svg-container", true);
 
     var treeLayout = d3.tree();
     treeLayout.nodeSize([750, 350]);
     treeLayout(treeData);
     var linksData = treeData.links();
 
-    svg.attr("width", width).attr("height", height).call(zoom);
+    svg.attr("width", width).attr("height", height);
 
-    // initial zoom .attr("transform","translate(100,50)scale(.25,.25)")
-    var nodes = d3.select("svg").selectAll("g").data([0]);
+    // initial zoom
+    var nodes = d3.select("svg.svg-container").selectAll("g").data([0]);
     nodes.enter().append("g").attr("class", "links");
     nodes.enter().append("g").attr("class", "nodes");
 
@@ -572,6 +576,7 @@ export default function Tree(props) {
       $("#datalist-input").attr("placeholder", "Please click from list");
       return false;
     }
+
   };
 
   const populateEditFields = (node) => {
@@ -602,6 +607,9 @@ export default function Tree(props) {
     });
     arr = arr.filter((x) => {
       return x.pid !== Number(id);
+    });
+    arr = arr.filter((x) => {
+      return x.isPartner !== 1;
     });
     try {
       if (children.length > 0) {
@@ -733,7 +741,7 @@ export default function Tree(props) {
         ⟳
       </button>
       <NodeCard node={InfoCard} treeData={tableData} edit={() => openNode()} />
-      <div id="Tree"></div>
+      <svg id="Tree"></svg>
       <Create
         data={tableData}
         getPID={getPID}

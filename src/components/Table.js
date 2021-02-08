@@ -116,6 +116,9 @@ export default function Table(props) {
     arr = arr.filter((x) => {
       return x.pid !== Number(id);
     });
+    arr = arr.filter((x) => {
+      return x.isPartner !== 1;
+    });
     try {
       if (children.length > 0) {
         for (let i = 0; i < children.length; i++) {

@@ -32,14 +32,16 @@ nav {
   font-size: 24px;
   font-weight: 600;
   letter-spacing: 0.1rem;
-
+  border-bottom: 2px solid #d10300;
   margin: 0 50px;
 
   color: white;
+  transition: all 0.5s;
 }
 
 .nav-link:hover{
   border-bottom: 2px solid #fff200;
+  transition: all 0.3s;
 }
 
 .active{
