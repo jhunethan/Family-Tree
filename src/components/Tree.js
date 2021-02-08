@@ -155,18 +155,18 @@ export default function Tree(props) {
     height = $("#Tree").height();
     width = $("#Tree").width();
 
-    svg = d3
-      .select("#Tree")
-      .call(zoom)
-      .append("svg")
-      .classed("svg-container", true);
-
+    svg = d3.select("#Tree").call(zoom);
+    zoom.scaleTo(svg.transition().duration(500), 0.2);
     var treeLayout = d3.tree();
     treeLayout.nodeSize([750, 350]);
     treeLayout(treeData);
     var linksData = treeData.links();
 
-    svg.attr("width", width).attr("height", height);
+    svg
+      .append("svg")
+      .classed("svg-container", true)
+      .attr("width", width)
+      .attr("height", height);
 
     // initial zoom
     var nodes = d3.select("svg.svg-container").selectAll("g").data([0]);
@@ -514,10 +514,10 @@ export default function Tree(props) {
     return node.id;
   };
 
-  const search = () => {
+  const search = (text) => {
     let found = false;
     let node;
-    let searchterm = $.trim($("#datalist-input").val());
+    let searchterm = $.trim(text);
     $("#datalist-input").val("");
     populateDatalist();
 
@@ -576,7 +576,6 @@ export default function Tree(props) {
       $("#datalist-input").attr("placeholder", "Please click from list");
       return false;
     }
-
   };
 
   const populateEditFields = (node) => {
@@ -720,14 +719,16 @@ export default function Tree(props) {
               // Cancel the default action, if needed
               event.preventDefault();
               // Focus on next element if successful
-              if (search()) event.target.blur();
+              let val = $("#datalist-input").val();
+              if (search(val)) event.target.blur();
             }
           }}
         />
         <button
           id="datalistbutton"
           onClick={(event) => {
-            if (!search()) document.getElementById("datalist-input").focus();
+            if (!search($("#datalist-input").val()))
+              document.getElementById("datalist-input").focus();
           }}
         >
           Search

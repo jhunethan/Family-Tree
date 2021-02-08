@@ -237,7 +237,9 @@ export default function Table(props) {
     $("#deleteConfirmMenu").css("display", "none");
     $("div.edit-container").css("display", "none");
   };
-
+  $("#nav-link-two").removeClass("active");
+  $("#nav-link-one").removeClass("active");
+  $("#nav-link-one").addClass("active");
   $("ul.header-navigation").removeClass("hidden");
 
   return (
