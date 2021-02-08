@@ -19,8 +19,8 @@ const getChildren = (id, data) => {
   let arr = [];
   if (Number(id) === 0) return arr;
   for (let i = 0; i < data.length; i++) {
-    if (data[i].pid === Number(id)) {
-      if (data[i].isPartner !== 1) arr.push(data[i]);
+    if (data[i].pid === Number(id) && data[i].isPartner !== 1) {
+      arr.push(data[i]);
     }
   }
   if (arr.length > 0) return arr;

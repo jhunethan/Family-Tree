@@ -132,7 +132,7 @@ export default function Tree(props) {
     .scaleExtent([0.1, 1])
     .on("zoom", zoomed);
 
-  var svg = d3.select("#Tree");
+  var svg = d3.select("svg.svg-container");
 
   const buildTree = () => {
     //reconvert tabledata to check for updates
@@ -155,7 +155,7 @@ export default function Tree(props) {
     height = $("#Tree").height();
     width = $("#Tree").width();
 
-    svg = d3.select("#Tree").append("svg");
+    svg = d3.select("#Tree").append("svg").classed("svg-container", true);
 
     var treeLayout = d3.tree();
     treeLayout.nodeSize([750, 350]);
