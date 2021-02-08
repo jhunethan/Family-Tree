@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as $ from "jquery";
 import Axios from "axios";
 
@@ -51,12 +51,14 @@ function NodeCardDetails(props) {
           );
         }
       } catch {}
-      return (
-        <section>
-          <h2>Born</h2>
-          <p>{props.node.birthdate}</p>
-        </section>
-      );
+      if (props.node.birthdate !== "")
+        return (
+          <section>
+            <h2>Born</h2>
+            <p>{props.node.birthdate}</p>
+          </section>
+        );
+      return null;
     case "generation":
       if (props.node.generation !== "") {
         return (
@@ -224,24 +226,29 @@ function ImmediateFamily(props) {
   }
 }
 
+function DisplayImages(props) {
+  console.log(props.imageServed);
+  return <img src={props.imageServed} alt="user" />;
+}
+
 export default function NodeCard(props) {
   const [cardexpanded, setcardexpanded] = useState(false);
   const [image, setImage] = useState(undefined);
-  const [imageServed] = useState(placeholder);
+  const [imageServed, setImageServed] = useState(placeholder);
   const [progress, setProgress] = useState("");
 
-  // useEffect(() => {
-  //   try {
-  //     Axios.get("http://localhost:5000/api/get/photos/user", {
-  //       params: { filename: `ID${props.node.id}` },
-  //       responseType: "blob",
-  //     }).then((response) => {
-  //       let imgUrl = URL.createObjectURL(response.data);
-  //       setImageServed(imgUrl);
-  //       if (response.data.type === "text/html") setImageServed(placeholder);
-  //     });
-  //   } catch (error) {}
-  // }, [props.node]);
+  useEffect(() => {
+    try {
+      Axios.get("http://localhost:5000/api/get/photos/user", {
+        params: { filename: `ID${props.node.id}` },
+        responseType: "blob",
+      }).then((response) => {
+        if (response.data.type === "text/html")
+          return setImageServed(placeholder);
+        setImageServed(URL.createObjectURL(response.data));
+      });
+    } catch (error) {}
+  }, [props.node]);
 
   const transform = () => {
     if (!cardexpanded) {
@@ -295,7 +302,7 @@ export default function NodeCard(props) {
       </div>
       <div className="card-main">
         <section className="top-card">
-          <img src={imageServed} alt="user" />
+          <DisplayImages imageServed={imageServed} />
         </section>
         <input type="file" id="uploadfile" onChange={inputFileHandler} />
         <input type="submit" onClick={() => submit(1)} />
