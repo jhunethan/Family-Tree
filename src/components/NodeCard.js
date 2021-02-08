@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import * as $ from "jquery";
 import Axios from "axios";
 
@@ -227,20 +227,21 @@ function ImmediateFamily(props) {
 export default function NodeCard(props) {
   const [cardexpanded, setcardexpanded] = useState(false);
   const [image, setImage] = useState(undefined);
-  const [imageServed, setImageServed] = useState(placeholder);
+  const [imageServed] = useState(placeholder);
   const [progress, setProgress] = useState("");
 
-  useEffect(() => {
-    try {
-      Axios.get("http://localhost:5000/api/get/photos/user", {
-        params: { filename: `ID${props.node.id}` },
-        responseType: "blob",
-      }).then((response) => {
-        let imgUrl = URL.createObjectURL(response.data);
-        setImageServed(imgUrl);
-      });
-    } catch (error) {}
-  }, [props.node]);
+  // useEffect(() => {
+  //   try {
+  //     Axios.get("http://localhost:5000/api/get/photos/user", {
+  //       params: { filename: `ID${props.node.id}` },
+  //       responseType: "blob",
+  //     }).then((response) => {
+  //       let imgUrl = URL.createObjectURL(response.data);
+  //       setImageServed(imgUrl);
+  //       if (response.data.type === "text/html") setImageServed(placeholder);
+  //     });
+  //   } catch (error) {}
+  // }, [props.node]);
 
   const transform = () => {
     if (!cardexpanded) {

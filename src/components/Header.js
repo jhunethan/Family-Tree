@@ -1,7 +1,6 @@
 import React from "react";
 import "../css/Header.css";
 
-
 export default function Header(props) {
   return (
     <nav>
@@ -69,7 +68,7 @@ export default function Header(props) {
               document.querySelector(".nav-ul").classList.toggle("visible");
             }}
           >
-            ㊂
+            ☰
           </i>
         </ul>
       </div>
