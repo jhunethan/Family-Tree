@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import * as $ from "jquery";
 import Axios from "axios";
+import { Image } from "cloudinary-react";
 
 import "../css/NodeCard.css";
 import placeholder from "../css/person-placeholder.jpg";
@@ -257,22 +258,18 @@ export default function NodeCard(props) {
     }
   };
 
-  const inputFileHandler = (event) => {
-    setProgress("");
-    setImage(event.target.files[0]);
-  };
+  const uploadImage = () => {
+    const formData = new FormData();
+    formData.append("file", image);
+    formData.append("upload_preset", "oms6f6zi");
 
-  const submit = (photonumber) => {
-    var fd = new FormData();
-    fd.append("file", image);
-    fd.append("photoname", `ID${props.node.id}-${photonumber}`);
-    Axios.post("http://localhost:5000/api/upload", fd, {
-      onUploadProgress: (ProgressEvent) => {
-        let progress =
-          Math.round((ProgressEvent.loaded / ProgressEvent.total) * 100) + "%";
-        setProgress(progress);
-      },
-    }).catch(setProgress("no file selected"));
+    Axios.post(
+      "https://api.cloudinary.com/v1_1/dqwu1p8fp/image/upload",
+      formData
+    ).then((Response) => {
+      console.log(Response);
+      //save it to extradetails db as filename: `${Response.data.public_id}.${Response.data.format}`
+    });
   };
 
   return (
@@ -295,10 +292,16 @@ export default function NodeCard(props) {
       </div>
       <div className="card-main">
         <section className="top-card">
-          <img src={imageServed} alt="user" />
+          <Image cloudName="dqwu1p8fp" public_id="trxzimtewj41fn3aghia"/>
         </section>
-        <input type="file" id="uploadfile" onChange={inputFileHandler} />
-        <input type="submit" onClick={() => submit(1)} />
+        <input
+          type="file"
+          id="uploadfile"
+          onChange={(event) => {
+            setImage(event.target.files[0]);
+          }}
+        />
+        <input type="submit" onClick={() => uploadImage()} />
         {progress}
         <section className="middle-card">
           <h1 className="card-subtitle">
