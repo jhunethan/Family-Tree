@@ -299,7 +299,7 @@ export default function Tree(props) {
       })
       .classed("hide", function (d) {
         try {
-          if (d.data.partnerinfo.name !== "") return true;
+          if (d.data.partnerinfo.name) return true;
         } catch {
           return false;
         }

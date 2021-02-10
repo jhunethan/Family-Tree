@@ -11,11 +11,22 @@ import { useCookies } from "react-cookie";
 function MemberPhotos(props) {
   try {
     if (props.node.extradetails.photo_id) {
+      let photos = props.node.extradetails.photo_id.split(",");
       return (
-        <Image
-          cloudName="dqwu1p8fp"
-          public_id={props.node.extradetails.photo_id}
-        />
+        <div className="image-container">
+          <div className="main-image">
+            <Image cloudName="dqwu1p8fp" public_id={photos[0]} />
+          </div>
+          <div className="extra-images">
+            {photos.map((x, index) => {
+              if (index > 0) {
+                return (
+                  <Image cloudName="dqwu1p8fp" public_id={x} key={index} />
+                );
+              } else return null;
+            })}
+          </div>
+        </div>
       );
     }
   } catch {}
@@ -23,21 +34,21 @@ function MemberPhotos(props) {
 }
 
 export default function NodeCard(props) {
-  const [cardexpanded, setcardexpanded] = useState(false);
   const [imageToBeSent, setImageToBeSent] = useState(undefined);
   const [cookies] = useCookies(["author"]);
+  var cardexpanded = false;
 
   const transform = () => {
     if (!cardexpanded) {
       $("div.card-main").css("width", "100%");
       $("#card-container").css("width", "100%").css("margin-left", "0px");
       $("#card-expand").html("><");
-      setcardexpanded(true);
+      cardexpanded = true;
     } else {
       $("div.card-main").css("width", 350);
       $("#card-container").css("width", 350).css("margin-left", "10px");
       $("#card-expand").html("<>");
-      setcardexpanded(false);
+      cardexpanded = false;
     }
   };
 
@@ -52,9 +63,19 @@ export default function NodeCard(props) {
     ).then((Response) => {
       console.log(Response);
       //save it to extradetails db as filename: `${Response.data.public_id}.${Response.data.format}`
+      let photo_id_string;
+      try {
+        if (props.node.extradetails.photo_id) {
+          photo_id_string = `${props.node.extradetails.photo_id},${Response.data.public_id}`;
+        } else {
+          photo_id_string = Response.data.public_id;
+        }
+      } catch {
+        photo_id_string = Response.data.public_id;
+      }
       Axios.put("http://localhost:5000/api/updateextra", {
         id: Number(props.node.id),
-        photo_id: Response.data.public_id,
+        photo_id: photo_id_string,
         author: cookies.author,
       });
     });

@@ -90,7 +90,7 @@ function Create(props) {
     } else {
       check1 = true;
     }
-    if (whitespace(nameinput.val()) !== "") {
+    if (whitespace(nameinput.val())) {
       whitespace(node.generation);
       whitespace(node.name);
       whitespace(node.birthdate);

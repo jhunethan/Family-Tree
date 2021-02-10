@@ -176,3 +176,16 @@ footer {
   border: 1px black solid;
   border-radius: 5px;
 }
+
+.image-container{
+  display: flex;
+}
+
+.extra-images{
+  display: flex;
+  flex-direction: column;
+}
+
+.extra-images>*{
+  max-height: 160px !important;
+}

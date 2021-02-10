@@ -25,10 +25,7 @@ export function NodeCardDetails(props) {
   switch (props.method) {
     case "birthdate":
       try {
-        if (
-          props.node.extradetails.birthplace !== "" &&
-          props.node.birthdate !== ""
-        ) {
+        if (props.node.extradetails.birthplace && props.node.birthdate) {
           return (
             <section>
               <h2>Born</h2>
@@ -37,7 +34,7 @@ export function NodeCardDetails(props) {
               </p>
             </section>
           );
-        } else if (props.node.extradetails.birthplace !== "") {
+        } else if (props.node.extradetails.birthplace) {
           return (
             <section>
               <h2>Born</h2>
@@ -53,7 +50,7 @@ export function NodeCardDetails(props) {
         </section>
       );
     case "generation":
-      if (props.node.generation !== "") {
+      if (props.node.generation) {
         return (
           <section>
             <h2>Generation</h2>
@@ -65,7 +62,7 @@ export function NodeCardDetails(props) {
       }
     case "location":
       try {
-        if (props.node.extradetails.location !== "") {
+        if (props.node.extradetails.location) {
           return (
             <section>
               <h2>Current location</h2>
@@ -80,7 +77,7 @@ export function NodeCardDetails(props) {
       try {
         let extranames = props.node.extradetails.extranames;
 
-        if (extranames !== "") {
+        if (extranames) {
           return (
             <section>
               <h2>Additional Names</h2>
@@ -111,7 +108,7 @@ export function NodeCardDetails(props) {
       }
     case "description":
       try {
-        if (props.node.extradetails.description !== "") {
+        if (props.node.extradetails.description) {
           let output = props.node.extradetails.description.split("\n\n");
           let count = 0;
           return (
@@ -145,7 +142,7 @@ export function ImmediateFamily(props) {
         } catch {
           partner = parent.partnerinfo.name;
         }
-        if (parent.partnerinfo.name !== "") {
+        if (parent.partnerinfo.name) {
           return (
             <div className="card-parents card-related">
               <h2>Known Parents</h2>
@@ -155,7 +152,7 @@ export function ImmediateFamily(props) {
           );
         }
       } catch {
-        if (props.node.parent !== undefined && props.node.parent !== "") {
+        if (props.node.parent) {
           return (
             <div className="card-parents card-related">
               <h2>Known Parents</h2>
