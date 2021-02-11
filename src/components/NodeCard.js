@@ -14,23 +14,18 @@ function MemberPhotos(props) {
       let photos = props.node.extradetails.photo_id.split(",");
       return (
         <div className="image-container">
-          <div className="main-image">
-            <Image cloudName="dqwu1p8fp" public_id={photos[0]} />
-          </div>
-          <div className="extra-images">
-            {photos.map((x, index) => {
-              if (index > 0) {
-                return (
-                  <Image cloudName="dqwu1p8fp" public_id={x} key={index} />
-                );
-              } else return null;
-            })}
-          </div>
+          {photos.map((x, index) => {
+            return <Image cloudName="dqwu1p8fp" public_id={x} key={index} />;
+          })}
         </div>
       );
     }
   } catch {}
-  return <img src={placeholder} alt="placeholder" />;
+  return (
+    <div className="image-container">
+      <img src={placeholder} alt="placeholder" />;
+    </div>
+  );
 }
 
 export default function NodeCard(props) {
@@ -83,6 +78,7 @@ export default function NodeCard(props) {
 
   return (
     <div id="card-container">
+      {" "}
       <div className="card-nav">
         <button
           id="card-close"
@@ -96,7 +92,31 @@ export default function NodeCard(props) {
           {"<>"}
         </button>
         <button id="card-edit" onClick={props.edit}>
-          Edit
+          <svg
+            version="1.1"
+            id="Capa_1"
+            xmlns="http://www.w3.org/2000/svg"
+            x="0px"
+            y="0px"
+            viewBox="0 0 50 50"
+            className="svg-edit"
+          >
+            <g>
+              <g>
+                <circle cx="10" cy="30" r="10" fill="white" />
+              </g>
+            </g>
+            <g>
+              <g>
+                <circle cx="40" cy="30" r="10" fill="white" />
+              </g>
+            </g>
+            <g>
+              <g>
+                <circle cx="70" cy="30" r="10" fill="white" />
+              </g>
+            </g>
+          </svg>
         </button>
       </div>
       <div className="card-main">

@@ -13,7 +13,7 @@
   background-color: #fff;
   line-height: 22px;
   color: #000;
-  border-radius: 5px;
+  border-radius: 15px 0 0 0;
   filter: drop-shadow(5px 5px 5px rgba(65, 65, 65, 0.322));
 
   margin: 10px auto;
@@ -22,59 +22,64 @@
 
 .card-nav {
   position: absolute;
+  margin: 10px 0 0 0;
   z-index: 3;
-  width: 340px;
-  margin-top: 10px;
+  width: 100%;
   display: flex;
   flex-direction: row;
-  padding: 10px;
+  border-radius: 15px 0 0 0;
+
+  background-color: #d10300;
 }
 
 .card-nav > * {
-  margin: 0px 5px;
-  background-color: white;
+  background-color: #D10300;
+  border: none;
+  outline: none;
+  color: white;
+  padding: 5px 20px;
+  font-weight: 600;
+  font-size: 24px;
+}
+
+.card-nav > *:hover{
+  background-color: #8d0200;
+}
+
+#card-expand {
+  font-size: 30px;
+  padding: 5px 15px;
+  flex-grow: 2;
+}
+
+#card-close{
+  border-radius: 15px 0 0 0;
+}
+
+.svg-edit{
+  enable-background:new 0 0 50 50;
+  height: 20px;
+  width: 60px;
 }
 
 .top-card {
   width: 100%;
 }
 
-.top-card img {
-  max-height: 350px;
+.image-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  width: auto;
+  max-width: 100%;
+}
+
+.image-container > img {
+  width: auto;
+  max-width: 350px;
+  height: auto;
   display: block;
-  margin: 10px auto;
-}
-
-.top-card .menu-icon {
-  position: relative;
-  width: 22px;
-  top: 13.7em;
-  left: 1.1em;
-  cursor: pointer;
-}
-
-.top-card .menu-icon .menu {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: 4px;
-  background-color: #000;
-  margin-bottom: 6px;
-  opacity: 0.5;
-  transition: 0.4s;
-}
-
-.top-card .menu-icon .item1 {
-  left: -5px;
-}
-
-.top-card .menu-icon .item2 {
-  left: 5px;
-}
-
-.top-card .menu-icon:hover .menu {
-  left: 0;
-  border-radius: 1px;
+  margin: 40px auto 20px auto;
 }
 
 .top-card .name {
@@ -127,11 +132,6 @@ footer {
   text-align: justify;
 }
 
-#card-expand {
-  font-size: 24px;
-  padding: 5px 15px;
-  border-radius: 0px;
-}
 
 .fblink {
   color: black;
@@ -175,17 +175,4 @@ footer {
   padding: 5px 10px;
   border: 1px black solid;
   border-radius: 5px;
-}
-
-.image-container{
-  display: flex;
-}
-
-.extra-images{
-  display: flex;
-  flex-direction: column;
-}
-
-.extra-images>*{
-  max-height: 160px !important;
 }
