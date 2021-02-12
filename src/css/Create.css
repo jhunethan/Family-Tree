@@ -118,7 +118,6 @@ input:checked[type="checkbox"]::before {
 .create-button {
   padding: 8px 12px;
   font-family: "Montserrat", sans-serif;
-  border: 2px solid black;
   background: 0;
   font-size: 16px;
 

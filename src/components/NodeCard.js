@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import * as $ from "jquery";
 import Axios from "axios";
+import { useCookies } from "react-cookie";
 import { Image } from "cloudinary-react";
 
 import "../css/NodeCard.css";
 import placeholder from "../css/person-placeholder.jpg";
+import  editIcon  from "../css/edit-button.png"
 import { NodeCardDetails, ImmediateFamily } from "./NodeCardContent";
-import { useCookies } from "react-cookie";
 
 function MemberPhotos(props) {
   try {
@@ -78,7 +79,6 @@ export default function NodeCard(props) {
 
   return (
     <div id="card-container">
-      {" "}
       <div className="card-nav">
         <button
           id="card-close"
@@ -92,31 +92,7 @@ export default function NodeCard(props) {
           {"<>"}
         </button>
         <button id="card-edit" onClick={props.edit}>
-          <svg
-            version="1.1"
-            id="Capa_1"
-            xmlns="http://www.w3.org/2000/svg"
-            x="0px"
-            y="0px"
-            viewBox="0 0 50 50"
-            className="svg-edit"
-          >
-            <g>
-              <g>
-                <circle cx="10" cy="30" r="10" fill="white" />
-              </g>
-            </g>
-            <g>
-              <g>
-                <circle cx="40" cy="30" r="10" fill="white" />
-              </g>
-            </g>
-            <g>
-              <g>
-                <circle cx="70" cy="30" r="10" fill="white" />
-              </g>
-            </g>
-          </svg>
+        <img src={editIcon} className="card-edit-icon" alt="edit"></img>
         </button>
       </div>
       <div className="card-main">
