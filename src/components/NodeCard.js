@@ -6,17 +6,32 @@ import { Image } from "cloudinary-react";
 
 import "../css/NodeCard.css";
 import placeholder from "../css/person-placeholder.jpg";
-import  editIcon  from "../css/edit-button.png"
+import editIcon from "../css/edit-button.png";
 import { NodeCardDetails, ImmediateFamily } from "./NodeCardContent";
 
 function MemberPhotos(props) {
+  const imageDelete = (e) => {};
+
   try {
     if (props.node.extradetails.photo_id) {
       let photos = props.node.extradetails.photo_id.split(",");
       return (
         <div className="image-container">
           {photos.map((x, index) => {
-            return <Image cloudName="dqwu1p8fp" public_id={x} key={index} />;
+            return (
+              <div className="image-single-container">
+                <Image
+                  cloudName="dqwu1p8fp"
+                  public_id={x}
+                  key={index}
+                  className={"image img-" + index}
+                />
+                <div className="image-edit-menu">
+                    <div className="image-expand image-menu">EXPAND</div>
+                    <div className="image-delete image-menu">DELETE</div>
+                </div>
+              </div>
+            );
           })}
         </div>
       );
@@ -24,7 +39,7 @@ function MemberPhotos(props) {
   } catch {}
   return (
     <div className="image-container">
-      <img src={placeholder} alt="placeholder" />;
+      <img src={placeholder} className="image" alt="placeholder" />
     </div>
   );
 }
@@ -77,6 +92,19 @@ export default function NodeCard(props) {
     });
   };
 
+  const imageChangeHandler = (event) => {
+    console.log(event.target.files[0]);
+    if (
+      event.target.files[0].size <= 5 * 1024 * 1024 &&
+      event.target.files[0].type.includes("image/")
+    ) {
+      console.log(event.target.files[0].type.includes("image/"));
+      return setImageToBeSent(event.target.files[0]);
+    }
+    //else err
+    console.log("file invalid or exceeds 5MB");
+  };
+
   return (
     <div id="card-container">
       <div className="card-nav">
@@ -92,7 +120,7 @@ export default function NodeCard(props) {
           {"<>"}
         </button>
         <button id="card-edit" onClick={props.edit}>
-        <img src={editIcon} className="card-edit-icon" alt="edit"></img>
+          <img src={editIcon} className="card-edit-icon" alt="edit"></img>
         </button>
       </div>
       <div className="card-main">
@@ -102,9 +130,8 @@ export default function NodeCard(props) {
         <input
           type="file"
           id="uploadfile"
-          onChange={(event) => {
-            setImageToBeSent(event.target.files[0]);
-          }}
+          accept="image/*"
+          onChange={(event) => imageChangeHandler(event)}
         />
         <input type="submit" onClick={() => uploadImage()} />
         <section className="middle-card">

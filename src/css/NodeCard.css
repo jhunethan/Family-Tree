@@ -33,7 +33,7 @@
 }
 
 .card-nav > * {
-  background-color: #D10300;
+  background-color: #d10300;
   border: none;
   outline: none;
   color: white;
@@ -42,7 +42,7 @@
   font-size: 24px;
 }
 
-.card-nav > *:hover{
+.card-nav > *:hover {
   background-color: #8d0200;
 }
 
@@ -52,12 +52,12 @@
   flex-grow: 2;
 }
 
-#card-close{
+#card-close {
   border-radius: 15px 0 0 0;
 }
 
-.card-edit-icon{
-  enable-background:new 0 0 50 50;
+.card-edit-icon {
+  enable-background: new 0 0 50 50;
   height: 30px;
   width: 30px;
 }
@@ -74,12 +74,40 @@
   max-width: 100%;
 }
 
-.image-container > img {
+.image {
   width: auto;
   max-width: 350px;
   height: auto;
   display: block;
-  margin: 40px auto 20px auto;
+  margin: 5px auto;
+
+  transition: all 0.5s;
+}
+
+.image-single-container{
+  display: flex;
+  align-items: center;
+}
+
+.image-edit-menu {
+  transition: 0.5s ease;
+  opacity: 1;
+  transform: translate(-35vh, 0);
+  -ms-transform: translate(-35vh, 0);
+  text-align: center;
+}
+
+.image-menu{
+  position: absolute;
+}
+
+.image-delete{
+  transform: translate(10vh, 0);
+}
+
+.image:hover {
+  filter: brightness(0.5);
+  transition: all 0.3s;
 }
 
 .top-card .name {
@@ -131,7 +159,6 @@ footer {
 .middle-card {
   text-align: justify;
 }
-
 
 .fblink {
   color: black;
