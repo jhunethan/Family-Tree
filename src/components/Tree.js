@@ -32,7 +32,7 @@ export default function Tree(props) {
   };
 
   useEffect(() => {
-    Axios.get("http://localhost:5000/api/get").then((result) => {
+    Axios.get("https://layfamily.herokuapp.com/api/get").then((result) => {
       setTableData(result.data);
     });
   }, [update]);
@@ -138,7 +138,7 @@ export default function Tree(props) {
     //reconvert tabledata to check for updates
     converttreeData();
 
-    Axios.get("http://localhost:5000/api/get/extra").then((result) => {
+    Axios.get("https://layfamily.herokuapp.com/api/get/extra").then((result) => {
       let extradetails = result.data;
       let tempData = tableData;
 
