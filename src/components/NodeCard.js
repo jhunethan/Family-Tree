@@ -62,10 +62,72 @@ function MemberPhotos(props) {
   );
 }
 
+function AddPhoto(props) {
+  const [fileName, setFileName] = useState("");
+  try {
+    if (props.node.extradetails.photo_id.split(",").length < 3) {
+      return (
+        <div className="file-input-container">
+          <label className="file-input-button" for="file-input">
+            Upload Photo
+          </label>
+          <input
+            type="file"
+            id="file-input"
+            className="file-input"
+            accept="image/*"
+            onChange={(event) => {
+              props.imageChangeHandler(event);
+              setFileName(event.target.files[0].name);
+            }}
+          />
+          {fileName}
+          <input
+            type="submit"
+            className="file-submit"
+            onClick={() => {
+              props.uploadImage();
+              setFileName("");
+            }}
+            value="Submit Photo"
+          />
+        </div>
+      );
+    } else {
+      return null;
+    }
+  } catch (error) {
+    return (
+      <div className="file-input-container">
+        <label className="file-input-button" for="file-input">
+          Upload Photo
+        </label>
+        <input
+          type="file"
+          id="file-input"
+          className="file-input"
+          accept="image/*"
+          onChange={(event) => props.imageChangeHandler(event)}
+        />
+        <input
+          type="submit"
+          className="file-submit"
+          onClick={() => {
+            props.uploadImage();
+            props.update();
+          }}
+          value="Submit Photo"
+        />
+      </div>
+    );
+  }
+}
+
 export default function NodeCard(props) {
   const [imageToBeSent, setImageToBeSent] = useState(undefined);
   const [cookies] = useCookies(["author"]);
   var cardexpanded = false;
+  var uploadProgress;
 
   const transform = () => {
     if (!cardexpanded) {
@@ -88,7 +150,15 @@ export default function NodeCard(props) {
 
     Axios.post(
       "https://api.cloudinary.com/v1_1/dqwu1p8fp/image/upload",
-      formData
+      formData,
+      {
+        onUploadProgress: (progressEvent) => {
+          uploadProgress = progressEvent.lengthComputable
+            ? Math.round((progressEvent.loaded * 100) / progressEvent.total)
+            : 0;
+          $("div.progress-bar").css("width", `${uploadProgress}%`);
+        },
+      }
     ).then((Response) => {
       console.log(Response);
       //save it to extradetails db as filename: `${Response.data.public_id}.${Response.data.format}`
@@ -102,27 +172,32 @@ export default function NodeCard(props) {
       } catch {
         photo_id_string = Response.data.public_id;
       }
+      $("#card-container").css("display", "none");
       Axios.put("http://localhost:5000/api/updateextra", {
         id: Number(props.node.id),
         photo_id: photo_id_string,
         author: cookies.author,
+      }).then(() => {
+        setTimeout(() => {
+          props.update();
+        }, 250);
       });
     });
   };
 
   const imageChangeHandler = (event) => {
-    console.log(event.target.files[0]);
     if (
       event.target.files[0].size <= 5 * 1024 * 1024 &&
       event.target.files[0].type.includes("image/")
     ) {
-      console.log("valid file");
       return setImageToBeSent(event.target.files[0]);
     }
     //else err
     console.log("file invalid or exceeds 5MB");
     event.target.files = null;
   };
+
+  $("div.progress-bar").css("width", 0);
 
   return (
     <div id="card-container">
@@ -144,15 +219,15 @@ export default function NodeCard(props) {
       </div>
       <div className="card-main">
         <section className="top-card">
-          <MemberPhotos node={props.node} update={props.update}/>
+          <MemberPhotos node={props.node} update={props.update} />
         </section>
-        <input
-          type="file"
-          id="uploadfile"
-          accept="image/*"
-          onChange={(event) => imageChangeHandler(event)}
+        <AddPhoto
+          imageChangeHandler={imageChangeHandler}
+          uploadImage={uploadImage}
+          update={props.update}
+          node={props.node}
         />
-        <input type="submit" onClick={() => uploadImage()} />
+        <div className="progress-bar"></div>
         <section className="middle-card">
           <h1 className="card-subtitle">
             {props.node.generation} {props.node.name}

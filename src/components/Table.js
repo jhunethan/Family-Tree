@@ -182,6 +182,7 @@ export default function Table(props) {
   };
 
   const showNode = (row) => {
+    updateTable();
     try {
       let children = row.children;
       let tempData = tableData;
