@@ -10,7 +10,18 @@ import editIcon from "../css/edit-button.png";
 import { NodeCardDetails, ImmediateFamily } from "./NodeCardContent";
 
 function MemberPhotos(props) {
-  const imageDelete = (e) => {};
+  const [cookies] = useCookies(["author"]);
+
+  const imageDelete = (e) => {
+    Axios.post("http://localhost:5000/api/delete/image", {
+      id: props.node.id,
+      author: cookies.author,
+      public_id: e.target.parentNode.previousElementSibling.classList[1],
+    }).then(() => {
+      $("#card-container").css("display", "none");
+      props.update();
+    });
+  };
 
   try {
     if (props.node.extradetails.photo_id) {
@@ -19,16 +30,23 @@ function MemberPhotos(props) {
         <div className="image-container">
           {photos.map((x, index) => {
             return (
-              <div className="image-single-container">
+              <div
+                className="image-single-container"
+                key={`${index}-container`}
+              >
                 <Image
                   cloudName="dqwu1p8fp"
                   public_id={x}
-                  key={index}
-                  className={"image img-" + index}
+                  className={"image " + x}
                 />
                 <div className="image-edit-menu">
-                    <div className="image-expand image-menu">EXPAND</div>
-                    <div className="image-delete image-menu">DELETE</div>
+                  <div className="image-expand image-menu">EXPAND</div>
+                  <div
+                    className="image-delete image-menu"
+                    onClick={(e) => imageDelete(e)}
+                  >
+                    DELETE
+                  </div>
                 </div>
               </div>
             );
@@ -98,11 +116,12 @@ export default function NodeCard(props) {
       event.target.files[0].size <= 5 * 1024 * 1024 &&
       event.target.files[0].type.includes("image/")
     ) {
-      console.log(event.target.files[0].type.includes("image/"));
+      console.log("valid file");
       return setImageToBeSent(event.target.files[0]);
     }
     //else err
     console.log("file invalid or exceeds 5MB");
+    event.target.files = null;
   };
 
   return (
@@ -125,7 +144,7 @@ export default function NodeCard(props) {
       </div>
       <div className="card-main">
         <section className="top-card">
-          <MemberPhotos node={props.node} />
+          <MemberPhotos node={props.node} update={props.update}/>
         </section>
         <input
           type="file"

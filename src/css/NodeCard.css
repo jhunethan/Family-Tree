@@ -84,24 +84,45 @@
   transition: all 0.5s;
 }
 
-.image-single-container{
+.image-single-container {
   display: flex;
   align-items: center;
 }
 
-.image-edit-menu {
-  transition: 0.5s ease;
+.image-single-container:hover .image-edit-menu {
   opacity: 1;
-  transform: translate(-35vh, 0);
-  -ms-transform: translate(-35vh, 0);
+}
+
+.image-edit-menu {
+  position: absolute;
+  transition: 0.5s ease;
+  opacity: 0;
+  transform: translate(5vw, -20px);
+  -ms-transform: translate(5vw, -20px);
   text-align: center;
 }
 
-.image-menu{
+.image-menu {
+  pointer-events: auto;
+  user-select: none;
   position: absolute;
+  width: 50px;
+  height: 20px;
+  color: white;
+  border: 2px solid white;
+  padding: 10px;
+  transition: 0.5s ease;
 }
 
-.image-delete{
+.image-menu:hover {
+  cursor: pointer;
+  background-color: white;
+  border: 2px solid black;
+  color: black;
+  transition: 0.5s ease;
+}
+
+.image-delete {
   transform: translate(10vh, 0);
 }
 

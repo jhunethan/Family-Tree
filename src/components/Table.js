@@ -292,6 +292,7 @@ export default function Table(props) {
         node={nodestate}
         treeData={TreeData}
         data={tableData}
+        update={updateTable}
         edit={() => {
           openNode(currentRow);
         }}

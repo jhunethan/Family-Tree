@@ -741,7 +741,12 @@ export default function Tree(props) {
       <button className="refresh-button" onClick={() => updateTree()}>
         ⟳
       </button>
-      <NodeCard node={InfoCard} treeData={tableData} edit={() => openNode()} />
+      <NodeCard
+        update={updateTree()}
+        node={InfoCard}
+        treeData={tableData}
+        edit={() => openNode()}
+      />
       <svg id="Tree"></svg>
       <Create
         data={tableData}
