@@ -68,7 +68,7 @@ function AddPhoto(props) {
     if (props.node.extradetails.photo_id.split(",").length < 3) {
       return (
         <div className="file-input-container">
-          <label className="file-input-button" for="file-input">
+          <label className="file-input-button" htmlFor="file-input">
             Upload Photo
           </label>
           <input
@@ -99,7 +99,7 @@ function AddPhoto(props) {
   } catch (error) {
     return (
       <div className="file-input-container">
-        <label className="file-input-button" for="file-input">
+        <label className="file-input-button" htmlFor="file-input">
           Upload Photo
         </label>
         <input
