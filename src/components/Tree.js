@@ -132,7 +132,7 @@ export default function Tree(props) {
     .scaleExtent([0.1, 1])
     .on("zoom", zoomed);
 
-  var svg = d3.select("svg.svg-container");
+  var svg = d3.select("#Tree");
 
   const buildTree = () => {
     //reconvert tabledata to check for updates
@@ -258,27 +258,6 @@ export default function Tree(props) {
         }, 500);
       });
 
-    partnerShapes
-      .enter()
-      .append("circle")
-      .attr("r", 50)
-      .attr("class", function (d) {
-        return "circle level-" + d.depth;
-      })
-      .attr("cx", function (d) {
-        return d.x + 145;
-      })
-      .attr("cy", function (d) {
-        return d.y - 90;
-      })
-      .classed("hide", function (d) {
-        try {
-          if (d.data.partnerinfo.name === "text") return false;
-        } catch {
-          return true;
-        }
-      });
-
     // Nodes
     var shapes = d3
       .select("svg g.nodes")
@@ -292,7 +271,7 @@ export default function Tree(props) {
         return "node shadow level-" + d.depth;
       })
       .attr("x", function (d) {
-        return d.x - 180;
+        return d.x - 170;
       })
       .attr("y", function (d) {
         return d.y - 170;
@@ -316,7 +295,7 @@ export default function Tree(props) {
           if (!d.data.partnerinfo.name === "text") return d.x;
           return d.x - 400;
         } catch {
-          return d.x - 190;
+          return d.x - 180;
         }
       })
       .attr("y", function (d) {
@@ -338,25 +317,6 @@ export default function Tree(props) {
         }, 500);
       });
 
-    shapes
-      .enter()
-      .append("circle")
-      .attr("r", 50)
-      .attr("class", function (d) {
-        return "circle level-" + d.depth;
-      })
-      .attr("cx", function (d) {
-        try {
-          if (!d.data.partnerinfo.name === "text") return d.x;
-          return d.x - 290;
-        } catch {
-          return d.x - 90;
-        }
-      })
-      .attr("cy", function (d) {
-        return d.y - 90;
-      });
-
     var partnerText = d3
       .select("svg g.nodes")
       .selectAll("text .node")
@@ -365,10 +325,10 @@ export default function Tree(props) {
       .enter()
       .append("text")
       .attr("x", function (d) {
-        return d.x + 290;
+        return d.x + 230;
       })
       .attr("y", function (d) {
-        return d.y - 120;
+        return d.y - 130;
       })
       .text(function (d) {
         try {
@@ -377,15 +337,15 @@ export default function Tree(props) {
           return "";
         }
       })
-      .call(wrap, 150);
+      .call(wrap, 300);
     partnerText
       .enter()
       .append("text")
       .attr("x", function (d) {
-        return d.x + 290;
+        return d.x + 230;
       })
       .attr("y", function (d) {
-        return d.y - 70;
+        return d.y - 50;
       })
       .text(function (d) {
         try {
@@ -393,8 +353,8 @@ export default function Tree(props) {
         } catch {
           return "";
         }
-      })
-      .call(wrap, 150);
+      }).classed("name-field",true)
+      .call(wrap, 300);
     var text = d3
       .select("svg g.nodes")
       .selectAll("text .node")
@@ -405,27 +365,27 @@ export default function Tree(props) {
       .attr("x", function (d) {
         try {
           if (!d.data.partnerinfo.name === "text") return d.x;
-          return d.x - 150;
+          return d.x - 230;
         } catch {
-          return d.x + 40;
+          return d.x ;
         }
       })
       .attr("y", function (d) {
-        return d.y - 120;
+        return d.y - 130;
       })
       .text(function (d) {
         return d.data.birthdate;
       })
-      .call(wrap, 150);
+      .call(wrap, 300);
     text
       .enter()
       .append("text")
       .attr("x", function (d) {
         try {
           if (!d.data.partnerinfo.name === "text") return d.x;
-          return d.x - 150;
+          return d.x - 230;
         } catch {
-          return d.x + 40;
+          return d.x ;
         }
       })
       .attr("y", function (d) {
@@ -434,25 +394,25 @@ export default function Tree(props) {
       .text(function (d) {
         return d.data.generation;
       })
-      .call(wrap, 150);
+      .call(wrap, 300);
     text
       .enter()
       .append("text")
       .attr("x", function (d) {
         try {
           if (!d.data.partnerinfo.name === "text") return d.x;
-          return d.x - 150;
+          return d.x - 230;
         } catch {
-          return d.x + 40;
+          return d.x ;
         }
       })
       .attr("y", function (d) {
-        return d.y - 70;
+        return d.y - 50;
       })
       .text(function (d) {
         return d.data.name;
-      })
-      .call(wrap, 150);
+      }).classed("name-field",true)
+      .call(wrap, 300);
 
     links = d3.select("svg g.links").selectAll("path").data(linksData);
     links
@@ -742,7 +702,7 @@ export default function Tree(props) {
         ⟳
       </button>
       <NodeCard
-        update={updateTree()}
+        update={()=>updateTree()}
         node={InfoCard}
         treeData={tableData}
         edit={() => openNode()}

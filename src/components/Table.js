@@ -25,9 +25,11 @@ export default function Table(props) {
     Axios.get("https://layfamily.herokuapp.com/api/get").then((result) => {
       setTableData(result.data);
     });
-    Axios.get("https://layfamily.herokuapp.com/api/get/extra").then((result) => {
-      settableDataExtra(result.data);
-    });
+    Axios.get("https://layfamily.herokuapp.com/api/get/extra").then(
+      (result) => {
+        settableDataExtra(result.data);
+      }
+    );
   }, [update]);
 
   const updateTable = () => {
@@ -293,7 +295,7 @@ export default function Table(props) {
         node={nodestate}
         treeData={TreeData}
         data={tableData}
-        update={updateTable}
+        update={() => updateTable}
         edit={() => {
           openNode(currentRow);
         }}
