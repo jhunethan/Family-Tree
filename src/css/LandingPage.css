@@ -155,6 +155,8 @@
 
 .history-edits {
   color: black;
+  list-style-type: none;
+  padding: 5px;
   border-left: grey 2px solid;
 }
 

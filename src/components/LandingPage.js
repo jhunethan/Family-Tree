@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Axios from "axios";
 import * as $ from "jquery";
 import { useCookies } from "react-cookie";
+// import Agechart from "./Agechart";
 
 function Edits(props) {
   let changes = [];
@@ -156,6 +157,7 @@ export default function LandingPage(props) {
   const [update, setupdate] = useState(0);
   const [editHistory, setEditHistory] = useState([]);
   const [databasesize, setDatabasesize] = useState(0);
+  // const [data, setData] = useState([]);
   const [page, setPage] = useState(0);
 
   const updatehistory = () => {
@@ -173,11 +175,14 @@ export default function LandingPage(props) {
   };
 
   useEffect(() => {
-    Axios.get("https://layfamily.herokuapp.com/api/get/edithistory").then((result) => {
-      setEditHistory(result.data.reverse());
-    });
+    Axios.get("https://layfamily.herokuapp.com/api/get/edithistory").then(
+      (result) => {
+        setEditHistory(result.data.reverse());
+      }
+    );
     Axios.get("https://layfamily.herokuapp.com/api/get").then((result) => {
       setDatabasesize(result.data.length);
+      // setData(result.data);
     });
   }, [update]);
 
@@ -199,10 +204,10 @@ export default function LandingPage(props) {
         </div>
         <h1 className="about-header">Edit History</h1>
         <section className="about-section">
+          {/* <Agechart data={data} /> */}
           <div className="stats-container">
             <div className="stat-card users">
               <button onClick={updatehistory}>⟳</button>
-              <h1>Total Users?</h1>
             </div>
             <div className="stat-card members">
               <h1>Family Members in Database</h1>
@@ -221,7 +226,6 @@ export default function LandingPage(props) {
               <button onClick={() => changePage("+")}>Next</button>
             </div>
           </div>
-
           <EditHistory editHistory={editHistory} pagesize={page} />
         </section>
       </section>
