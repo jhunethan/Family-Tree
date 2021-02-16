@@ -11,11 +11,15 @@ import NodeCard from "./NodeCard";
 export default function Table(props) {
   const [update, setUpdate] = useState(0);
   const [tableData, setTableData] = useState([]);
-  const [TreeData, setTreeData] = useState([]);
   const [tableDataExtra, settableDataExtra] = useState([]);
+
+  const [TreeData, setTreeData] = useState([]);
+
+  //current node/ clicked node state
   const [nodestate, setNodestate] = useState(0);
-  var [radiochecked, setRadiochecked] = useState(true);
   const [currentRow, setcurrentRow] = useState();
+  
+  var [radiochecked, setRadiochecked] = useState(true);
   const [datalist, setDatalist] = useState([]);
 
   const switchRadio = () => {

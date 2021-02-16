@@ -138,19 +138,21 @@ export default function Tree(props) {
     //reconvert tabledata to check for updates
     converttreeData();
 
-    Axios.get("https://layfamily.herokuapp.com/api/get/extra").then((result) => {
-      let extradetails = result.data;
-      let tempData = tableData;
+    Axios.get("https://layfamily.herokuapp.com/api/get/extra").then(
+      (result) => {
+        let extradetails = result.data;
+        let tempData = tableData;
 
-      for (let i = 0; i < tempData.length; i++) {
-        for (const x of extradetails) {
-          if (x.id === tempData[i].id) {
-            tempData[i].extradetails = x;
+        for (let i = 0; i < tempData.length; i++) {
+          for (const x of extradetails) {
+            if (x.id === tempData[i].id) {
+              tempData[i].extradetails = x;
+            }
           }
         }
+        setTableData(tempData);
       }
-      setTableData(tempData);
-    });
+    );
 
     height = $("#Tree").height();
     width = $("#Tree").width();
@@ -353,7 +355,8 @@ export default function Tree(props) {
         } catch {
           return "";
         }
-      }).classed("name-field",true)
+      })
+      .classed("name-field", true)
       .call(wrap, 300);
     var text = d3
       .select("svg g.nodes")
@@ -367,7 +370,7 @@ export default function Tree(props) {
           if (!d.data.partnerinfo.name === "text") return d.x;
           return d.x - 230;
         } catch {
-          return d.x ;
+          return d.x;
         }
       })
       .attr("y", function (d) {
@@ -385,7 +388,7 @@ export default function Tree(props) {
           if (!d.data.partnerinfo.name === "text") return d.x;
           return d.x - 230;
         } catch {
-          return d.x ;
+          return d.x;
         }
       })
       .attr("y", function (d) {
@@ -403,7 +406,7 @@ export default function Tree(props) {
           if (!d.data.partnerinfo.name === "text") return d.x;
           return d.x - 230;
         } catch {
-          return d.x ;
+          return d.x;
         }
       })
       .attr("y", function (d) {
@@ -411,7 +414,8 @@ export default function Tree(props) {
       })
       .text(function (d) {
         return d.data.name;
-      }).classed("name-field",true)
+      })
+      .classed("name-field", true)
       .call(wrap, 300);
 
     links = d3.select("svg g.links").selectAll("path").data(linksData);
@@ -451,16 +455,27 @@ export default function Tree(props) {
     $("#datalist-input").css("border", "1px solid black");
     let str = "";
     datalistarr = [];
-    let list = document.getElementById("datalist-ul");
+    let list = $("ul.datalist-ul");
     //populate parentSearchDataList
     for (const x of tableData) {
       if (x.id !== 0)
         datalistarr.push(`${x.generation} ${x.name} ${x.birthdate} ${x.id}`);
     }
-    for (var i = 0; i < datalistarr.length; ++i) {
-      str += '<option value="' + datalistarr[i] + '" />';
+
+    if ($("#datalist-input").val()) {
+      let inputParsed = $.trim($("#datalist-input").val()).split(" ");
+      datalistarr = datalistarr.filter((x) => {
+        for (const word of inputParsed) {
+          if (!x.includes(word)) return false;
+        }
+        return true;
+      });
     }
-    list.innerHTML = str;
+
+    for (var i = 0; i < datalistarr.length; ++i) {
+      str += `<li>${datalistarr[i]}</>`;
+    }
+    list.html(str);
   };
 
   const getPID = (nameKey) => {
@@ -477,7 +492,7 @@ export default function Tree(props) {
   const search = (text) => {
     let found = false;
     let node;
-    let searchterm = $.trim(text);
+    let searchterm = $.trim($("ul.datalist-ul")[0].firstChild.textContent);
     $("#datalist-input").val("");
     populateDatalist();
 
@@ -533,7 +548,7 @@ export default function Tree(props) {
       return true;
     } else {
       $("#datalist-input").css("border", "2px solid red");
-      $("#datalist-input").attr("placeholder", "Please click from list");
+      $("#datalist-input").attr("placeholder", "Person not found.");
       return false;
     }
   };
@@ -671,6 +686,9 @@ export default function Tree(props) {
           name="searchtree"
           placeholder="Search by Name or Birthdate"
           list="datalist-ul"
+          onChange={() => {
+            populateDatalist();
+          }}
           onClick={() => {
             populateDatalist();
           }}
@@ -693,8 +711,13 @@ export default function Tree(props) {
         >
           Search
         </button>
-        <datalist id="datalist-ul" className="datalist-ul"></datalist>
       </div>
+      <ul
+        className="datalist-ul"
+        onClick={(e) => {
+          search(e.target.closest("li").textContent);
+        }}
+      ></ul>
       <button className="create-button" onClick={() => resetCreateFields()}>
         Add New
       </button>
@@ -702,7 +725,7 @@ export default function Tree(props) {
         ⟳
       </button>
       <NodeCard
-        update={()=>updateTree()}
+        update={() => updateTree()}
         node={InfoCard}
         treeData={tableData}
         edit={() => openNode()}

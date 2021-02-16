@@ -99,9 +99,28 @@ text {
   padding: 10px;
 }
 .datalist-ul {
+  position: absolute;
+  right: 10px;
+  margin-top: 50px;
+
   overflow-x: auto;
-  font-size: 20px;
+  font-size: 24px;
+  list-style:none;
+  width: 245px;
+  max-height: 300px;
 }
+
+.datalist-ul>li{
+  border: 1px solid black;
+  padding: 2.5px 5px;
+  user-select: none;
+}
+
+.datalist-ul>li:hover{
+  background-color: #ffbf49;
+  cursor: pointer;
+}
+
 #datalistbutton {
   letter-spacing: 0.15rem;
   color: black;
