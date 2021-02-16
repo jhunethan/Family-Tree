@@ -451,8 +451,16 @@ export default function Tree(props) {
       });
   };
 
+  function toTitleCase(str) {
+    return str.replace(/(?:^|\s)\w/g, function (match) {
+      return match.toUpperCase();
+    });
+  }
+
   const populateDatalist = () => {
     $("#datalist-input").css("border", "1px solid black");
+    $("#datalist-input").attr("placeholder","Search by Name or Birthdate");
+
     let str = "";
     datalistarr = [];
     let list = $("ul.datalist-ul");
@@ -463,7 +471,7 @@ export default function Tree(props) {
     }
 
     if ($("#datalist-input").val()) {
-      let inputParsed = $.trim($("#datalist-input").val()).split(" ");
+      let inputParsed = toTitleCase($.trim($("#datalist-input").val())).split(" ");
       datalistarr = datalistarr.filter((x) => {
         for (const word of inputParsed) {
           if (!x.includes(word)) return false;
@@ -491,9 +499,11 @@ export default function Tree(props) {
 
   const search = (text) => {
     let found = false;
-    let node;
-    let searchterm = $.trim($("ul.datalist-ul")[0].firstChild.textContent);
-    $("#datalist-input").val("");
+    let node, searchterm;
+    try {
+      searchterm = $.trim($("ul.datalist-ul")[0].firstChild.textContent);
+    } catch {}
+    $("#datalist-input").val("").attr("placeholder","Search by Name or Birthdate");
     populateDatalist();
 
     for (const x of datalistarr) {
@@ -527,13 +537,7 @@ export default function Tree(props) {
         }
       }
       try {
-        setInfoCard({
-          id: node.id,
-          name: node.name,
-          generation: node.generation,
-          birthdate: node.birthdate,
-          parent: node.parent,
-        });
+        setInfoCard(node);
         zoom.scaleTo(svg.transition().duration(500), 0.25);
         $("#card-container").css("display", "block");
         zoom.translateTo(
