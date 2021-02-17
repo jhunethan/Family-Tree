@@ -451,15 +451,9 @@ export default function Tree(props) {
       });
   };
 
-  function toTitleCase(str) {
-    return str.replace(/(?:^|\s)\w/g, function (match) {
-      return match.toUpperCase();
-    });
-  }
-
   const populateDatalist = () => {
     $("#datalist-input").css("border", "1px solid black");
-    $("#datalist-input").attr("placeholder","Search by Name or Birthdate");
+    $("#datalist-input").attr("placeholder", "Search by Name or Birthdate");
 
     let str = "";
     datalistarr = [];
@@ -471,10 +465,10 @@ export default function Tree(props) {
     }
 
     if ($("#datalist-input").val()) {
-      let inputParsed = toTitleCase($.trim($("#datalist-input").val())).split(" ");
+      let parsed = $.trim($("#datalist-input").val().toLowerCase()).split(" ");
       datalistarr = datalistarr.filter((x) => {
-        for (const word of inputParsed) {
-          if (!x.includes(word)) return false;
+        for (const word of parsed) {
+          if (!x.toLowerCase().includes(word)) return false;
         }
         return true;
       });
@@ -497,13 +491,20 @@ export default function Tree(props) {
     return node.id;
   };
 
-  const search = (text) => {
+  const search = (text, method) => {
     let found = false;
     let node, searchterm;
-    try {
-      searchterm = $.trim($("ul.datalist-ul")[0].firstChild.textContent);
-    } catch {}
-    $("#datalist-input").val("").attr("placeholder","Search by Name or Birthdate");
+    if (method === "first") {
+      try {
+        searchterm = $.trim($("ul.datalist-ul")[0].firstChild.textContent);
+        console.log("get first element");
+      } catch {}
+    } else {
+      searchterm = $.trim(text);
+    }
+    $("#datalist-input")
+      .val("")
+      .attr("placeholder", "Search by Name or Birthdate");
     populateDatalist();
 
     for (const x of datalistarr) {
@@ -511,6 +512,8 @@ export default function Tree(props) {
         found = true;
       }
     }
+    console.log(searchterm);
+    console.log(found);
     if (found) {
       //get node object
       let n = searchterm.split(" ");
@@ -702,7 +705,7 @@ export default function Tree(props) {
               event.preventDefault();
               // Focus on next element if successful
               let val = $("#datalist-input").val();
-              if (search(val)) event.target.blur();
+              if (search(val, "first")) event.target.blur();
             }
           }}
         />
@@ -710,7 +713,7 @@ export default function Tree(props) {
           id="datalistbutton"
           onClick={(event) => {
             if (!search($("#datalist-input").val()))
-              document.getElementById("datalist-input").focus();
+              return document.getElementById("datalist-input").focus();
           }}
         >
           Search
@@ -719,7 +722,9 @@ export default function Tree(props) {
       <ul
         className="datalist-ul"
         onClick={(e) => {
-          search(e.target.closest("li").textContent);
+          try {
+            search(e.target.closest("li").textContent);
+          } catch {}
         }}
       ></ul>
       <button className="create-button" onClick={() => resetCreateFields()}>
