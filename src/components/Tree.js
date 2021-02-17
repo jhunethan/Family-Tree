@@ -512,8 +512,6 @@ export default function Tree(props) {
         found = true;
       }
     }
-    console.log(searchterm);
-    console.log(found);
     if (found) {
       //get node object
       let n = searchterm.split(" ");
@@ -542,6 +540,7 @@ export default function Tree(props) {
       try {
         setInfoCard(node);
         zoom.scaleTo(svg.transition().duration(500), 0.25);
+        $("ul.datalist-ul").html("");
         $("#card-container").css("display", "block");
         zoom.translateTo(
           svg.transition().duration(500),
@@ -712,7 +711,7 @@ export default function Tree(props) {
         <button
           id="datalistbutton"
           onClick={(event) => {
-            if (!search($("#datalist-input").val()))
+            if (!search($("#datalist-input").val(),"first"))
               return document.getElementById("datalist-input").focus();
           }}
         >
