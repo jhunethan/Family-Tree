@@ -35,6 +35,23 @@ export default function Tree(props) {
     Axios.get("https://layfamily.herokuapp.com/api/get").then((result) => {
       setTableData(result.data);
     });
+
+    Axios.get("https://layfamily.herokuapp.com/api/get/extra").then(
+      (result) => {
+        let extradetails = result.data;
+        let tempData = tableData;
+
+        for (let i = 0; i < tempData.length; i++) {
+          for (const x of extradetails) {
+            if (x.id === tempData[i].id) {
+              tempData[i].extradetails = x;
+            }
+          }
+        }
+        setTableData(tempData);
+      }
+    );
+    // eslint-disable-next-line
   }, [update]);
 
   useEffect(() => {
@@ -137,22 +154,6 @@ export default function Tree(props) {
   const buildTree = () => {
     //reconvert tabledata to check for updates
     converttreeData();
-
-    Axios.get("https://layfamily.herokuapp.com/api/get/extra").then(
-      (result) => {
-        let extradetails = result.data;
-        let tempData = tableData;
-
-        for (let i = 0; i < tempData.length; i++) {
-          for (const x of extradetails) {
-            if (x.id === tempData[i].id) {
-              tempData[i].extradetails = x;
-            }
-          }
-        }
-        setTableData(tempData);
-      }
-    );
 
     height = $("#Tree").height();
     width = $("#Tree").width();
@@ -478,6 +479,10 @@ export default function Tree(props) {
       str += `<li>${datalistarr[i]}</>`;
     }
     list.html(str);
+
+    if (datalistarr.length === 0 && $.trim($("#datalist-input").val())) {
+      list.html(`<li>No results.</li>`);
+    }
   };
 
   const getPID = (nameKey) => {
@@ -497,7 +502,6 @@ export default function Tree(props) {
     if (method === "first") {
       try {
         searchterm = $.trim($("ul.datalist-ul")[0].firstChild.textContent);
-        console.log("get first element");
       } catch {}
     } else {
       searchterm = $.trim(text);
@@ -516,7 +520,8 @@ export default function Tree(props) {
       //get node object
       let n = searchterm.split(" ");
       let id = Number(n[n.length - 1]);
-      for (const x of tableData) {
+      let tempData = tableData;
+      for (const x of tempData) {
         if (x.id === id) {
           node = x;
         }
@@ -681,6 +686,14 @@ export default function Tree(props) {
   };
 
   $("ul.header-navigation").removeClass("hidden");
+  $(window).on("click", function (event) {
+    //Hide the menus if visible
+    try {
+      if (event.target !== $("#datalist-input")[0]) {
+        $("ul.datalist-ul").html("");
+      }
+    } catch {}
+  });
 
   return (
     <div>
@@ -711,7 +724,7 @@ export default function Tree(props) {
         <button
           id="datalistbutton"
           onClick={(event) => {
-            if (!search($("#datalist-input").val(),"first"))
+            if (!search($("#datalist-input").val(), "first"))
               return document.getElementById("datalist-input").focus();
           }}
         >
