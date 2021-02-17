@@ -35,6 +35,23 @@ export default function Tree(props) {
     Axios.get("https://layfamily.herokuapp.com/api/get").then((result) => {
       setTableData(result.data);
     });
+
+    Axios.get("https://layfamily.herokuapp.com/api/get/extra").then(
+      (result) => {
+        let extradetails = result.data;
+        let tempData = tableData;
+
+        for (let i = 0; i < tempData.length; i++) {
+          for (const x of extradetails) {
+            if (x.id === tempData[i].id) {
+              tempData[i].extradetails = x;
+            }
+          }
+        }
+        setTableData(tempData);
+      }
+    );
+    // eslint-disable-next-line
   }, [update]);
 
   useEffect(() => {
@@ -137,22 +154,6 @@ export default function Tree(props) {
   const buildTree = () => {
     //reconvert tabledata to check for updates
     converttreeData();
-
-    Axios.get("https://layfamily.herokuapp.com/api/get/extra").then(
-      (result) => {
-        let extradetails = result.data;
-        let tempData = tableData;
-
-        for (let i = 0; i < tempData.length; i++) {
-          for (const x of extradetails) {
-            if (x.id === tempData[i].id) {
-              tempData[i].extradetails = x;
-            }
-          }
-        }
-        setTableData(tempData);
-      }
-    );
 
     height = $("#Tree").height();
     width = $("#Tree").width();
@@ -451,15 +452,9 @@ export default function Tree(props) {
       });
   };
 
-  function toTitleCase(str) {
-    return str.replace(/(?:^|\s)\w/g, function (match) {
-      return match.toUpperCase();
-    });
-  }
-
   const populateDatalist = () => {
     $("#datalist-input").css("border", "1px solid black");
-    $("#datalist-input").attr("placeholder","Search by Name or Birthdate");
+    $("#datalist-input").attr("placeholder", "Search by Name or Birthdate");
 
     let str = "";
     datalistarr = [];
@@ -471,10 +466,10 @@ export default function Tree(props) {
     }
 
     if ($("#datalist-input").val()) {
-      let inputParsed = toTitleCase($.trim($("#datalist-input").val())).split(" ");
+      let parsed = $.trim($("#datalist-input").val().toLowerCase()).split(" ");
       datalistarr = datalistarr.filter((x) => {
-        for (const word of inputParsed) {
-          if (!x.includes(word)) return false;
+        for (const word of parsed) {
+          if (!x.toLowerCase().includes(word)) return false;
         }
         return true;
       });
@@ -484,6 +479,10 @@ export default function Tree(props) {
       str += `<li>${datalistarr[i]}</>`;
     }
     list.html(str);
+
+    if (datalistarr.length === 0 && $.trim($("#datalist-input").val())) {
+      list.html(`<li>No results.</li>`);
+    }
   };
 
   const getPID = (nameKey) => {
@@ -497,13 +496,19 @@ export default function Tree(props) {
     return node.id;
   };
 
-  const search = (text) => {
+  const search = (text, method) => {
     let found = false;
     let node, searchterm;
-    try {
-      searchterm = $.trim($("ul.datalist-ul")[0].firstChild.textContent);
-    } catch {}
-    $("#datalist-input").val("").attr("placeholder","Search by Name or Birthdate");
+    if (method === "first") {
+      try {
+        searchterm = $.trim($("ul.datalist-ul")[0].firstChild.textContent);
+      } catch {}
+    } else {
+      searchterm = $.trim(text);
+    }
+    $("#datalist-input")
+      .val("")
+      .attr("placeholder", "Search by Name or Birthdate");
     populateDatalist();
 
     for (const x of datalistarr) {
@@ -515,7 +520,8 @@ export default function Tree(props) {
       //get node object
       let n = searchterm.split(" ");
       let id = Number(n[n.length - 1]);
-      for (const x of tableData) {
+      let tempData = tableData;
+      for (const x of tempData) {
         if (x.id === id) {
           node = x;
         }
@@ -539,6 +545,7 @@ export default function Tree(props) {
       try {
         setInfoCard(node);
         zoom.scaleTo(svg.transition().duration(500), 0.25);
+        $("ul.datalist-ul").html("");
         $("#card-container").css("display", "block");
         zoom.translateTo(
           svg.transition().duration(500),
@@ -679,6 +686,14 @@ export default function Tree(props) {
   };
 
   $("ul.header-navigation").removeClass("hidden");
+  $(window).on("click", function (event) {
+    //Hide the menus if visible
+    try {
+      if (event.target !== $("#datalist-input")[0]) {
+        $("ul.datalist-ul").html("");
+      }
+    } catch {}
+  });
 
   return (
     <div>
@@ -702,15 +717,15 @@ export default function Tree(props) {
               event.preventDefault();
               // Focus on next element if successful
               let val = $("#datalist-input").val();
-              if (search(val)) event.target.blur();
+              if (search(val, "first")) event.target.blur();
             }
           }}
         />
         <button
           id="datalistbutton"
           onClick={(event) => {
-            if (!search($("#datalist-input").val()))
-              document.getElementById("datalist-input").focus();
+            if (!search($("#datalist-input").val(), "first"))
+              return document.getElementById("datalist-input").focus();
           }}
         >
           Search
@@ -719,7 +734,9 @@ export default function Tree(props) {
       <ul
         className="datalist-ul"
         onClick={(e) => {
-          search(e.target.closest("li").textContent);
+          try {
+            search(e.target.closest("li").textContent);
+          } catch {}
         }}
       ></ul>
       <button className="create-button" onClick={() => resetCreateFields()}>
