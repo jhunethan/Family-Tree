@@ -5,9 +5,9 @@ body {
   overflow-x: hidden;
   height: 100vh;
   overflow: hidden;
-  background-color: #EDDEA4;
+  background-color: #FED381;
 }
-/* #EDDEA4 #EC7771 */
+/* #FED381 #EC7771 */
 
 .TableContainer {
   display: flex;
