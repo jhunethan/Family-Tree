@@ -5,6 +5,7 @@ import * as $ from "jquery";
 import "../css/Tree.css";
 import "dateformat";
 import pattern from "../css/person-placeholder.jpg";
+import profile from "../css/person-placeholder.jpg";
 
 import NodeCard from "./NodeCard";
 import Create from "./Create.js";
@@ -183,7 +184,14 @@ export default function Tree(props) {
     var partnerShapes = d3
       .select("svg g.nodes")
       .selectAll("rect .node")
-      .data(treeData.descendants());
+      .data(
+        treeData.descendants().filter(function (d) {
+          try {
+            if (d.data.partnerinfo.name) return true;
+          } catch {}
+          return false;
+        })
+      );
 
     partnerShapes
       .enter()
@@ -198,14 +206,8 @@ export default function Tree(props) {
         return d.y - 400;
       })
       .attr("rx", 5)
-      .attr("ry", 5)
-      .classed("hide", function (d) {
-        try {
-          if (d.data.partnerinfo.name === "text") return false;
-        } catch {
-          return true;
-        }
-      });
+      .attr("ry", 5);
+
     partnerShapes
       .enter()
       .append("rect")
@@ -324,12 +326,19 @@ export default function Tree(props) {
     var partnerText = d3
       .select("svg g.nodes")
       .selectAll("text .node")
-      .data(treeData.descendants());
+      .data(
+        treeData.descendants().filter(function (d) {
+          try {
+            if (d.data.partnerinfo.name) return true;
+          } catch {}
+          return false;
+        })
+      );
     partnerText
       .enter()
       .append("text")
       .attr("x", function (d) {
-        return d.x + 175;
+        return d.x + 167.5;
       })
       .attr("y", function (d) {
         return d.y - 200;
