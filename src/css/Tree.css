@@ -15,15 +15,22 @@ svg {
 
 .node,
 .partnernode {
-  width: 350px;
-  height: 180px;
+  width: 600px;
+  height: 400px;
   padding: 8px 12px;
   fill: #fff;
-  stroke: grey;
+  stroke: white;
   stroke-dasharray: 0,0;
   transition: all 0.3s;
 }
 
+.partner{
+  width: 600px;
+  height: 180px;
+  padding: 8px 12px;
+  fill: white;
+  transition: all 0.3s;
+}
 
 .partner-container {
   width: 800px;
@@ -42,8 +49,12 @@ svg {
   transition: all 0.3s;
 }
 
-.shadow {
+.pattern {
   fill: rgba(65, 65, 65, 0.322);
+  height: 150px;
+  overflow: hidden;
+  pointer-events: none;
+  stroke: none;
 }
 
 .node:hover,
@@ -74,8 +85,7 @@ text {
 }
 
 .level-0 {
-  stroke: none;
-  fill: none;
+  display:none;
 }
 
 .level-0 > text {

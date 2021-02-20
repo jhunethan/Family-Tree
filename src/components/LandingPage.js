@@ -175,12 +175,12 @@ export default function LandingPage(props) {
   };
 
   useEffect(() => {
-    Axios.get("https://layfamily.herokuapp.com/api/get/edithistory").then(
+    Axios.get("http://localhost:5000/api/get/edithistory").then(
       (result) => {
         setEditHistory(result.data.reverse());
       }
     );
-    Axios.get("https://layfamily.herokuapp.com/api/get").then((result) => {
+    Axios.get("http://localhost:5000/api/get").then((result) => {
       setDatabasesize(result.data.length);
       // setData(result.data);
     });

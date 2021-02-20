@@ -3,6 +3,8 @@ import * as d3 from "d3";
 import Axios from "axios";
 import * as $ from "jquery";
 import "../css/Tree.css";
+import "dateformat";
+import pattern from "../css/person-placeholder.jpg";
 
 import NodeCard from "./NodeCard";
 import Create from "./Create.js";
@@ -27,12 +29,14 @@ export default function Tree(props) {
     parent: "",
   });
 
+  var dateFormat = require("dateformat");
+
   const switchRadio = () => {
     setRadiochecked(!radiochecked);
   };
 
   useEffect(() => {
-    Axios.get("https://layfamily.herokuapp.com/api/get").then((result) => {
+    Axios.get("http://localhost:5000/api/get").then((result) => {
       setTableData(result.data);
     });
   }, [update]);
@@ -138,21 +142,19 @@ export default function Tree(props) {
     //reconvert tabledata to check for updates
     converttreeData();
 
-    Axios.get("https://layfamily.herokuapp.com/api/get/extra").then(
-      (result) => {
-        let extradetails = result.data;
-        let tempData = tableData;
+    Axios.get("http://localhost:5000/api/get/extra").then((result) => {
+      let extradetails = result.data;
+      let tempData = tableData;
 
-        for (let i = 0; i < tempData.length; i++) {
-          for (const x of extradetails) {
-            if (x.id === tempData[i].id) {
-              tempData[i].extradetails = x;
-            }
+      for (let i = 0; i < tempData.length; i++) {
+        for (const x of extradetails) {
+          if (x.id === tempData[i].id) {
+            tempData[i].extradetails = x;
           }
         }
-        setTableData(tempData);
       }
-    );
+      setTableData(tempData);
+    });
 
     height = $("#Tree").height();
     width = $("#Tree").width();
@@ -160,7 +162,7 @@ export default function Tree(props) {
     svg = d3.select("#Tree").call(zoom);
     zoom.scaleTo(svg.transition().duration(500), 0.2);
     var treeLayout = d3.tree();
-    treeLayout.nodeSize([750, 350]);
+    treeLayout.nodeSize([1000, 570]);
     treeLayout(treeData);
     var linksData = treeData.links();
 
@@ -182,27 +184,6 @@ export default function Tree(props) {
       .select("svg g.nodes")
       .selectAll("rect .node")
       .data(treeData.descendants());
-    partnerShapes
-      .enter()
-      .append("rect")
-      .attr("class", function (d) {
-        return "partner-container shadow level-" + d.depth;
-      })
-      .attr("x", function (d) {
-        return d.x - 390;
-      })
-      .attr("y", function (d) {
-        return d.y - 170;
-      })
-      .attr("rx", 5)
-      .attr("ry", 5)
-      .classed("hide", function (d) {
-        try {
-          if (d.data.partnerinfo.isPartner === 1) return false;
-        } catch {
-          return true;
-        }
-      });
 
     partnerShapes
       .enter()
@@ -211,10 +192,10 @@ export default function Tree(props) {
         return "partner-container level-" + d.depth;
       })
       .attr("x", function (d) {
-        return d.x - 400;
+        return d.x - 525;
       })
       .attr("y", function (d) {
-        return d.y - 180;
+        return d.y - 400;
       })
       .attr("rx", 5)
       .attr("ry", 5)
@@ -235,7 +216,7 @@ export default function Tree(props) {
         return d.x + 50;
       })
       .attr("y", function (d) {
-        return d.y - 180;
+        return d.y - 400;
       })
       .attr("rx", 5)
       .attr("ry", 5)
@@ -259,32 +240,33 @@ export default function Tree(props) {
           zoom.scaleTo(svg.transition().duration(750), 1);
         }, 500);
       });
-
+    partnerShapes
+      .enter()
+      .append("rect")
+      .attr("class", function (d) {
+        return "partner pattern level-" + d.depth;
+      })
+      .attr("x", function (d) {
+        return d.x + 50;
+      })
+      .attr("y", function (d) {
+        return d.y - 400;
+      })
+      .attr("rx", 5)
+      .attr("ry", 5)
+      .classed("hide", function (d) {
+        try {
+          if (d.data.partnerinfo.isPartner === 1) return false;
+        } catch {
+          return true;
+        }
+      });
     // Nodes
     var shapes = d3
       .select("svg g.nodes")
       .selectAll("rect .node")
       .data(treeData.descendants());
-    //normal node shadow
-    shapes
-      .enter()
-      .append("rect")
-      .attr("class", function (d) {
-        return "node shadow level-" + d.depth;
-      })
-      .attr("x", function (d) {
-        return d.x - 170;
-      })
-      .attr("y", function (d) {
-        return d.y - 170;
-      })
-      .classed("hide", function (d) {
-        try {
-          if (d.data.partnerinfo.name) return true;
-        } catch {
-          return false;
-        }
-      });
+
     //normal node rectangle
     shapes
       .enter()
@@ -295,13 +277,13 @@ export default function Tree(props) {
       .attr("x", function (d) {
         try {
           if (!d.data.partnerinfo.name === "text") return d.x;
-          return d.x - 400;
+          return d.x - 662.5;
         } catch {
-          return d.x - 180;
+          return d.x - 300;
         }
       })
       .attr("y", function (d) {
-        return d.y - 180;
+        return d.y - 400;
       })
       .attr("rx", 5)
       .attr("ry", 5)
@@ -319,6 +301,26 @@ export default function Tree(props) {
         }, 500);
       });
 
+    //card pattern
+    shapes
+      .enter()
+      .append("image")
+      .attr("xlink:href", pattern)
+      .attr("class", function (d) {
+        return "node pattern level-" + d.depth;
+      })
+      .attr("x", function (d) {
+        try {
+          if (!d.data.partnerinfo.name === "text") return d.x;
+          return d.x - 650;
+        } catch {
+          return d.x - 300;
+        }
+      })
+      .attr("y", function (d) {
+        return d.y - 400;
+      });
+
     var partnerText = d3
       .select("svg g.nodes")
       .selectAll("text .node")
@@ -327,27 +329,51 @@ export default function Tree(props) {
       .enter()
       .append("text")
       .attr("x", function (d) {
-        return d.x + 230;
+        return d.x + 175;
       })
       .attr("y", function (d) {
-        return d.y - 130;
+        return d.y - 200;
       })
       .text(function (d) {
         try {
-          return d.data.partnerinfo.birthdate;
+          return dateFormat(d.data.partnerinfo.birthdate, "dS mmmm yyyy");
         } catch {
           return "";
         }
       })
-      .call(wrap, 300);
+      .call(wrap, 200);
     partnerText
       .enter()
       .append("text")
       .attr("x", function (d) {
-        return d.x + 230;
+        return d.x + 562.5;
       })
       .attr("y", function (d) {
-        return d.y - 50;
+        return d.y - 200;
+      })
+      .text(function (d) {
+        try {
+          if (d.data.partnerinfo.birthdate) {
+            let firstDate = new Date(d.data.partnerinfo.birthdate),
+              now = new Date(),
+              timeDifference = Math.floor(
+                Math.abs((now.getTime() - firstDate.getTime()) / 31449600000)
+              );
+            return `${timeDifference} years old`;
+          }
+        } catch {}
+        return "";
+      })
+      .call(wrap, 200);
+
+    partnerText
+      .enter()
+      .append("text")
+      .attr("x", function (d) {
+        return d.x + 350;
+      })
+      .attr("y", function (d) {
+        return d.y - 100;
       })
       .text(function (d) {
         try {
@@ -357,7 +383,7 @@ export default function Tree(props) {
         }
       })
       .classed("name-field", true)
-      .call(wrap, 300);
+      .call(wrap, 400);
     var text = d3
       .select("svg g.nodes")
       .selectAll("text .node")
@@ -368,31 +394,58 @@ export default function Tree(props) {
       .attr("x", function (d) {
         try {
           if (!d.data.partnerinfo.name === "text") return d.x;
-          return d.x - 230;
+          return d.x - 550;
         } catch {
-          return d.x;
+          return d.x - 187.5;
         }
       })
       .attr("y", function (d) {
-        return d.y - 130;
+        return d.y - 200;
       })
       .text(function (d) {
-        return d.data.birthdate;
+        if (d.data.birthdate)
+          return dateFormat(d.data.birthdate, "dS mmmm yyyy");
+        return "";
       })
-      .call(wrap, 300);
+      .call(wrap, 200);
     text
       .enter()
       .append("text")
       .attr("x", function (d) {
         try {
           if (!d.data.partnerinfo.name === "text") return d.x;
-          return d.x - 230;
+          return d.x - 150;
+        } catch {
+          return d.x + 212.5;
+        }
+      })
+      .attr("y", function (d) {
+        return d.y - 200;
+      })
+      .text(function (d) {
+        if (d.data.birthdate) {
+          let firstDate = new Date(d.data.birthdate),
+            now = new Date(),
+            timeDifference = Math.floor(
+              Math.abs((now.getTime() - firstDate.getTime()) / 31449600000)
+            );
+          return `${timeDifference} years old`;
+        }
+        return "";
+      });
+    text
+      .enter()
+      .append("text")
+      .attr("x", function (d) {
+        try {
+          if (!d.data.partnerinfo.name === "text") return d.x;
+          return d.x - 375;
         } catch {
           return d.x;
         }
       })
       .attr("y", function (d) {
-        return d.y - 95;
+        return d.y - 145;
       })
       .text(function (d) {
         return d.data.generation;
@@ -404,19 +457,19 @@ export default function Tree(props) {
       .attr("x", function (d) {
         try {
           if (!d.data.partnerinfo.name === "text") return d.x;
-          return d.x - 230;
+          return d.x - 375;
         } catch {
           return d.x;
         }
       })
       .attr("y", function (d) {
-        return d.y - 50;
+        return d.y - 100;
       })
       .text(function (d) {
         return d.data.name;
       })
       .classed("name-field", true)
-      .call(wrap, 300);
+      .call(wrap, 400);
 
     links = d3.select("svg g.links").selectAll("path").data(linksData);
     links

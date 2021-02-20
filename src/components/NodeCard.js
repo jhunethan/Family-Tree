@@ -13,7 +13,7 @@ function MemberPhotos(props) {
   const [cookies] = useCookies(["author"]);
 
   const imageDelete = (e) => {
-    Axios.post("https://layfamily.herokuapp.com/api/delete/image", {
+    Axios.post("http://localhost:5000/api/delete/image", {
       id: props.node.id,
       author: cookies.author,
       public_id: e.target.parentNode.previousElementSibling.classList[1],
@@ -173,7 +173,7 @@ export default function NodeCard(props) {
         photo_id_string = Response.data.public_id;
       }
       $("#card-container").css("display", "none");
-      Axios.put("https://layfamily.herokuapp.com/api/updateextra", {
+      Axios.put("http://localhost:5000/api/updateextra", {
         id: Number(props.node.id),
         photo_id: photo_id_string,
         author: cookies.author,
