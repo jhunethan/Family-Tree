@@ -19,8 +19,11 @@ svg {
   height: 180px;
   padding: 8px 12px;
   fill: #fff;
+  stroke: grey;
+  stroke-dasharray: 0,0;
   transition: all 0.3s;
 }
+
 
 .partner-container {
   width: 800px;
@@ -47,6 +50,7 @@ svg {
 .partnernode:hover {
   fill: #eeeeee;
   stroke: black;
+  stroke-dasharray: 0,0,100,0;
 
   transition: all 0.3s;
   cursor: pointer;
