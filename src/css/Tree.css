@@ -20,11 +20,11 @@ svg {
   padding: 8px 12px;
   fill: #fff;
   stroke: white;
-  stroke-dasharray: 0,0;
+  stroke-dasharray: 0, 0;
   transition: all 0.3s;
 }
 
-.partner{
+.partner {
   width: 600px;
   height: 180px;
   padding: 8px 12px;
@@ -34,25 +34,28 @@ svg {
 
 .partner-container {
   width: 800px;
-  height: 180px;
+  height: 450px;
   padding: 8px 12px;
-  fill: white;
   transition: all 0.3s;
 }
 
-.circle {
-  fill: white;
-  stroke-width: 1px;
-  stroke: #446491;
-  pointer-events: none;
+circle {
+  fill: none;
+  stroke: black;
+}
 
-  transition: all 0.3s;
+.profile-container {
+  height: 150px;
+  width: 150px;
+}
+
+.profile-picture{
+  border-radius: 150px;
+  height: 150px;
 }
 
 .pattern {
-  fill: rgba(65, 65, 65, 0.322);
-  height: 150px;
-  overflow: hidden;
+  height: 100px;
   pointer-events: none;
   stroke: none;
 }
@@ -61,13 +64,13 @@ svg {
 .partnernode:hover {
   fill: #eeeeee;
   stroke: black;
-  stroke-dasharray: 0,0,100,0;
+  stroke-dasharray: 0, 0, 100, 0;
 
   transition: all 0.3s;
   cursor: pointer;
 }
 
-.name-field{
+.name-field {
   font-size: 38px;
 }
 
@@ -85,7 +88,7 @@ text {
 }
 
 .level-0 {
-  display:none;
+  display: none;
 }
 
 .level-0 > text {
@@ -119,19 +122,19 @@ text {
 
   overflow-x: auto;
   font-size: 20px;
-  list-style:none;
+  list-style: none;
   width: 245px;
   max-height: 300px;
 }
 
-.datalist-ul>li{
+.datalist-ul > li {
   background-color: white;
-  border-bottom: .25px solid grey;
+  border-bottom: 0.25px solid grey;
   padding: 2.5px 5px;
   user-select: none;
 }
 
-.datalist-ul>li:hover{
+.datalist-ul > li:hover {
   background-color: rgb(207, 207, 207);
   cursor: pointer;
 }

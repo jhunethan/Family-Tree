@@ -203,8 +203,9 @@ export default function Tree(props) {
         return d.x - 525;
       })
       .attr("y", function (d) {
-        return d.y - 400;
+        return d.y - 450;
       })
+      .attr("fill", "#FED381")
       .attr("rx", 5)
       .attr("ry", 5);
 
@@ -263,6 +264,21 @@ export default function Tree(props) {
           return true;
         }
       });
+    partnerShapes
+      .enter()
+      .append("foreignObject")
+      .attr("class", function (d) {
+        return "profile-container level-" + d.depth;
+      })
+      .attr("x", function (d) {
+        return d.x + 275;
+      })
+      .attr("y", function (d) {
+        return d.y - 362.5;
+      })
+      .append("xhtml:img")
+      .attr("src", profile)
+      .classed("profile-picture", true);
     // Nodes
     var shapes = d3
       .select("svg g.nodes")
@@ -323,6 +339,27 @@ export default function Tree(props) {
         return d.y - 400;
       });
 
+    shapes
+      .enter()
+      .append("foreignObject")
+      .attr("class", function (d) {
+        return "profile-container level-" + d.depth;
+      })
+      .attr("x", function (d) {
+        try {
+          if (!d.data.partnerinfo.name === "text") return d.x;
+          return d.x - 450;
+        } catch {
+          return d.x - 75;
+        }
+      })
+      .attr("y", function (d) {
+        return d.y - 362.5;
+      })
+      .append("xhtml:img")
+      .attr("src", profile)
+      .classed("profile-picture", true);
+
     var partnerText = d3
       .select("svg g.nodes")
       .selectAll("text .node")
@@ -341,7 +378,7 @@ export default function Tree(props) {
         return d.x + 167.5;
       })
       .attr("y", function (d) {
-        return d.y - 200;
+        return d.y - 250;
       })
       .text(function (d) {
         try {
@@ -358,7 +395,7 @@ export default function Tree(props) {
         return d.x + 562.5;
       })
       .attr("y", function (d) {
-        return d.y - 200;
+        return d.y - 250;
       })
       .text(function (d) {
         try {
@@ -393,6 +430,21 @@ export default function Tree(props) {
       })
       .classed("name-field", true)
       .call(wrap, 400);
+
+    partnerText
+      .enter()
+      .append("text")
+      .attr("x", function (d) {
+        return d.x;
+      })
+      .attr("y", function (d) {
+        return d.y - 412.5;
+      })
+      .text(function (d) {
+        return "Married: YYYY";
+      })
+      .classed("name-field", true)
+      .call(wrap, 400);
     var text = d3
       .select("svg g.nodes")
       .selectAll("text .node")
@@ -409,7 +461,7 @@ export default function Tree(props) {
         }
       })
       .attr("y", function (d) {
-        return d.y - 200;
+        return d.y - 250;
       })
       .text(function (d) {
         if (d.data.birthdate)
@@ -429,7 +481,7 @@ export default function Tree(props) {
         }
       })
       .attr("y", function (d) {
-        return d.y - 200;
+        return d.y - 250;
       })
       .text(function (d) {
         if (d.data.birthdate) {
@@ -454,7 +506,7 @@ export default function Tree(props) {
         }
       })
       .attr("y", function (d) {
-        return d.y - 145;
+        return d.y - 140;
       })
       .text(function (d) {
         return d.data.generation;
