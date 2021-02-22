@@ -63,14 +63,14 @@ export default function Tree(props) {
   useEffect(() => {
     //if tabledata is updated, check if the tree exists, else do nothing
     var intervalId = setInterval(function () {
-      if ($("#Tree").children().length < 1) {
-        $("#Tree").html("");
+      $("#Tree").html("");
+      if ($("#Tree").children().length === 0) {
         try {
           buildTree();
         } catch {}
         clearInterval(intervalId);
       }
-    }, 100);
+    }, 1000);
     // eslint-disable-next-line
   }, [tableData]);
 
@@ -258,7 +258,7 @@ export default function Tree(props) {
           d.target.__data__.y
         );
         setTimeout(() => {
-          zoom.scaleTo(svg.transition().duration(750), 1);
+          zoom.scaleTo(svg.transition().duration(750), 0.5);
         }, 500);
       });
     partnerShapes
@@ -333,7 +333,7 @@ export default function Tree(props) {
           d.target.__data__.y
         );
         setTimeout(() => {
-          zoom.scaleTo(svg.transition().duration(750), 1);
+          zoom.scaleTo(svg.transition().duration(750), 0.5);
         }, 500);
       });
 
@@ -684,7 +684,7 @@ export default function Tree(props) {
           dimensions[1]
         );
         setTimeout(() => {
-          zoom.scaleTo(svg.transition().duration(750), 1);
+          zoom.scaleTo(svg.transition().duration(750), 0.5);
         }, 500);
       } catch {}
       return true;
