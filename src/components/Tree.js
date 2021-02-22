@@ -70,7 +70,7 @@ export default function Tree(props) {
         } catch {}
         clearInterval(intervalId);
       }
-    }, 1000);
+    }, 200);
     // eslint-disable-next-line
   }, [tableData]);
 
@@ -179,9 +179,9 @@ export default function Tree(props) {
     width = $("#Tree").width();
 
     svg = d3.select("#Tree").call(zoom);
-    zoom.scaleTo(svg.transition().duration(500), 0.2);
+    zoom.scaleTo(svg.transition().duration(500), 0.25);
     var treeLayout = d3.tree();
-    treeLayout.nodeSize([1000, 570]);
+    treeLayout.nodeSize([1400, 570]);
     treeLayout(treeData);
     var linksData = treeData.links();
 
@@ -708,11 +708,14 @@ export default function Tree(props) {
       $("#location-input").val(node.extradetails.location);
       $("#extranames-input").val(node.extradetails.extranames);
       $("#fblink-input").val(node.extradetails.fblink);
+      $("#profession-input").val(node.extradetails.profession);
       $("textarea.description-input").val(node.extradetails.description);
     } catch {
+      $("#birthplace-input").val("");
       $("#location-input").val("");
       $("#extranames-input").val("");
       $("#fblink-input").val("");
+      $("#profession-input").val("");
       $("textarea.description-input").val("");
     }
   };
@@ -874,7 +877,7 @@ export default function Tree(props) {
         Add New
       </button>
       <button className="refresh-button" onClick={() => updateTree()}>
-        ⟳
+        Read
       </button>
       <NodeCard
         update={() => updateTree()}

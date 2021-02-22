@@ -128,6 +128,7 @@ export default function Edit(props) {
   function saveEdit() {
     let check = false;
     check = checkParent();
+    console.log(nodeInput);
     if (changed === true && check) {
       //save
       Axios.post("http://localhost:5000/api/update", {
@@ -153,6 +154,7 @@ export default function Edit(props) {
         location: nodeInput.location,
         extranames: nodeInput.extranames,
         fblink: nodeInput.fblink,
+        profession: nodeInput.profession,
         description: nodeInput.description,
         author: cookies.author,
         changes: extrachanges,
@@ -210,18 +212,14 @@ export default function Edit(props) {
   const extraInputHandler = () => {
     checkExtraChanges();
     //get
-    let birthplace = $.trim($("#birthplace-input").val());
-    let location = $.trim($("#location-input").val());
-    let extranames = $.trim($("#extranames-input").val());
-    let fblink = $.trim($("#fblink-input").val());
-    let description = $.trim($("textarea.description-input").val());
     //set nodeInput
     let tempnode = nodeInput;
-    tempnode.birthplace = birthplace;
-    tempnode.location = location;
-    tempnode.extranames = extranames;
-    tempnode.fblink = fblink;
-    tempnode.description = description;
+    tempnode.birthplace = $.trim($("#birthplace-input").val());
+    tempnode.location = $.trim($("#location-input").val());
+    tempnode.extranames = $.trim($("#extranames-input").val());
+    tempnode.fblink = $.trim($("#fblink-input").val());
+    tempnode.profession = $.trim($("#profession-input").val());
+    tempnode.description = $.trim($("textarea.description-input").val());
     setNodeInput(tempnode);
   };
 
@@ -257,6 +255,12 @@ export default function Edit(props) {
       }
       if (props.nodedata.extradetails.fblink !== $("#fblink-input").val()) {
         arr.push("fblink");
+        setExtrachanged(true);
+      }
+      if (
+        props.nodedata.extradetails.profession !== $("#profession-input").val()
+      ) {
+        arr.push("profession");
         setExtrachanged(true);
       }
       if (
@@ -449,6 +453,24 @@ export default function Edit(props) {
           type="text"
           name="fblink-input"
           id="fblink-input"
+          className="extra-details-input"
+          onChange={extraInputHandler}
+          onKeyUp={(event) => {
+            if (event.key === "Enter") {
+              // Cancel the default action, if needed
+              event.preventDefault();
+              // Focus on next element
+              document.getElementsByClassName("profession-input")[0].focus();
+            }
+          }}
+        />
+        <label htmlFor="profession-input" className="extra-details-label">
+          Profession
+        </label>
+        <input
+          type="text"
+          name="profession-input"
+          id="profession-input"
           className="extra-details-input"
           onChange={extraInputHandler}
           onKeyUp={(event) => {

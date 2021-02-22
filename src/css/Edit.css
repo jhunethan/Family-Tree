@@ -121,8 +121,7 @@ label {
   width: 33.33%;
   z-index: 2;
 }
-.slide-item,
-.slide-item-2 {
+.slide-item {
   background: white;
   border-radius: 9999px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
@@ -142,7 +141,7 @@ input[type="radio"] {
   left: 4px;
 }
 #option-2:checked ~ .slide-item {
-  left: 165px;
+  left: calc(50% - 4px);
 }
 
 #create-option-1:checked ~ .slide-item-2 {
