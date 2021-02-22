@@ -287,11 +287,16 @@ export default function Edit(props) {
         arr.push("fblink");
         setExtrachanged(true);
       }
+      if ($("#profession-input").val().length > 0) {
+        arr.push("profession");
+        setExtrachanged(true);
+      }
       if ($("textarea.description-input").val().length > 0) {
         arr.push("description");
         setExtrachanged(true);
       }
     }
+    console.log(extrachanged)
     setExtrachanges(arr.join(","));
   };
 

@@ -541,17 +541,17 @@ export default function Tree(props) {
       .attr("x", function (d) {
         try {
           if (!d.data.partnerinfo.name === "text") return d.x;
-          return d.x - 375;
+          return d.x - 80;
         } catch {
-          return d.x;
+          return d.x + 280;
         }
       })
       .attr("y", function (d) {
-        return d.y + 100;
+        return d.y - 10;
       })
       .text(function (d) {
         try {
-          return d.data.extradetails;
+          return d.data.extradetails.profession;
         } catch {
           return "";
         }
