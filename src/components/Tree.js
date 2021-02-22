@@ -63,8 +63,8 @@ export default function Tree(props) {
   useEffect(() => {
     //if tabledata is updated, check if the tree exists, else do nothing
     var intervalId = setInterval(function () {
-      $("#Tree").html("");
       if ($("#Tree").children().length === 0) {
+        $("#Tree").html("");
         try {
           buildTree();
         } catch {}
@@ -160,21 +160,7 @@ export default function Tree(props) {
   const buildTree = () => {
     //reconvert tabledata to check for updates
     converttreeData();
-
-    Axios.get("http://localhost:5000/api/get/extra").then((result) => {
-      let extradetails = result.data;
-      let tempData = tableData;
-
-      for (let i = 0; i < tempData.length; i++) {
-        for (const x of extradetails) {
-          if (x.id === tempData[i].id) {
-            tempData[i].extradetails = x;
-          }
-        }
-      }
-      setTableData(tempData);
-    });
-
+    
     height = $("#Tree").height();
     width = $("#Tree").width();
 
@@ -549,6 +535,28 @@ export default function Tree(props) {
       })
       .classed("name-field", true)
       .call(wrap, 400);
+    text
+      .enter()
+      .append("text")
+      .attr("x", function (d) {
+        try {
+          if (!d.data.partnerinfo.name === "text") return d.x;
+          return d.x - 375;
+        } catch {
+          return d.x;
+        }
+      })
+      .attr("y", function (d) {
+        return d.y + 100;
+      })
+      .text(function (d) {
+        try {
+          return d.data.extradetails;
+        } catch {
+          return "";
+        }
+      })
+      .classed("profession", true);
 
     links = d3.select("svg g.links").selectAll("path").data(linksData);
     links

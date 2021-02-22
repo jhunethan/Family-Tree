@@ -74,6 +74,10 @@ circle {
   font-size: 38px;
 }
 
+.profession{
+  text-anchor: end;
+}
+
 .link {
   max-width: 150px;
   fill: none;
