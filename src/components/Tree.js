@@ -17,6 +17,24 @@ var width;
 var datalistarr,
   treeData = [];
 
+// function treeCard(data) {
+//   return (
+//     <div className="node">
+//       <section className="pattern">pattern</section>
+//       <div className="profile-picture"></div>
+//       <section className="tree-card-main">
+//         <div className="tree-card-birth card-birthdate">28th December 2001</div>
+//         <div className="tree-card-birth card-age">19 years old</div>
+//         <div className="card-name">
+//           <p className="sub">Hau</p>
+//           <p>Jhun Ethan Lay</p>
+//         </div>
+//         <div className="tree-card-footer">Carpenter</div>
+//       </section>
+//     </div>
+//   );
+// }
+
 export default function Tree(props) {
   const [update, setUpdate] = useState(false);
   const [datalist, setDatalist] = useState([]);

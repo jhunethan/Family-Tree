@@ -18,7 +18,7 @@ export default function Table(props) {
   //current node/ clicked node state
   const [nodestate, setNodestate] = useState(0);
   const [currentRow, setcurrentRow] = useState();
-  
+
   var [radiochecked, setRadiochecked] = useState(true);
   const [datalist, setDatalist] = useState([]);
 
@@ -29,11 +29,9 @@ export default function Table(props) {
     Axios.get("http://localhost:5000/api/get").then((result) => {
       setTableData(result.data);
     });
-    Axios.get("http://localhost:5000/api/get/extra").then(
-      (result) => {
-        settableDataExtra(result.data);
-      }
-    );
+    Axios.get("http://localhost:5000/api/get/extra").then((result) => {
+      settableDataExtra(result.data);
+    });
   }, [update]);
 
   const updateTable = () => {
