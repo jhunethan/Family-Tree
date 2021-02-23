@@ -4,7 +4,7 @@ import Axios from "axios";
 import * as $ from "jquery";
 import "../css/Tree.css";
 import "dateformat";
-import pattern from "../css/person-placeholder.jpg";
+import pattern from "../css/pattern.jpg";
 import profile from "../css/person-placeholder.jpg";
 
 import NodeCard from "./NodeCard";
@@ -160,7 +160,7 @@ export default function Tree(props) {
   const buildTree = () => {
     //reconvert tabledata to check for updates
     converttreeData();
-    
+
     height = $("#Tree").height();
     width = $("#Tree").width();
 
@@ -268,6 +268,20 @@ export default function Tree(props) {
           return true;
         }
       });
+    //card pattern
+    partnerShapes
+      .enter()
+      .append("image")
+      .attr("xlink:href", pattern)
+      .attr("class", function (d) {
+        return "pattern level-" + d.depth;
+      })
+      .attr("x", function (d) {
+        return d.x + 47.5;
+      })
+      .attr("y", function (d) {
+        return d.y - 400;
+      });
     partnerShapes
       .enter()
       .append("foreignObject")
@@ -334,7 +348,7 @@ export default function Tree(props) {
       .attr("x", function (d) {
         try {
           if (!d.data.partnerinfo.name === "text") return d.x;
-          return d.x - 650;
+          return d.x - 662.5;
         } catch {
           return d.x - 300;
         }
@@ -479,15 +493,18 @@ export default function Tree(props) {
       .attr("x", function (d) {
         try {
           if (!d.data.partnerinfo.name === "text") return d.x;
-          return d.x - 150;
+          return d.x - 165;
         } catch {
-          return d.x + 212.5;
+          return d.x + 200;
         }
       })
       .attr("y", function (d) {
         return d.y - 250;
       })
       .text(function (d) {
+        if(d.data.deathdate){
+          return dateFormat(d.data.deathdate, "dS mmmm yyyy");
+        }
         if (d.data.birthdate) {
           let firstDate = new Date(d.data.birthdate),
             now = new Date(),
@@ -497,7 +514,7 @@ export default function Tree(props) {
           return `${timeDifference} years old`;
         }
         return "";
-      });
+      }).call(wrap,200);
     text
       .enter()
       .append("text")
@@ -708,6 +725,13 @@ export default function Tree(props) {
     $("#name").val(node.name);
     $("#birthdate").val(node.birthdate);
 
+    if (node.deathdate) {
+      $("#isDeceased").attr("checked", true);
+      $("#deathdate").css("display", "block").val(node.deathdate);
+    } else {
+      $("#isDeceased").attr("checked", false);
+      $("#deathdate").css("display", "none");
+    }
     let pval = node.isPartner ? node.partner : node.parent;
     $("#parentInput").val(pval);
 

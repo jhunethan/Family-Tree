@@ -29,6 +29,11 @@ export default function Edit(props) {
   var inputChangedHandler = () => {
     let isPartner = false;
     let partner, parent, pid;
+    let deathdate = null;
+
+    if ($("#isDeceased")[0].checked) deathdate = $("#deathdate").val();
+
+    console.log(deathdate);
     getRadioVal("option-1", "option-2") === "partner"
       ? (isPartner = 1)
       : (isPartner = 0);
@@ -46,12 +51,15 @@ export default function Edit(props) {
       pid = 0;
     }
 
+    if (pid === 0 || !pid) isPartner = 0;
+
     setNodeInput({
       id: props.nodedata.id,
       generation: $("#genInput").val(),
       name: $("#name").val(),
       birthdate: $("#birthdate").val(),
       pid: pid,
+      deathdate: deathdate,
       isPartner: isPartner,
       parent: parent,
       partner: partner,
@@ -82,14 +90,14 @@ export default function Edit(props) {
     // eslint-disable-next-line
     if (
       $("#parentInput").val() !== props.nodedata.parent &&
-      (props.nodedata.partner === null || props.nodedata.partner === "")
+      !props.nodedata.partner
     ) {
       setChanged(true);
       changesStack.push("parent-node");
     }
     if (
       $("#parentInput").val() !== props.nodedata.partner &&
-      (props.nodedata.parent === null || props.nodedata.parent === "")
+      !props.nodedata.parent
     ) {
       setChanged(true);
       changesStack.push("parent-node");
@@ -108,6 +116,13 @@ export default function Edit(props) {
       setChanged(true);
       changesStack.push("isChild");
     }
+    console.log($("#deathdate").val());
+    console.log(props.nodedata.deathdate);
+    if ($("#deathdate").val() !== props.nodedata.deathdate) {
+      setChanged(true);
+      changesStack.push("deathdate");
+    }
+    console.log(changesStack);
     setChanges(changesStack.join(","));
   }
 
@@ -126,20 +141,11 @@ export default function Edit(props) {
   }
 
   function saveEdit() {
-    let check = false;
-    check = checkParent();
     console.log(nodeInput);
-    if (changed === true && check) {
+    if (changed === true && checkParent()) {
       //save
       Axios.post("http://localhost:5000/api/update", {
-        id: nodeInput.id,
-        generation: nodeInput.generation,
-        name: nodeInput.name,
-        birthdate: nodeInput.birthdate,
-        pid: nodeInput.pid,
-        isPartner: nodeInput.isPartner,
-        parent: nodeInput.parent,
-        partner: nodeInput.partner,
+        input: nodeInput,
         author: cookies.author,
         changes: changes,
       }).then(closeEditMenu());
@@ -150,12 +156,7 @@ export default function Edit(props) {
     if (extrachanged) {
       Axios.post("http://localhost:5000/api/updateextra", {
         id: props.nodedata.id,
-        birthplace: nodeInput.birthplace,
-        location: nodeInput.location,
-        extranames: nodeInput.extranames,
-        fblink: nodeInput.fblink,
-        profession: nodeInput.profession,
-        description: nodeInput.description,
+        input: nodeInput,
         author: cookies.author,
         changes: extrachanges,
       }).then(closeEditMenu());
@@ -296,7 +297,6 @@ export default function Edit(props) {
         setExtrachanged(true);
       }
     }
-    console.log(extrachanged)
     setExtrachanges(arr.join(","));
   };
 
@@ -342,6 +342,40 @@ export default function Edit(props) {
         <p type="Date of Birth">
           <input
             id="birthdate"
+            type="date"
+            className="extra-details-input"
+            onChange={inputChangedHandler}
+            placeholder="YYYY-MM-DD"
+            onKeyUp={(event) => {
+              if (event.key === "Enter") {
+                // Cancel the default action, if needed
+                event.preventDefault();
+                // Focus on next element
+                document.getElementById("parentInput").focus();
+              }
+            }}
+          />
+        </p>
+        <p type="Date of death">
+          <label htmlFor="isDeceased">Has this person died?</label>
+          <input
+            id="isDeceased"
+            type="checkbox"
+            name="isDeceased"
+            onClick={(e) => {
+              $("#deathdate").css(
+                "display",
+                e.target.checked ? "block" : "none"
+              );
+              $("#deathdate").val(
+                e.target.checked ? props.nodedata.deathdate : null
+              );
+              inputChangedHandler();
+            }}
+          />
+          <input
+            id="deathdate"
+            type="date"
             className="extra-details-input"
             onChange={inputChangedHandler}
             placeholder="YYYY-MM-DD"
