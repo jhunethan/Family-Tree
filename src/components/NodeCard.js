@@ -235,7 +235,9 @@ export default function NodeCard(props) {
           <div className="card-content">
             <div className="card-details">
               <NodeCardDetails node={props.node} method="birthdate" />
+              <NodeCardDetails node={props.node} method="deathdate" />
               <NodeCardDetails node={props.node} method="generation" />
+              <NodeCardDetails node={props.node} method="profession" />
               <NodeCardDetails node={props.node} method="location" />
               <NodeCardDetails node={props.node} method="extranames" />
               <NodeCardDetails node={props.node} method="fblink" />

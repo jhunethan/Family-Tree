@@ -11,7 +11,6 @@ import NodeCard from "./NodeCard";
 export default function Table(props) {
   const [update, setUpdate] = useState(0);
   const [tableData, setTableData] = useState([]);
-  const [tableDataExtra, settableDataExtra] = useState([]);
 
   const [TreeData, setTreeData] = useState([]);
 
@@ -29,9 +28,6 @@ export default function Table(props) {
     Axios.get("http://localhost:5000/api/get").then((result) => {
       setTableData(result.data);
     });
-    Axios.get("http://localhost:5000/api/get/extra").then((result) => {
-      settableDataExtra(result.data);
-    });
   }, [update]);
 
   const updateTable = () => {
@@ -44,23 +40,29 @@ export default function Table(props) {
     $("#name").val(node.name);
     $("#birthdate").val(node.birthdate);
 
-    let pval;
-    if (node.partner.length > 0) {
-      pval = node.partner;
+    if (node.deathdate) {
+      $("#isDeceased").attr("checked", true);
+      $("#deathdate").css("display", "block").val(node.deathdate);
     } else {
-      pval = node.parent;
+      $("#isDeceased").attr("checked", false);
+      $("#deathdate").css("display", "none");
     }
-    $("#parentInput").val(pval);
+
+    $("#parentInput").val(node.isPartner ? node.partner : node.parent);
+
     try {
       $("#birthplace-input").val(node.extradetails.birthplace);
       $("#location-input").val(node.extradetails.location);
       $("#extranames-input").val(node.extradetails.extranames);
       $("#fblink-input").val(node.extradetails.fblink);
+      $("#profession-input").val(node.extradetails.profession);
       $("textarea.description-input").val(node.extradetails.description);
     } catch {
+      $("#birthplace-input").val("");
       $("#location-input").val("");
       $("#extranames-input").val("");
       $("#fblink-input").val("");
+      $("#profession-input").val("");
       $("textarea.description-input").val("");
     }
   };
@@ -176,7 +178,6 @@ export default function Table(props) {
       row.firstChild.textContent !== "0"
     ) {
       nodestate.isPartner ? setRadiochecked(false) : setRadiochecked(true);
-
       //sort out edit menu
       populateEditFields(nodestate);
       $("#Modal").css("display", "block");
@@ -186,9 +187,7 @@ export default function Table(props) {
   };
 
   const showNode = (row) => {
-    updateTable();
     try {
-      let children = row.children;
       let tempData = tableData;
       let partners = tempData.filter((x) => x.isPartner === 1);
       tempData = tempData.filter((x) => x.isPartner !== 1);
@@ -211,24 +210,7 @@ export default function Table(props) {
         setcurrentRow(row);
 
         $("#card-container").css("display", "flex");
-        let thisnode = getNode(Number(row.firstChild.textContent));
-        let node = {
-          id: children[0].textContent,
-          generation: children[1].textContent,
-          name: children[2].textContent,
-          birthdate: children[3].textContent,
-          parent: children[4].textContent,
-          partner: children[5].textContent,
-          isPartner: thisnode.isPartner,
-        };
-
-        //check if extra details exists
-
-        for (let i = 0; i < tableDataExtra.length; i++) {
-          if (tableDataExtra[i].id === Number(node.id)) {
-            node.extradetails = tableDataExtra[i];
-          }
-        }
+        let node = getNode(Number(row.firstChild.textContent));
 
         //update current node json object
         setNodestate(node);

@@ -502,7 +502,7 @@ export default function Tree(props) {
         return d.y - 250;
       })
       .text(function (d) {
-        if(d.data.deathdate){
+        if (d.data.deathdate) {
           return dateFormat(d.data.deathdate, "dS mmmm yyyy");
         }
         if (d.data.birthdate) {
@@ -514,7 +514,8 @@ export default function Tree(props) {
           return `${timeDifference} years old`;
         }
         return "";
-      }).call(wrap,200);
+      })
+      .call(wrap, 200);
     text
       .enter()
       .append("text")

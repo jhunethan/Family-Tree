@@ -1,4 +1,7 @@
 import React from "react";
+import "dateformat";
+
+var dateFormat = require("dateformat");
 
 const getNode = (name, data) => {
   let tempname;
@@ -30,11 +33,13 @@ export function NodeCardDetails(props) {
             <section>
               <h2>Born</h2>
               <p>
-                {props.node.birthdate} in {props.node.extradetails.birthplace}
+                <div>{dateFormat(props.node.birthdate, "dS mmmm yyyy")}</div>
+                <div>{props.node.extradetails.birthplace}</div>
               </p>
             </section>
           );
-        } else if (props.node.extradetails.birthplace) {
+        }
+        if (props.node.extradetails.birthplace) {
           return (
             <section>
               <h2>Born</h2>
@@ -43,12 +48,26 @@ export function NodeCardDetails(props) {
           );
         }
       } catch {}
-      return (
-        <section>
-          <h2>Born</h2>
-          <p>{props.node.birthdate}</p>
-        </section>
-      );
+      if (props.node.birthdate)
+        return (
+          <section>
+            <h2>Born</h2>
+            <p>{props.node.birthdate}</p>
+          </section>
+        );
+      return null;
+    case "deathdate":
+      try {
+        if (props.node.deathdate) {
+          return (
+            <section>
+              <h2>Died</h2>
+              <p>{dateFormat(props.node.deathdate, "dS mmmm yyyy")}</p>
+            </section>
+          );
+        }
+      } catch {}
+      return null;
     case "generation":
       if (props.node.generation) {
         return (
@@ -57,9 +76,9 @@ export function NodeCardDetails(props) {
             <p>{props.node.generation}</p>
           </section>
         );
-      } else {
-        return null;
       }
+      return null;
+
     case "location":
       try {
         if (props.node.extradetails.location) {
@@ -69,10 +88,21 @@ export function NodeCardDetails(props) {
               <p>{props.node.extradetails.location}</p>
             </section>
           );
-        } else return null;
-      } catch {
-        return null;
-      }
+        }
+      } catch {}
+      return null;
+    case "profession":
+      try {
+        if (props.node.extradetails.profession) {
+          return (
+            <section>
+              <h2>Profession</h2>
+              <p>{props.node.extradetails.profession}</p>
+            </section>
+          );
+        }
+      } catch {}
+      return null;
     case "extranames":
       try {
         let extranames = props.node.extradetails.extranames;
@@ -127,7 +157,7 @@ export function NodeCardDetails(props) {
         return null;
       }
     default:
-      break;
+      return null;
   }
 }
 
