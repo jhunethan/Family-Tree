@@ -1,7 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import "dateformat";
-
+import * as $ from "jquery";
+import Axios from "axios";
+import { useCookies } from "react-cookie";
+import { Image } from "cloudinary-react";
+import placeholder from "../css/person-placeholder.jpg";
 var dateFormat = require("dateformat");
+
 
 const getNode = (name, data) => {
   let tempname;
@@ -243,5 +248,119 @@ export function ImmediateFamily(props) {
       return null;
     default:
       return null;
+  }
+}
+
+export function MemberPhotos(props) {
+  const [cookies] = useCookies(["author"]);
+
+  const imageDelete = (e) => {
+    Axios.post("http://localhost:5000/api/delete/image", {
+      id: props.node.id,
+      author: cookies.author,
+      public_id: e.target.parentNode.previousElementSibling.classList[1],
+    }).then(() => {
+      $("#card-container").css("display", "none");
+      props.update();
+    });
+  };
+
+  try {
+    if (props.node.extradetails.photo_id) {
+      let photos = props.node.extradetails.photo_id.split(",");
+      return (
+        <div className="image-container">
+          {photos.map((x, index) => {
+            return (
+              <div
+                className="image-single-container"
+                key={`${index}-container`}
+              >
+                <Image
+                  cloudName="dqwu1p8fp"
+                  public_id={x}
+                  className={"image " + x}
+                />
+                <div className="image-edit-menu">
+                  <div className="image-expand image-menu">EXPAND</div>
+                  <div
+                    className="image-delete image-menu"
+                    onClick={(e) => imageDelete(e)}
+                  >
+                    DELETE
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      );
+    }
+  } catch {}
+  return (
+    <div className="image-container">
+      <img src={placeholder} className="image" alt="placeholder" />
+    </div>
+  );
+}
+
+export function AddPhoto(props) {
+  const [fileName, setFileName] = useState("");
+  try {
+    if (props.node.extradetails.photo_id.split(",").length < 3) {
+      return (
+        <div className="file-input-container">
+          <label className="file-input-button" htmlFor="file-input">
+            Upload Photo
+          </label>
+          <input
+            type="file"
+            id="file-input"
+            className="file-input"
+            accept="image/*"
+            onChange={(event) => {
+              props.imageChangeHandler(event);
+              setFileName(event.target.files[0].name);
+            }}
+          />
+          {fileName}
+          <input
+            type="submit"
+            className="file-submit"
+            onClick={() => {
+              props.uploadImage();
+              setFileName("");
+            }}
+            value="Submit Photo"
+          />
+        </div>
+      );
+    } else {
+      return null;
+    }
+  } catch (error) {
+    return (
+      <div className="file-input-container">
+        <label className="file-input-button" htmlFor="file-input">
+          Upload Photo
+        </label>
+        <input
+          type="file"
+          id="file-input"
+          className="file-input"
+          accept="image/*"
+          onChange={(event) => props.imageChangeHandler(event)}
+        />
+        <input
+          type="submit"
+          className="file-submit"
+          onClick={() => {
+            props.uploadImage();
+            props.update();
+          }}
+          value="Submit Photo"
+        />
+      </div>
+    );
   }
 }
