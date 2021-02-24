@@ -60,11 +60,11 @@ export default function Tree(props) {
     });
   }, [update]);
 
+  //update tree on tableData mutation
   useEffect(() => {
-    //if tabledata is updated, check if the tree exists, else do nothing
+    $("#Tree").html("");
     var intervalId = setInterval(function () {
       if ($("#Tree").children().length === 0) {
-        $("#Tree").html("");
         try {
           buildTree();
         } catch {}
@@ -78,6 +78,34 @@ export default function Tree(props) {
   const updateTree = () => {
     setUpdate((prevUpdate) => !prevUpdate);
   };
+
+  async function dynamicUpdate(obj) {
+    let data = tableData;
+    await setTableData([]);
+    //update an edited node
+    try {
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].id === obj.id) data[i] = obj;
+      }
+      //delete node from table
+      if (obj.method === "delete") {
+        console.log("deleting");
+        data = data.filter((x) => x.id !== obj.id);
+        console.log(data);
+      }
+    } catch {}
+
+    if (obj.method === "create") {
+      console.log("new node detected");
+      setTimeout(() => {
+        updateTree();
+      }, 500);
+      
+    } else {
+      await setTableData(data);
+    }
+    console.log(obj);
+  }
 
   const closePopups = () => {
     $("div.Create").css("display", "none");
@@ -99,6 +127,11 @@ export default function Tree(props) {
           treeData[x].partnerinfo = partners[i];
         }
       }
+    }
+
+    //ensure that id === 0 is the root node
+    for (let i = 0; i < treeData.length; i++) {
+      if (treeData[i].id === 0) treeData[i].pid = null;
     }
 
     treeData = d3
@@ -922,8 +955,8 @@ export default function Tree(props) {
       <Create
         data={tableData}
         getPID={getPID}
-        update={() => {
-          updateTree();
+        update={(obj) => {
+          dynamicUpdate(obj);
         }}
       />
       <Edit
@@ -933,7 +966,10 @@ export default function Tree(props) {
         data={tableData}
         datalist={datalist}
         nodedata={InfoCard}
-        update={() => {
+        update={(obj) => {
+          dynamicUpdate(obj);
+        }}
+        refresh={() => {
           updateTree();
         }}
       />

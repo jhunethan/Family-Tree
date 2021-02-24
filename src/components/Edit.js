@@ -30,10 +30,10 @@ export default function Edit(props) {
     let isPartner = false;
     let partner, parent, pid;
     let deathdate = null;
+    let temp = nodeInput;
 
     if ($("#isDeceased")[0].checked) deathdate = $("#deathdate").val();
 
-    console.log(deathdate);
     getRadioVal("option-1", "option-2") === "partner"
       ? (isPartner = 1)
       : (isPartner = 0);
@@ -53,17 +53,17 @@ export default function Edit(props) {
 
     if (pid === 0 || !pid) isPartner = 0;
 
-    setNodeInput({
-      id: props.nodedata.id,
-      generation: $("#genInput").val(),
-      name: $("#name").val(),
-      birthdate: $("#birthdate").val(),
-      pid: pid,
-      deathdate: deathdate,
-      isPartner: isPartner,
-      parent: parent,
-      partner: partner,
-    });
+    temp.id = props.nodedata.id;
+    temp.generation = $("#genInput").val();
+    temp.name = $("#name").val();
+    temp.birthdate = $("#birthdate").val();
+    temp.pid = pid;
+    temp.deathdate = deathdate;
+    temp.isPartner = isPartner;
+    temp.parent = parent;
+    temp.partner = partner;
+
+    setNodeInput(temp);
   };
 
   function getRadioVal(radio1, radio2) {
@@ -137,28 +137,26 @@ export default function Edit(props) {
     return false;
   }
 
-  function saveEdit() {
+  async function saveEdit() {
     console.log(nodeInput);
     if (changed === true && checkParent()) {
       //save
-      Axios.post("http://localhost:5000/api/update", {
+      await Axios.post("http://localhost:5000/api/update", {
         input: nodeInput,
         author: cookies.author,
         changes: changes,
-      }).then(closeEditMenu());
-    } else {
-      //alert no changes made
+      });
     }
-    extraInputHandler();
+    await extraInputHandler();
     if (extrachanged) {
-      Axios.post("http://localhost:5000/api/updateextra", {
+      await Axios.post("http://localhost:5000/api/updateextra", {
         id: props.nodedata.id,
-        input: nodeInput,
+        input: nodeInput.extradetails,
         author: cookies.author,
         changes: extrachanges,
-      }).then(closeEditMenu());
-    } else {
+      });
     }
+    closeEditMenu();
     setChanged(false);
     setExtrachanged(false);
   }
@@ -170,6 +168,7 @@ export default function Edit(props) {
     $("#card-container").css("display", "none");
     //send new node update
     if (param === "unsave") return;
+    console.log(nodeInput);
     props.update(nodeInput);
   };
 
@@ -183,7 +182,9 @@ export default function Edit(props) {
     let node = props.nodedata;
     console.log(node);
     node.method = "delete";
+
     if (userValidation.val() === "confirm") {
+      props.update(node);
       //delete node
       Axios.post("http://localhost:5000/api/delete", {
         id: props.nodedata.id,
@@ -191,8 +192,7 @@ export default function Edit(props) {
       });
 
       cancelDeleteConfirm();
-      closeEditMenu();
-      props.update(node);
+      closeEditMenu("unsave");
     } else {
       userValidation.css("border-bottom", "2px solid red");
       userValidation.val("");
@@ -211,19 +211,25 @@ export default function Edit(props) {
     $("#deleteTextbox").css("border-bottom", "2px solid #bebed2");
   };
 
-  const extraInputHandler = () => {
-    checkExtraChanges();
+  async function extraInputHandler() {
+    await checkExtraChanges();
+    await inputChangedHandler();
     //get
     //set nodeInput
-    let tempnode = nodeInput;
-    tempnode.birthplace = $.trim($("#birthplace-input").val());
-    tempnode.location = $.trim($("#location-input").val());
-    tempnode.extranames = $.trim($("#extranames-input").val());
-    tempnode.fblink = $.trim($("#fblink-input").val());
-    tempnode.profession = $.trim($("#profession-input").val());
-    tempnode.description = $.trim($("textarea.description-input").val());
+    let tempnode = props.nodedata;
+
+    let extradetails = {
+      birthplace: $.trim($("#birthplace-input").val()),
+      location: $.trim($("#location-input").val()),
+      extranames: $.trim($("#extranames-input").val()),
+      fblink: $.trim($("#fblink-input").val()),
+      profession: $.trim($("#profession-input").val()),
+      description: $.trim($("textarea.description-input").val()),
+    };
+
+    tempnode.extradetails = extradetails;
     setNodeInput(tempnode);
-  };
+  }
 
   const descriptionHandler = () => {
     extraInputHandler();

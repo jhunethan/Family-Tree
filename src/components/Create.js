@@ -66,9 +66,10 @@ function Create(props) {
       $("#Modal").css("display", "none");
     } catch {}
 
-    setTimeout(() => {
-      props.update();
-    }, 500);
+    let node = sendNode;
+    node.method = "create";
+    console.log(node)
+    props.update(node);
   };
 
   const validation = () => {
@@ -127,14 +128,12 @@ function Create(props) {
     if (node.isPartner === 0) {
       node.parent = node.parentNode;
     }
-    setTimeout(() => {
-      if (validation() && checkParent()) {
-        Axios.post("http://localhost:5000/api/insert", {
-          input: sendNode,
-          author: cookies.author,
-        }).then(successAdd());
-      }
-    }, 500);
+    if (validation() && checkParent()) {
+      Axios.post("http://localhost:5000/api/insert", {
+        input: sendNode,
+        author: cookies.author,
+      }).then(successAdd());
+    }
   };
 
   return (
@@ -217,7 +216,12 @@ function Create(props) {
         />
         <p> Partner</p>
       </div>
-      <button type="button" id="save" className="create-button" onClick={submit}>
+      <button
+        type="button"
+        id="save"
+        className="create-button"
+        onClick={submit}
+      >
         Save Changes
       </button>
       <button
