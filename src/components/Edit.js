@@ -159,6 +159,7 @@ export default function Edit(props) {
     }
 
     if (extrachanged || (changed === true && checkParent())) closeEditMenu();
+    setChanged(false);
     setExtrachanged(false);
   }
 
@@ -209,22 +210,20 @@ export default function Edit(props) {
     $("#deleteTextbox").css("border-bottom", "2px solid #bebed2");
   };
 
-  const extraInputHandler = () => {
+  async function extraInputHandler() {
     checkExtraChanges();
     //set nodeInput
-    let tempnode = nodeInput;
-    if (!tempnode.id) tempnode = props.nodedata;
-    let extradetails = {
-      birthplace: $.trim($("#birthplace-input").val()),
-      location: $.trim($("#location-input").val()),
-      extranames: $.trim($("#extranames-input").val()),
-      fblink: $.trim($("#fblink-input").val()),
-      profession: $.trim($("#profession-input").val()),
-      description: $.trim($("textarea.description-input").val()),
-    };
-    tempnode.extradetails = extradetails;
-    setNodeInput(tempnode);
-  };
+    let node = nodeInput;
+    let tempnode = {}
+    tempnode.birthplace = $.trim($("#birthplace-input").val());
+    tempnode.location = $.trim($("#location-input").val());
+    tempnode.extranames = $.trim($("#extranames-input").val());
+    tempnode.fblink = $.trim($("#fblink-input").val());
+    tempnode.profession = $.trim($("#profession-input").val());
+    tempnode.description = $.trim($("textarea.description-input").val());
+    node.extradetails = tempnode
+    await setNodeInput(node);
+  }
 
   const descriptionHandler = () => {
     extraInputHandler();
