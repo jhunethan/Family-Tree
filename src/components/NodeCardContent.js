@@ -7,7 +7,6 @@ import { Image } from "cloudinary-react";
 import placeholder from "../css/person-placeholder.jpg";
 var dateFormat = require("dateformat");
 
-
 const getNode = (name, data) => {
   let tempname;
   for (let i = 0; i < data.length; i++) {
@@ -37,10 +36,9 @@ export function NodeCardDetails(props) {
           return (
             <section>
               <h2>Born</h2>
-              <p>
-                <div>{dateFormat(props.node.birthdate, "dS mmmm yyyy")}</div>
-                <div>{props.node.extradetails.birthplace}</div>
-              </p>
+
+              <div>{dateFormat(props.node.birthdate, "dS mmmm yyyy")}</div>
+              <div>{props.node.extradetails.birthplace}</div>
             </section>
           );
         }
@@ -83,7 +81,6 @@ export function NodeCardDetails(props) {
         );
       }
       return null;
-
     case "location":
       try {
         if (props.node.extradetails.location) {
@@ -110,19 +107,16 @@ export function NodeCardDetails(props) {
       return null;
     case "extranames":
       try {
-        let extranames = props.node.extradetails.extranames;
-
-        if (extranames) {
+        if (props.node.extradetails.extranames) {
           return (
             <section>
               <h2>Additional Names</h2>
-              <p>{extranames}</p>
+              <p>{props.node.extradetails.extranames}</p>
             </section>
           );
-        } else return null;
-      } catch {
-        return null;
-      }
+        }
+      } catch {}
+      return null;
     case "fblink":
       try {
         if (
@@ -135,12 +129,9 @@ export function NodeCardDetails(props) {
               </a>
             </section>
           );
-        } else {
-          return null;
         }
-      } catch {
-        return null;
-      }
+      } catch {}
+      return null;
     case "description":
       try {
         if (props.node.extradetails.description) {
@@ -157,10 +148,9 @@ export function NodeCardDetails(props) {
               </div>
             </section>
           );
-        } else return null;
-      } catch {
-        return null;
-      }
+        }
+      } catch {}
+      return null;
     default:
       return null;
   }
@@ -180,7 +170,7 @@ export function ImmediateFamily(props) {
         if (parent.partnerinfo.name) {
           return (
             <div className="card-parents card-related">
-              <h2>Known Parents</h2>
+              <h2>Parents</h2>
               <p>{props.node.parent}</p>
               <p>{partner}</p>
             </div>
@@ -190,7 +180,7 @@ export function ImmediateFamily(props) {
         if (props.node.parent) {
           return (
             <div className="card-parents card-related">
-              <h2>Known Parents</h2>
+              <h2>Parents</h2>
               <p>{props.node.parent}</p>
             </div>
           );
@@ -206,7 +196,7 @@ export function ImmediateFamily(props) {
         if (siblings.length > 1) {
           return (
             <div className="card-siblings card-related">
-              <h2>Known Siblings</h2>
+              <h2>Siblings</h2>
               {siblings.map((x) => {
                 if (x.name !== props.node.name) {
                   return (
@@ -231,7 +221,7 @@ export function ImmediateFamily(props) {
         if (children.length > 0) {
           return (
             <div className="card-children card-related">
-              <h2>Known Children</h2>
+              <h2>Children</h2>
               {children.map((x) => {
                 return (
                   <p key={x.id}>
@@ -261,7 +251,17 @@ export function MemberPhotos(props) {
       public_id: e.target.parentNode.previousElementSibling.classList[1],
     }).then(() => {
       $("#card-container").css("display", "none");
-      props.update();
+
+      let photo_id_string = props.node.extradetails.photo_id
+        .split(",")
+        .filter(
+          (x) => x !== e.target.parentNode.previousElementSibling.classList[1]
+        )
+        .join(",");
+      console.log(photo_id_string);
+      let obj = props.node;
+      obj.extradetails.photo_id = photo_id_string;
+      props.update(obj);
     });
   };
 
@@ -356,7 +356,6 @@ export function AddPhoto(props) {
           className="file-submit"
           onClick={() => {
             props.uploadImage();
-            props.update();
           }}
           value="Submit Photo"
         />

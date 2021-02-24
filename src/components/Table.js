@@ -35,6 +35,22 @@ export default function Table(props) {
     setUpdate(update + 1);
   };
 
+  //async to reset and set tabledata to trigger a rerender
+  async function dynamicUpdate(obj) {
+    let data = tableData;
+    await setTableData([]);
+    //update an edited node
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].id === obj.id) data[i] = obj;
+    }
+    //delete node from table
+    if (obj.method === "delete") {
+      data = data.filter((x) => x.id !== obj.id);
+    }
+    console.log(obj);
+    await setTableData(data);
+  }
+
   const populateEditFields = (node) => {
     $("#genInput").val(node.generation);
     $("#name").val(node.name);
@@ -208,12 +224,9 @@ export default function Table(props) {
         row.firstChild.textContent !== "0"
       ) {
         setcurrentRow(row);
-
-        $("#card-container").css("display", "flex");
-        let node = getNode(Number(row.firstChild.textContent));
-
+        $("#card-container").css("display", "block");
         //update current node json object
-        setNodestate(node);
+        setNodestate(getNode(Number(row.firstChild.textContent)));
       }
     } catch {}
   };
@@ -271,15 +284,13 @@ export default function Table(props) {
         data={tableData}
         datalist={datalist}
         nodedata={nodestate}
-        update={() => {
-          updateTable();
-        }}
+        update={(obj) => dynamicUpdate(obj)}
       />
       <NodeCard
         node={nodestate}
         treeData={TreeData}
         data={tableData}
-        update={() => updateTable}
+        update={(obj) => dynamicUpdate(obj)}
         edit={() => {
           openNode(currentRow);
         }}

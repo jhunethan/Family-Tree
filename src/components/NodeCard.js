@@ -5,8 +5,12 @@ import { useCookies } from "react-cookie";
 
 import "../css/NodeCard.css";
 import editIcon from "../css/edit-button.png";
-import { NodeCardDetails, ImmediateFamily, AddPhoto, MemberPhotos } from "./NodeCardContent";
-
+import {
+  NodeCardDetails,
+  ImmediateFamily,
+  AddPhoto,
+  MemberPhotos,
+} from "./NodeCardContent";
 
 export default function NodeCard(props) {
   const [imageToBeSent, setImageToBeSent] = useState(undefined);
@@ -58,14 +62,13 @@ export default function NodeCard(props) {
         photo_id_string = Response.data.public_id;
       }
       $("#card-container").css("display", "none");
+      let obj = props.node;
+      obj.extradetails.photo_id = photo_id_string;
+      props.update(obj);
       Axios.put("http://localhost:5000/api/updateextra", {
         id: Number(props.node.id),
         photo_id: photo_id_string,
         author: cookies.author,
-      }).then(() => {
-        setTimeout(() => {
-          props.update();
-        }, 250);
       });
     });
   };
@@ -109,7 +112,6 @@ export default function NodeCard(props) {
         <AddPhoto
           imageChangeHandler={imageChangeHandler}
           uploadImage={uploadImage}
-          update={props.update}
           node={props.node}
         />
         <div className="progress-bar"></div>

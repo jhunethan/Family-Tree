@@ -116,13 +116,10 @@ export default function Edit(props) {
       setChanged(true);
       changesStack.push("isChild");
     }
-    console.log($("#deathdate").val());
-    console.log(props.nodedata.deathdate);
     if ($("#deathdate").val() !== props.nodedata.deathdate) {
       setChanged(true);
       changesStack.push("deathdate");
     }
-    console.log(changesStack);
     setChanges(changesStack.join(","));
   }
 
@@ -165,24 +162,27 @@ export default function Edit(props) {
     setChanged(false);
     setExtrachanged(false);
   }
-  var closeEditMenu = () => {
+
+  const closeEditMenu = (param) => {
     $("#editForm").css("display", "none");
     $("#Modal").css("display", "none");
     $("div.edit-container").css("display", "none");
     $("#card-container").css("display", "none");
-    //wait for Axios update then update
-    setTimeout(() => {
-      props.update();
-    }, 1000);
+    //send new node update
+    if (param === "unsave") return;
+    props.update(nodeInput);
   };
 
   function cancelDeleteConfirm() {
     $("#deleteConfirmMenu").css("display", "none");
     $("#editForm").css("display", "block");
   }
+
   function confirmDeletion() {
     let userValidation = $("#deleteTextbox");
-
+    let node = props.nodedata;
+    console.log(node);
+    node.method = "delete";
     if (userValidation.val() === "confirm") {
       //delete node
       Axios.post("http://localhost:5000/api/delete", {
@@ -192,6 +192,7 @@ export default function Edit(props) {
 
       cancelDeleteConfirm();
       closeEditMenu();
+      props.update(node);
     } else {
       userValidation.css("border-bottom", "2px solid red");
       userValidation.val("");
@@ -534,7 +535,11 @@ export default function Edit(props) {
         <button type="button" id="save" onClick={saveEdit}>
           Save Changes
         </button>
-        <button type="button" id="cancel" onClick={closeEditMenu}>
+        <button
+          type="button"
+          id="cancel"
+          onClick={() => closeEditMenu("unsave")}
+        >
           Cancel
         </button>
       </div>

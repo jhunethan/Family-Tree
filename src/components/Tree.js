@@ -400,10 +400,10 @@ export default function Tree(props) {
       })
       .text(function (d) {
         try {
-          return dateFormat(d.data.partnerinfo.birthdate, "dS mmmm yyyy");
-        } catch {
-          return "";
-        }
+          if (d.data.partnerinfo.birthdate)
+            return dateFormat(d.data.partnerinfo.birthdate, "dS mmmm yyyy");
+        } catch {}
+        return "";
       })
       .call(wrap, 200);
     partnerText

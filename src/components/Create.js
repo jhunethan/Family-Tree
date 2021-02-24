@@ -68,7 +68,7 @@ function Create(props) {
 
     setTimeout(() => {
       props.update();
-    }, 300);
+    }, 500);
   };
 
   const validation = () => {
@@ -130,13 +130,7 @@ function Create(props) {
     setTimeout(() => {
       if (validation() && checkParent()) {
         Axios.post("http://localhost:5000/api/insert", {
-          pid: sendNode.pid,
-          generation: sendNode.generation,
-          name: sendNode.name,
-          birthdate: sendNode.birthdate,
-          parent: sendNode.parent,
-          partner: sendNode.partner,
-          isPartner: sendNode.isPartner,
+          input: sendNode,
           author: cookies.author,
         }).then(successAdd());
       }
