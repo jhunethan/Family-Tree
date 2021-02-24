@@ -30,7 +30,6 @@ export default function Edit(props) {
     let isPartner = false;
     let partner, parent, pid;
     let deathdate = null;
-    let temp = nodeInput;
 
     if ($("#isDeceased")[0].checked) deathdate = $("#deathdate").val();
 
@@ -53,17 +52,17 @@ export default function Edit(props) {
 
     if (pid === 0 || !pid) isPartner = 0;
 
-    temp.id = props.nodedata.id;
-    temp.generation = $("#genInput").val();
-    temp.name = $("#name").val();
-    temp.birthdate = $("#birthdate").val();
-    temp.pid = pid;
-    temp.deathdate = deathdate;
-    temp.isPartner = isPartner;
-    temp.parent = parent;
-    temp.partner = partner;
-
-    setNodeInput(temp);
+    setNodeInput({
+      id: props.nodedata.id,
+      generation: $("#genInput").val(),
+      name: $("#name").val(),
+      birthdate: $("#birthdate").val(),
+      pid: pid,
+      deathdate: deathdate,
+      isPartner: isPartner,
+      parent: parent,
+      partner: partner,
+    });
   };
 
   function getRadioVal(radio1, radio2) {
@@ -140,28 +139,26 @@ export default function Edit(props) {
     return false;
   }
 
-  async function saveEdit() {
+  function saveEdit() {
     if (changed === true && checkParent()) {
       //save
-      await Axios.post("http://localhost:5000/api/update", {
+      Axios.post("http://localhost:5000/api/update", {
         input: nodeInput,
-        name: props.nodedata.name,
         author: cookies.author,
         changes: changes,
       });
     }
-    await extraInputHandler();
+    extraInputHandler();
     if (extrachanged) {
-      await Axios.post("http://localhost:5000/api/updateextra", {
+      Axios.post("http://localhost:5000/api/updateextra", {
         id: props.nodedata.id,
-        name: props.nodedata.name,
-        input: nodeInput.extradetails,
+        input: nodeInput,
         author: cookies.author,
         changes: extrachanges,
       });
     }
-    closeEditMenu();
-    setChanged(false);
+
+    if (extrachanged || (changed === true && checkParent())) closeEditMenu();
     setExtrachanged(false);
   }
 
@@ -184,18 +181,16 @@ export default function Edit(props) {
     let userValidation = $("#deleteTextbox");
     let node = props.nodedata;
     node.method = "delete";
-
     if (userValidation.val() === "confirm") {
-      props.update(node);
       //delete node
       Axios.post("http://localhost:5000/api/delete", {
         id: props.nodedata.id,
-        name: props.nodedata.name,
         author: cookies.author,
       });
 
       cancelDeleteConfirm();
-      closeEditMenu("unsave");
+      closeEditMenu();
+      props.update(node);
     } else {
       userValidation.css("border-bottom", "2px solid red");
       userValidation.val("");
@@ -214,13 +209,11 @@ export default function Edit(props) {
     $("#deleteTextbox").css("border-bottom", "2px solid #bebed2");
   };
 
-  function extraInputHandler() {
+  const extraInputHandler = () => {
     checkExtraChanges();
-    inputChangedHandler();
-    //get
     //set nodeInput
-    let tempnode = props.nodedata;
-
+    let tempnode = nodeInput;
+    if (!tempnode.id) tempnode = props.nodedata;
     let extradetails = {
       birthplace: $.trim($("#birthplace-input").val()),
       location: $.trim($("#location-input").val()),
@@ -229,10 +222,9 @@ export default function Edit(props) {
       profession: $.trim($("#profession-input").val()),
       description: $.trim($("textarea.description-input").val()),
     };
-
     tempnode.extradetails = extradetails;
     setNodeInput(tempnode);
-  }
+  };
 
   const descriptionHandler = () => {
     extraInputHandler();
@@ -247,37 +239,35 @@ export default function Edit(props) {
   const checkExtraChanges = () => {
     let arr = [];
     setExtrachanged(false);
-    let node = props.getNode(props.nodedata.id);
-    console.log(node)
     try {
       if (
-        node.extradetails.birthplace !== $("#birthplace-input").val()
+        props.nodedata.extradetails.birthplace !== $("#birthplace-input").val()
       ) {
         arr.push("birthplace");
         setExtrachanged(true);
       }
-      if (node.extradetails.location !== $("#location-input").val()) {
+      if (props.nodedata.extradetails.location !== $("#location-input").val()) {
         arr.push("location");
         setExtrachanged(true);
       }
       if (
-        node.extradetails.extranames !== $("#extranames-input").val()
+        props.nodedata.extradetails.extranames !== $("#extranames-input").val()
       ) {
         arr.push("extranames");
         setExtrachanged(true);
       }
-      if (node.extradetails.fblink !== $("#fblink-input").val()) {
+      if (props.nodedata.extradetails.fblink !== $("#fblink-input").val()) {
         arr.push("fblink");
         setExtrachanged(true);
       }
       if (
-        node.extradetails.profession !== $("#profession-input").val()
+        props.nodedata.extradetails.profession !== $("#profession-input").val()
       ) {
         arr.push("profession");
         setExtrachanged(true);
       }
       if (
-        node.extradetails.description !==
+        props.nodedata.extradetails.description !==
         $("textarea.description-input").val()
       ) {
         arr.push("description");
@@ -309,8 +299,6 @@ export default function Edit(props) {
         setExtrachanged(true);
       }
     }
-    console.log(node);
-    console.log(arr);
     setExtrachanges(arr.join(","));
   };
 

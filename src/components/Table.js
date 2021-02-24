@@ -277,19 +277,23 @@ export default function Table(props) {
       />
       <Edit
         getPID={getPID}
-        getNode={(id)=>getNode(id)}
+        getNode={(id) => getNode(id)}
         radiochecked={radiochecked}
         switchRadio={switchRadio}
         data={tableData}
         datalist={datalist}
         nodedata={nodestate}
-        update={(obj) => dynamicUpdate(obj)}
+        update={(obj) => {
+          dynamicUpdate(obj);
+        }}
       />
       <NodeCard
         node={nodestate}
         treeData={TreeData}
         data={tableData}
-        update={(obj) => dynamicUpdate(obj)}
+        update={(obj) => {
+          dynamicUpdate(obj);
+        }}
         edit={() => {
           openNode(currentRow);
         }}
