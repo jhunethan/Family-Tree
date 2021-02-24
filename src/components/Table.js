@@ -35,20 +35,29 @@ export default function Table(props) {
     setUpdate(update + 1);
   };
 
-  function dynamicUpdate(obj) {
+  async function dynamicUpdate(obj) {
     let data = tableData;
-    setTableData([]);
+    await setTableData([]);
     //update an edited node
-    for (let i = 0; i < data.length; i++) {
-      if (data[i].id === obj.id) data[i] = obj;
-    }
-    //delete node from table
-    if (obj.method === "delete") {
-      data = data.filter((x) => x.id !== obj.id);
-    }
-    setTableData(data);
-  }
+    try {
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].id === obj.id) data[i] = obj;
+      }
+      //delete node from table
+      if (obj.method === "delete") {
+        data = await data.filter((x) => x.id !== obj.id);
+      }
+    } catch {}
 
+    if (obj.method === "create") {
+      setTimeout(() => {
+        updateTable();
+      }, 500);
+      
+    } else {
+      await setTableData(data);
+    }
+  }
   const populateEditFields = (inputNode) => {
     let node = getNode(inputNode.id);
     $("#genInput").val(node.generation);

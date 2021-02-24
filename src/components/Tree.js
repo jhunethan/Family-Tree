@@ -87,9 +87,9 @@ export default function Tree(props) {
     }
   };
 
-  function dynamicUpdate(obj) {
+  async function dynamicUpdate(obj) {
     let data = tableData;
-    setTableData([]);
+    await setTableData([]);
     //update an edited node
     try {
       for (let i = 0; i < data.length; i++) {
@@ -97,7 +97,7 @@ export default function Tree(props) {
       }
       //delete node from table
       if (obj.method === "delete") {
-        data = data.filter((x) => x.id !== obj.id);
+        data = await data.filter((x) => x.id !== obj.id);
       }
     } catch {}
 
@@ -107,7 +107,7 @@ export default function Tree(props) {
       }, 500);
       
     } else {
-      setTableData(data);
+      await setTableData(data);
     }
   }
 

@@ -144,6 +144,7 @@ export default function Edit(props) {
       //save
       Axios.post("http://localhost:5000/api/update", {
         input: nodeInput,
+        name: props.nodedata.name,
         author: cookies.author,
         changes: changes,
       });
@@ -152,6 +153,7 @@ export default function Edit(props) {
     if (extrachanged) {
       Axios.post("http://localhost:5000/api/updateextra", {
         id: props.nodedata.id,
+        name: props.nodedata.name,
         input: nodeInput,
         author: cookies.author,
         changes: extrachanges,
@@ -186,6 +188,7 @@ export default function Edit(props) {
       //delete node
       Axios.post("http://localhost:5000/api/delete", {
         id: props.nodedata.id,
+        name: props.nodedata.name,
         author: cookies.author,
       });
 
