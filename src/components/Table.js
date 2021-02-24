@@ -35,10 +35,9 @@ export default function Table(props) {
     setUpdate(update + 1);
   };
 
-  //async to reset and set tabledata to trigger a rerender
-  async function dynamicUpdate(obj) {
+  function dynamicUpdate(obj) {
     let data = tableData;
-    await setTableData([]);
+    setTableData([]);
     //update an edited node
     for (let i = 0; i < data.length; i++) {
       if (data[i].id === obj.id) data[i] = obj;
@@ -47,11 +46,11 @@ export default function Table(props) {
     if (obj.method === "delete") {
       data = data.filter((x) => x.id !== obj.id);
     }
-    console.log(obj);
-    await setTableData(data);
+    setTableData(data);
   }
 
-  const populateEditFields = (node) => {
+  const populateEditFields = (inputNode) => {
+    let node = getNode(inputNode.id);
     $("#genInput").val(node.generation);
     $("#name").val(node.name);
     $("#birthdate").val(node.birthdate);
@@ -155,7 +154,6 @@ export default function Table(props) {
     $("#parentInput").css("border-bottom", "2px solid #bebed2");
     $("#parentInput").val("");
     $("#parentInput").attr("placeholder", "Parent/Partner");
-
     let str,
       id = "";
     let list = document.getElementById("parentSearchDataList");
@@ -279,6 +277,7 @@ export default function Table(props) {
       />
       <Edit
         getPID={getPID}
+        getNode={(id)=>getNode(id)}
         radiochecked={radiochecked}
         switchRadio={switchRadio}
         data={tableData}

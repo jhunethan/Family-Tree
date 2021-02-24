@@ -7,16 +7,6 @@ import { useCookies } from "react-cookie";
 function Create(props) {
   const [cookies] = useCookies(["author"]);
 
-  const [sendNode, setsendNode] = useState({
-    pid: 0,
-    generation: "",
-    name: "",
-    birthdate: "",
-    parent: "",
-    partner: "",
-    parentNode: "",
-    isPartner: 0,
-  });
   var node = {
     pid: 0,
     generation: "",
@@ -27,6 +17,7 @@ function Create(props) {
     parentNode: "",
     isPartner: 0,
   };
+  const [sendNode, setsendNode] = useState(node);
 
   const inputChangedHandler = () => {
     node.parentNode = $("#parentInputC").val();
@@ -68,7 +59,6 @@ function Create(props) {
 
     let node = sendNode;
     node.method = "create";
-    console.log(node)
     props.update(node);
   };
 

@@ -247,6 +247,7 @@ export function MemberPhotos(props) {
   const imageDelete = (e) => {
     Axios.post("http://localhost:5000/api/delete/image", {
       id: props.node.id,
+      name: props.node.name,
       author: cookies.author,
       public_id: e.target.parentNode.previousElementSibling.classList[1],
     }).then(() => {
@@ -258,7 +259,6 @@ export function MemberPhotos(props) {
           (x) => x !== e.target.parentNode.previousElementSibling.classList[1]
         )
         .join(",");
-      console.log(photo_id_string);
       let obj = props.node;
       obj.extradetails.photo_id = photo_id_string;
       props.update(obj);

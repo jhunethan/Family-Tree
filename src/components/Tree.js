@@ -79,9 +79,17 @@ export default function Tree(props) {
     setUpdate((prevUpdate) => !prevUpdate);
   };
 
-  async function dynamicUpdate(obj) {
+  const getNode = (idKey) => {
+    for (var i = 0; i < tableData.length; i++) {
+      if (tableData[i].id === idKey) {
+        return tableData[i];
+      }
+    }
+  };
+
+  function dynamicUpdate(obj) {
     let data = tableData;
-    await setTableData([]);
+    setTableData([]);
     //update an edited node
     try {
       for (let i = 0; i < data.length; i++) {
@@ -89,22 +97,18 @@ export default function Tree(props) {
       }
       //delete node from table
       if (obj.method === "delete") {
-        console.log("deleting");
         data = data.filter((x) => x.id !== obj.id);
-        console.log(data);
       }
     } catch {}
 
     if (obj.method === "create") {
-      console.log("new node detected");
       setTimeout(() => {
         updateTree();
       }, 500);
       
     } else {
-      await setTableData(data);
+      setTableData(data);
     }
-    console.log(obj);
   }
 
   const closePopups = () => {
@@ -961,6 +965,7 @@ export default function Tree(props) {
       />
       <Edit
         getPID={getPID}
+        getNode={(id)=>getNode(id)}
         radiochecked={radiochecked}
         switchRadio={switchRadio}
         data={tableData}

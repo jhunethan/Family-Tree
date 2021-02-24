@@ -18,8 +18,7 @@ function Edits(props) {
   } catch {
     changes[0] = props.data.changes;
   }
-  if (props.data.method === "delete")
-    changes[0] = `deleted node with ID ${props.data.id}`;
+  if (props.data.method === "delete") changes[0] = `deleted ${props.data.name}`;
   return (
     <ul>
       {changes.map((n, index) => {
@@ -41,14 +40,13 @@ function EditHistory(props) {
   return (
     <div className="edit-history">
       {props.editHistory.slice(slicesize[0], slicesize[1]).map((x) => {
-        let id = x.id !== 0 ? x.id : x.changes;
+        let name = x.id !== 0 ? x.name : x.changes;
         count += 1;
         return (
           <div className="history-container" key={count}>
             <p>{dateFormat(x.time, "dS mmmm [HH:MM]")}</p>
             <p>
-              <strong>{x.author}</strong> made the following changes to node{" "}
-              {id}
+              <strong>{x.author}</strong> made the following changes to {name}
             </p>
             <Edits data={x} />
           </div>
@@ -175,11 +173,9 @@ export default function LandingPage(props) {
   };
 
   useEffect(() => {
-    Axios.get("http://localhost:5000/api/get/edithistory").then(
-      (result) => {
-        setEditHistory(result.data.reverse());
-      }
-    );
+    Axios.get("http://localhost:5000/api/get/edithistory").then((result) => {
+      setEditHistory(result.data.reverse());
+    });
     Axios.get("http://localhost:5000/api/get").then((result) => {
       setDatabasesize(result.data.length);
       // setData(result.data);

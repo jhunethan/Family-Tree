@@ -67,6 +67,7 @@ export default function NodeCard(props) {
       props.update(obj);
       Axios.put("http://localhost:5000/api/updateextra", {
         id: Number(props.node.id),
+        name: props.node.name,
         photo_id: photo_id_string,
         author: cookies.author,
       });

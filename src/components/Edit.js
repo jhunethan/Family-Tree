@@ -116,7 +116,10 @@ export default function Edit(props) {
       setChanged(true);
       changesStack.push("isChild");
     }
-    if ($("#deathdate").val() !== props.nodedata.deathdate) {
+    //deal with empty string compared to null type
+    let deathdate =
+      props.nodedata.deathdate === null ? "" : props.nodedata.deathdate;
+    if ($("#deathdate").val() !== deathdate) {
       setChanged(true);
       changesStack.push("deathdate");
     }
@@ -138,11 +141,11 @@ export default function Edit(props) {
   }
 
   async function saveEdit() {
-    console.log(nodeInput);
     if (changed === true && checkParent()) {
       //save
       await Axios.post("http://localhost:5000/api/update", {
         input: nodeInput,
+        name: props.nodedata.name,
         author: cookies.author,
         changes: changes,
       });
@@ -151,6 +154,7 @@ export default function Edit(props) {
     if (extrachanged) {
       await Axios.post("http://localhost:5000/api/updateextra", {
         id: props.nodedata.id,
+        name: props.nodedata.name,
         input: nodeInput.extradetails,
         author: cookies.author,
         changes: extrachanges,
@@ -168,7 +172,6 @@ export default function Edit(props) {
     $("#card-container").css("display", "none");
     //send new node update
     if (param === "unsave") return;
-    console.log(nodeInput);
     props.update(nodeInput);
   };
 
@@ -180,7 +183,6 @@ export default function Edit(props) {
   function confirmDeletion() {
     let userValidation = $("#deleteTextbox");
     let node = props.nodedata;
-    console.log(node);
     node.method = "delete";
 
     if (userValidation.val() === "confirm") {
@@ -188,6 +190,7 @@ export default function Edit(props) {
       //delete node
       Axios.post("http://localhost:5000/api/delete", {
         id: props.nodedata.id,
+        name: props.nodedata.name,
         author: cookies.author,
       });
 
@@ -211,9 +214,9 @@ export default function Edit(props) {
     $("#deleteTextbox").css("border-bottom", "2px solid #bebed2");
   };
 
-  async function extraInputHandler() {
-    await checkExtraChanges();
-    await inputChangedHandler();
+  function extraInputHandler() {
+    checkExtraChanges();
+    inputChangedHandler();
     //get
     //set nodeInput
     let tempnode = props.nodedata;
@@ -244,35 +247,37 @@ export default function Edit(props) {
   const checkExtraChanges = () => {
     let arr = [];
     setExtrachanged(false);
+    let node = props.getNode(props.nodedata.id);
+    console.log(node)
     try {
       if (
-        props.nodedata.extradetails.birthplace !== $("#birthplace-input").val()
+        node.extradetails.birthplace !== $("#birthplace-input").val()
       ) {
         arr.push("birthplace");
         setExtrachanged(true);
       }
-      if (props.nodedata.extradetails.location !== $("#location-input").val()) {
+      if (node.extradetails.location !== $("#location-input").val()) {
         arr.push("location");
         setExtrachanged(true);
       }
       if (
-        props.nodedata.extradetails.extranames !== $("#extranames-input").val()
+        node.extradetails.extranames !== $("#extranames-input").val()
       ) {
         arr.push("extranames");
         setExtrachanged(true);
       }
-      if (props.nodedata.extradetails.fblink !== $("#fblink-input").val()) {
+      if (node.extradetails.fblink !== $("#fblink-input").val()) {
         arr.push("fblink");
         setExtrachanged(true);
       }
       if (
-        props.nodedata.extradetails.profession !== $("#profession-input").val()
+        node.extradetails.profession !== $("#profession-input").val()
       ) {
         arr.push("profession");
         setExtrachanged(true);
       }
       if (
-        props.nodedata.extradetails.description !==
+        node.extradetails.description !==
         $("textarea.description-input").val()
       ) {
         arr.push("description");
@@ -304,6 +309,8 @@ export default function Edit(props) {
         setExtrachanged(true);
       }
     }
+    console.log(node);
+    console.log(arr);
     setExtrachanges(arr.join(","));
   };
 
