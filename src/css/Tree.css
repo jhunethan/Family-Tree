@@ -39,6 +39,28 @@ svg {
   transition: all 0.3s;
 }
 
+.edit-menu-modal {
+  position: absolute;
+  z-index: 2;
+  margin: 0;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+
+  background-color: rgba(0, 0, 0, 0.082);
+}
+
+.edit-menu {
+  position: absolute;
+  z-index: 3;
+  
+  background-color: white;
+  height: 400px;
+  width: 600px;
+  filter: drop-shadow(5px 5px 5px rgba(65, 65, 65, 0.322));
+}
+
 circle {
   fill: none;
   stroke: black;
@@ -49,7 +71,7 @@ circle {
   width: 150px;
 }
 
-.profile-picture{
+.profile-picture {
   border-radius: 150px;
   height: 150px;
 }
@@ -74,7 +96,7 @@ circle {
   font-size: 38px;
 }
 
-.profession{
+.profession {
   text-anchor: end;
 }
 
@@ -162,18 +184,19 @@ text {
 .create-button {
   position: absolute;
   top: 21px;
-  right: 80px;
+  right: 120px;
   z-index: 3;
 
   background-color: #fff200;
   padding: 10px 20px;
 }
 
-.refresh-button {
+.changeview-button {
   position: absolute;
   top: 20px;
   right: 10px;
   z-index: 3;
+  width: 100px;
 
   background-color: #fff200;
   padding: 10px 20px;
@@ -181,4 +204,11 @@ text {
 
   cursor: pointer;
   transition: all 0.3s;
+}
+
+button:active {
+  background-color: #000;
+  color: #fff200;
+  box-shadow: 0 1px #666;
+  transform: translateY(1px);
 }

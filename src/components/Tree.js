@@ -40,6 +40,7 @@ export default function Tree(props) {
   const [datalist, setDatalist] = useState([]);
   const [tableData, setTableData] = useState([]);
   var [radiochecked, setRadiochecked] = useState(true);
+  const [editview, seteditView] = useState(false);
   const [InfoCard, setInfoCard] = useState({
     id: "",
     name: "",
@@ -52,6 +53,16 @@ export default function Tree(props) {
 
   const switchRadio = () => {
     setRadiochecked(!radiochecked);
+  };
+
+  const changeView = () => {
+    seteditView((prev) => !prev);
+    if (editview) {
+      $("foreignObject.edit-menu").remove();
+      return ($("button.changeview-button")[0].textContent = "Read");
+    }
+    $("button.changeview-button")[0].textContent = "Edit";
+    $("#card-container").css("display", "none");
   };
 
   useEffect(() => {
@@ -105,13 +116,9 @@ export default function Tree(props) {
       setTimeout(() => {
         updateTree();
       }, 500);
-      
     } else {
       await setTableData(data);
     }
-
-    console.log(obj);
-    console.log(data);
   }
 
   const closePopups = () => {
@@ -119,6 +126,7 @@ export default function Tree(props) {
     $("#editForm").css("display", "none");
     $("#deleteConfirmMenu").css("display", "none");
     $("div.edit-container").css("display", "none");
+    $("foreignObject.edit-menu").remove();
   };
 
   //convert to hierarchal tree form using d3.stratify()
@@ -192,10 +200,52 @@ export default function Tree(props) {
       [0, 0],
       [$("#Tree").width(), $("#Tree").height()],
     ])
-    .scaleExtent([0.1, 1])
+    .scaleExtent([0.05, 0.5])
     .on("zoom", zoomed);
 
   var svg = d3.select("#Tree");
+
+  function nodeClick(d, type) {
+    //alternative function
+    //show a edit menu for a node letting the user change the tree dynamically
+    if ($("button.changeview-button")[0].textContent === "Edit") {
+      //remove other instances of edit menus
+      $("foreignObject.edit-menu").remove();
+      //open edit menu
+      d3.select("g.nodes")
+        .append("foreignObject")
+        .attr("class", "edit-menu")
+        .attr("x", d.target.__data__.x - 300)
+        .attr("y", d.target.__data__.y - 400)
+        .attr("height", 500)
+        .attr("width", 500);
+      let menu = d3
+        .select("foreignObject.edit-menu")
+        .append("xhtml:div")
+        .attr("class", "edit-menu");
+      // menu.append("div");
+      // menu.append("div");
+      // menu.append("div");
+      return;
+    }
+    //normal click node function - pan and zoom to clicked node
+    let data =
+      type === "partner"
+        ? d.target.__data__.data.partnerinfo
+        : d.target.__data__.data;
+
+    zoom.scaleTo(svg.transition().duration(500), 0.25);
+    $("#card-container").css("display", "block");
+    setInfoCard(data);
+    zoom.translateTo(
+      svg.transition().duration(500),
+      d.target.__data__.x,
+      d.target.__data__.y
+    );
+    setTimeout(() => {
+      zoom.scaleTo(svg.transition().duration(750), 0.4);
+    }, 500);
+  }
 
   const buildTree = () => {
     //reconvert tabledata to check for updates
@@ -274,40 +324,7 @@ export default function Tree(props) {
           return true;
         }
       })
-      .on("click", function (d) {
-        zoom.scaleTo(svg.transition().duration(500), 0.25);
-        $("#card-container").css("display", "block");
-        setInfoCard(d.target.__data__.data.partnerinfo);
-        zoom.translateTo(
-          svg.transition().duration(500),
-          d.target.__data__.x,
-          d.target.__data__.y
-        );
-        setTimeout(() => {
-          zoom.scaleTo(svg.transition().duration(750), 0.5);
-        }, 500);
-      });
-    partnerShapes
-      .enter()
-      .append("rect")
-      .attr("class", function (d) {
-        return "partner pattern level-" + d.depth;
-      })
-      .attr("x", function (d) {
-        return d.x + 50;
-      })
-      .attr("y", function (d) {
-        return d.y - 400;
-      })
-      .attr("rx", 5)
-      .attr("ry", 5)
-      .classed("hide", function (d) {
-        try {
-          if (d.data.partnerinfo.isPartner === 1) return false;
-        } catch {
-          return true;
-        }
-      });
+      .on("click", (d) => nodeClick(d, "partner"));
     //card pattern
     partnerShapes
       .enter()
@@ -363,19 +380,7 @@ export default function Tree(props) {
       })
       .attr("rx", 5)
       .attr("ry", 5)
-      .on("click", function (d) {
-        $("#card-container").css("display", "block");
-        zoom.scaleTo(svg.transition().duration(500), 0.25);
-        setInfoCard(d.target.__data__.data);
-        zoom.translateTo(
-          svg.transition().duration(500),
-          d.target.__data__.x,
-          d.target.__data__.y
-        );
-        setTimeout(() => {
-          zoom.scaleTo(svg.transition().duration(750), 0.5);
-        }, 500);
-      });
+      .on("click", (d) => nodeClick(d, ""));
 
     //card pattern
     shapes
@@ -864,6 +869,7 @@ export default function Tree(props) {
   };
 
   const resetCreateFields = () => {
+    console.log(editview);
     let str = "";
     let temparr = [];
     let list = document.getElementById("parentSearchDataList");
@@ -896,9 +902,8 @@ export default function Tree(props) {
   $(window).on("click", function (event) {
     //Hide the menus if visible
     try {
-      if (event.target !== $("#datalist-input")[0]) {
+      if (event.target !== $("#datalist-input")[0])
         $("ul.datalist-ul").html("");
-      }
     } catch {}
   });
 
@@ -949,7 +954,7 @@ export default function Tree(props) {
       <button className="create-button" onClick={() => resetCreateFields()}>
         Add New
       </button>
-      <button className="refresh-button" onClick={() => updateTree()}>
+      <button className="changeview-button" onClick={() => changeView()}>
         Read
       </button>
       <NodeCard
@@ -968,7 +973,7 @@ export default function Tree(props) {
       />
       <Edit
         getPID={getPID}
-        getNode={(id)=>getNode(id)}
+        getNode={(id) => getNode(id)}
         radiochecked={radiochecked}
         switchRadio={switchRadio}
         data={tableData}
