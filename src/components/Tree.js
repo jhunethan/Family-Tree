@@ -109,6 +109,9 @@ export default function Tree(props) {
     } else {
       await setTableData(data);
     }
+
+    console.log(obj);
+    console.log(data);
   }
 
   const closePopups = () => {

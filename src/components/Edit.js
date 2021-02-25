@@ -172,7 +172,14 @@ export default function Edit(props) {
     $("#card-container").css("display", "none");
     //send new node update
     if (param === "unsave") return;
-    props.update(nodeInput);
+    let node;
+    if (!nodeInput.id) {
+      node = props.nodedata;
+      node.extradetails = nodeInput.extradetails;
+    } else {
+      node = nodeInput;
+    }
+    props.update(node);
   };
 
   function cancelDeleteConfirm() {
@@ -217,14 +224,14 @@ export default function Edit(props) {
     checkExtraChanges();
     //set nodeInput
     let node = nodeInput;
-    let tempnode = {}
+    let tempnode = {};
     tempnode.birthplace = $.trim($("#birthplace-input").val());
     tempnode.location = $.trim($("#location-input").val());
     tempnode.extranames = $.trim($("#extranames-input").val());
     tempnode.fblink = $.trim($("#fblink-input").val());
     tempnode.profession = $.trim($("#profession-input").val());
     tempnode.description = $.trim($("textarea.description-input").val());
-    node.extradetails = tempnode
+    node.extradetails = tempnode;
     await setNodeInput(node);
   }
 
