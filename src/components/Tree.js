@@ -223,9 +223,9 @@ export default function Tree(props) {
         .select("foreignObject.edit-menu")
         .append("xhtml:div")
         .attr("class", "edit-menu");
-      // menu.append("div");
-      // menu.append("div");
-      // menu.append("div");
+      menu.append("input");
+      menu.append("input");
+      menu.append("input");
       return;
     }
     //normal click node function - pan and zoom to clicked node

@@ -140,6 +140,7 @@ text {
 }
 .datalist-input {
   padding: 10px;
+  width: 175px;
 }
 .datalist-ul {
   position: absolute;
