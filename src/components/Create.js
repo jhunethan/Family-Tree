@@ -17,9 +17,21 @@ function Create(props) {
     parentNode: "",
     isPartner: 0,
   };
+
   const [sendNode, setsendNode] = useState(node);
 
   const inputChangedHandler = () => {
+    //set unique insert ID
+    let idArray = [],
+      id = 1;
+
+    for (let i = 0; i < props.data.length; i++) {
+      idArray.push(props.data[i].id);
+    }
+    while (idArray.includes(id)) {
+      id += 1;
+    }
+
     node.parentNode = $("#parentInputC").val();
     let pid = document.getElementById("toggle-slide").checked,
       isPartner = 0;
@@ -36,6 +48,7 @@ function Create(props) {
     }
 
     setsendNode({
+      id: id,
       generation: $("#genInputC").val(),
       name: $("#nameInputC").val(),
       birthdate: $("#birthdateInputC").val(),
