@@ -144,8 +144,6 @@ export default function Tree(props) {
     } else {
       await setTableData(data);
     }
-    console.log(data);
-    console.log(obj);
   }
 
   const closePopups = () => {
@@ -235,17 +233,23 @@ export default function Tree(props) {
   function editName(data) {
     let name = normalise($("input.edit-menu-input").val());
     let newData = data.data;
+    // if (!data.data.name)
+    //   Axios.post("http://localhost:5000/api/insert", {
+    //     input: newData,
+    //     author: cookies.author,
+    //   });
     if (name !== data.data.name && name) {
       //save
       newData.name = name;
+
       Axios.post("http://localhost:5000/api/update", {
         input: newData,
         name: data.data.name,
         author: cookies.author,
         changes: "name",
       });
+      dynamicUpdate(newData);
     }
-    dynamicUpdate(newData);
   }
 
   function addNode(d, method) {
@@ -322,7 +326,8 @@ export default function Tree(props) {
         .text("child")
         .on("click", () => {
           editName(d.target.__data__);
-          addNode(d, "child");
+          if (d.target.__data__.data.name) return addNode(d, "child");
+          //otherwise - no name - cant make child
         });
 
       nav
