@@ -102,19 +102,30 @@ export default function Tree(props) {
     let data = tableData;
     await setTableData([]);
     //update an edited node
-    try {
-      for (let i = 0; i < data.length; i++) {
-        if (data[i].id === obj.id) data[i] = obj;
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].id === obj.id) data[i] = obj;
+    }
+    //delete node from table
+    if (obj.method === "delete") {
+      data = await data.filter((x) => x.id !== obj.id);
+      if (obj.isPartner) {
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].id === obj.pid) data[i].partnerinfo = undefined;
+        }
       }
-      //delete node from table
-      if (obj.method === "delete") {
-        data = await data.filter((x) => x.id !== obj.id);
+    }
+    if (obj.method === "create") {
+      await data.push(obj);
+      if (obj.isPartner) {
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].id === obj.pid) data[i].partnerinfo = obj;
+        }
       }
-    } catch {}
+    }
 
     if (obj.method) {
       setTimeout(() => {
-        updateTree();
+        setTableData(data);
       }, 300);
     } else {
       await setTableData(data);
@@ -517,6 +528,7 @@ export default function Tree(props) {
       .append("text")
       .attr("x", function (d) {
         try {
+          console.log(d.data.partnerinfo)
           if (!d.data.partnerinfo.name === "text") return d.x;
           return d.x - 550;
         } catch {
@@ -869,7 +881,6 @@ export default function Tree(props) {
   };
 
   const resetCreateFields = () => {
-    console.log(editview);
     let str = "";
     let temparr = [];
     let list = document.getElementById("parentSearchDataList");
