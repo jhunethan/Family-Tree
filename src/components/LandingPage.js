@@ -210,7 +210,7 @@ export default function LandingPage(props) {
               <h2 className="edit-freq-display">{databasesize}</h2>
             </div>
             <div className="stat-card edits-freq">
-              <h1>Edits this month</h1>
+              <h1>Recent edits</h1>
               <h2 className="edit-freq-display">{editHistory.length}</h2>
             </div>
           </div>

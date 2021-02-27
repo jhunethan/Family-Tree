@@ -143,7 +143,7 @@ export function NodeCardDetails(props) {
               <div>
                 {output.map((x) => {
                   count += 1;
-                  return <p key={count}>{x}</p>;
+                  return <p key={count + "desc"}>{x}</p>;
                 })}
               </div>
             </section>
@@ -200,11 +200,11 @@ export function ImmediateFamily(props) {
               {siblings.map((x) => {
                 if (x.name !== props.node.name) {
                   return (
-                    <p key={x.id}>
+                    <p key={`siblings ${x.id}`}>
                       {x.generation} {x.name}
                     </p>
                   );
-                } else return <p key={x.id}></p>;
+                } else return <p key={`siblings ${x.id}`}></p>;
               })}
             </div>
           );
@@ -222,9 +222,9 @@ export function ImmediateFamily(props) {
           return (
             <div className="card-children card-related">
               <h2>Children</h2>
-              {children.map((x) => {
+              {children.map((x, i) => {
                 return (
-                  <p key={x.id}>
+                  <p key={`child ${x.id}${i}`}>
                     {x.generation} {x.name}
                   </p>
                 );

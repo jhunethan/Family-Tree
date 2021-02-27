@@ -4,6 +4,8 @@ import Axios from "axios";
 import * as $ from "jquery";
 import "../css/Tree.css";
 import "dateformat";
+import { useCookies } from "react-cookie";
+
 import pattern from "../css/pattern.jpg";
 import profile from "../css/person-placeholder.jpg";
 
@@ -36,6 +38,7 @@ var datalistarr,
 // }
 
 export default function Tree(props) {
+  const [cookies] = useCookies(["author"]);
   const [update, setUpdate] = useState(false);
   const [datalist, setDatalist] = useState([]);
   const [tableData, setTableData] = useState([]);
@@ -98,38 +101,51 @@ export default function Tree(props) {
     }
   };
 
+  const normalise = (text) => {
+    text = text.toLowerCase();
+    return $.trim(text).replace(/\w\S*/g, (w) =>
+      w.replace(/^\w/, (c) => c.toUpperCase())
+    );
+  };
+
   async function dynamicUpdate(obj) {
     let data = tableData;
     await setTableData([]);
     //update an edited node
-    for (let i = 0; i < data.length; i++) {
-      if (data[i].id === obj.id) data[i] = obj;
-    }
-    //delete node from table
-    if (obj.method === "delete") {
-      data = await data.filter((x) => x.id !== obj.id);
-      if (obj.isPartner) {
-        for (let i = 0; i < data.length; i++) {
-          if (data[i].id === obj.pid) data[i].partnerinfo = undefined;
+    switch (obj.method) {
+      case "delete":
+        data = data.filter((x) => x.id !== obj.id);
+        if (obj.isPartner) {
+          for (let i = 0; i < data.length; i++) {
+            if (data[i].id === obj.pid) data[i].partnerinfo = undefined;
+          }
         }
-      }
-    }
-    if (obj.method === "create") {
-      await data.push(obj);
-      if (obj.isPartner) {
+        break;
+      case "create":
         for (let i = 0; i < data.length; i++) {
-          if (data[i].id === obj.pid) data[i].partnerinfo = obj;
+          if (obj.id === data[i].id) return false;
+          if (obj.isPartner) {
+            if (data[i].id === obj.pid) data[i].partnerinfo = obj;
+          }
         }
-      }
+        data.push(obj);
+        break;
+      default:
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].id === obj.id) data[i] = obj;
+        }
+        break;
     }
 
     if (obj.method) {
       setTimeout(() => {
         setTableData(data);
-      }, 300);
+      }, 250);
     } else {
       await setTableData(data);
     }
+    console.log(data);
+    console.log(obj);
   }
 
   const closePopups = () => {
@@ -216,6 +232,59 @@ export default function Tree(props) {
 
   var svg = d3.select("#Tree");
 
+  function editName(data) {
+    let name = normalise($("input.edit-menu-input").val());
+    let newData = data.data;
+    if (name !== data.data.name && name) {
+      //save
+      newData.name = name;
+      Axios.post("http://localhost:5000/api/update", {
+        input: newData,
+        name: data.data.name,
+        author: cookies.author,
+        changes: "name",
+      });
+    }
+    dynamicUpdate(newData);
+  }
+
+  function addNode(d, method) {
+    //new child
+    let data;
+    switch (method) {
+      case "child":
+        data = d.target.__data__.data;
+        break;
+      case "sibling":
+        data = d.target.__data__.parent.data;
+        break;
+      default:
+        data = d.target.__data__.data;
+        break;
+    }
+    //set unique insert ID
+    let idArray = [],
+      id = 1;
+
+    for (let i = 0; i < tableData.length; i++) {
+      idArray.push(tableData[i].id);
+    }
+    while (idArray.includes(id)) id += 1;
+    //new child default values
+    let newChild = {
+      id: id,
+      birthdate: "",
+      generation: "",
+      name: "",
+      deathdate: null,
+      pid: data.id,
+      isPartner: 0,
+      parent: data.name,
+      method: "create",
+    };
+    dynamicUpdate(newChild);
+  }
+
   function nodeClick(d, type) {
     //alternative function
     //show a edit menu for a node letting the user change the tree dynamically
@@ -226,7 +295,14 @@ export default function Tree(props) {
       d3.select("g.nodes")
         .append("foreignObject")
         .attr("class", "edit-menu")
-        .attr("x", d.target.__data__.x - 300)
+        .attr("x", function () {
+          if (d.target.__data__.data.partnerinfo) {
+            if (d.target.classList[0] === "partnernode")
+              return d.target.__data__.x + 47.5;
+            return d.target.__data__.x - 662.5;
+          }
+          return d.target.__data__.x - 300;
+        })
         .attr("y", d.target.__data__.y - 400)
         .attr("height", 500)
         .attr("width", 500);
@@ -234,9 +310,36 @@ export default function Tree(props) {
         .select("foreignObject.edit-menu")
         .append("xhtml:div")
         .attr("class", "edit-menu");
-      menu.append("input");
-      menu.append("input");
-      menu.append("input");
+      menu.append("label").text("Name");
+      menu
+        .append("input")
+        .attr("class", "edit-menu-input")
+        .attr("placeholder", "full name");
+      let nav = menu.append("div").attr("class", "edit-menu-nav");
+      //buttons
+      nav
+        .append("button")
+        .text("child")
+        .on("click", () => {
+          editName(d.target.__data__);
+          addNode(d, "child");
+        });
+
+      nav
+        .append("button")
+        .text("sib")
+        .on("click", () => {
+          editName(d.target.__data__);
+          addNode(d, "sibling");
+        });
+
+      nav
+        .append("button")
+        .text("done")
+        .on("click", () => {
+          editName(d.target.__data__);
+        });
+
       return;
     }
     //normal click node function - pan and zoom to clicked node
@@ -528,7 +631,6 @@ export default function Tree(props) {
       .append("text")
       .attr("x", function (d) {
         try {
-          console.log(d.data.partnerinfo)
           if (!d.data.partnerinfo.name === "text") return d.x;
           return d.x - 550;
         } catch {
@@ -923,7 +1025,7 @@ export default function Tree(props) {
       <div className="datalist">
         <input
           id="datalist-input"
-          className="datalist-input"
+          className="input"
           type="text"
           name="searchtree"
           placeholder="Search by Name or Birthdate"
