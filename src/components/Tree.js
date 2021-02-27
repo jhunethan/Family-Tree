@@ -112,10 +112,10 @@ export default function Tree(props) {
       }
     } catch {}
 
-    if (obj.method === "create") {
+    if (obj.method) {
       setTimeout(() => {
         updateTree();
-      }, 500);
+      }, 300);
     } else {
       await setTableData(data);
     }
