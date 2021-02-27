@@ -110,7 +110,13 @@ export default function Tree(props) {
 
   async function dynamicUpdate(obj) {
     let data = tableData;
-    await setTableData([]);
+
+    if (!obj) {
+      await setTableData([]);
+      await setTableData(data);
+      return;
+    }
+
     //update an edited node
     switch (obj.method) {
       case "delete":
@@ -128,6 +134,7 @@ export default function Tree(props) {
             if (data[i].id === obj.pid) data[i].partnerinfo = obj;
           }
         }
+        obj.method = undefined;
         data.push(obj);
         break;
       default:
@@ -138,10 +145,12 @@ export default function Tree(props) {
     }
 
     if (obj.method) {
+      await setTableData([]);
       setTimeout(() => {
         setTableData(data);
       }, 250);
     } else {
+      await setTableData([]);
       await setTableData(data);
     }
   }
@@ -233,12 +242,14 @@ export default function Tree(props) {
   function editName(data) {
     let name = normalise($("input.edit-menu-input").val());
     let newData = data.data;
-    // if (!data.data.name)
-    //   Axios.post("http://localhost:5000/api/insert", {
-    //     input: newData,
-    //     author: cookies.author,
-    //   });
-    if (name !== data.data.name && name) {
+    if (data.data.name === "" && name) {
+      newData.name = name;
+      Axios.post("http://localhost:5000/api/insert", {
+        input: newData,
+        author: cookies.author,
+      });
+      dynamicUpdate(newData);
+    } else if (name !== data.data.name && name) {
       //save
       newData.name = name;
 
@@ -807,14 +818,12 @@ export default function Tree(props) {
   };
 
   const getPID = (nameKey) => {
-    let node;
     for (var i = 0; i < tableData.length; i++) {
       let namecheck = tableData[i].generation + " " + tableData[i].name;
-      if (namecheck === nameKey) {
-        node = tableData[i];
+      if ($.trim(namecheck) === $.trim(nameKey)) {
+        return tableData[i].id;
       }
     }
-    return node.id;
   };
 
   const search = (text, method) => {

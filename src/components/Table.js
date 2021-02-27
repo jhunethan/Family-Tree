@@ -53,7 +53,6 @@ export default function Table(props) {
       setTimeout(() => {
         updateTable();
       }, 500);
-      
     } else {
       await setTableData(data);
     }
@@ -100,14 +99,12 @@ export default function Table(props) {
   };
 
   const getPID = (nameKey) => {
-    let node;
     for (var i = 0; i < tableData.length; i++) {
       let namecheck = tableData[i].generation + " " + tableData[i].name;
-      if (namecheck === nameKey) {
-        node = tableData[i];
+      if ($.trim(namecheck) === $.trim(nameKey)) {
+        return tableData[i].id;
       }
     }
-    return node.id;
   };
 
   const resetCreateFields = () => {
