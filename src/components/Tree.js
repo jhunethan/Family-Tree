@@ -5,6 +5,8 @@ import * as $ from "jquery";
 import "../css/Tree.css";
 import "dateformat";
 import { useCookies } from "react-cookie";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import pattern from "../css/pattern.jpg";
 import profile from "../css/person-placeholder.jpg";
@@ -62,10 +64,12 @@ export default function Tree(props) {
     seteditView((prev) => !prev);
     if (editview) {
       $("foreignObject.edit-menu").remove();
+      toast.info("Read Mode");
       return ($("button.changeview-button")[0].textContent = "Read");
     }
     $("button.changeview-button")[0].textContent = "Edit";
     $("#card-container").css("display", "none");
+    toast.info("Edit Mode");
   };
 
   useEffect(() => {
@@ -140,19 +144,17 @@ export default function Tree(props) {
       default:
         for (let i = 0; i < data.length; i++) {
           if (data[i].id === obj.id) data[i] = obj;
+          if (obj.isPartner) {
+            if (data[i].id === obj.pid) data[i].partnerinfo = obj;
+          }
         }
         break;
     }
 
-    if (obj.method) {
-      await setTableData([]);
-      setTimeout(() => {
-        setTableData(data);
-      }, 250);
-    } else {
-      await setTableData([]);
-      await setTableData(data);
-    }
+    await setTableData([]);
+    setTimeout(() => {
+      setTableData(data);
+    }, 250);
   }
 
   const closePopups = () => {
@@ -239,28 +241,35 @@ export default function Tree(props) {
 
   var svg = d3.select("#Tree");
 
-  function editName(data) {
+  function editName(target) {
     let name = normalise($("input.edit-menu-input").val());
-    let newData = data.data;
-    if (data.data.name === "" && name) {
+    let newData =
+      target.classList[0] === "partnernode"
+        ? target.__data__.data.partnerinfo
+        : target.__data__.data;
+    console.log(newData);
+    if (newData.name === "" && name) {
       newData.name = name;
       Axios.post("http://localhost:5000/api/insert", {
         input: newData,
         author: cookies.author,
       });
+      toast.success(`Name updated to ${name}`);
       dynamicUpdate(newData);
-    } else if (name !== data.data.name && name) {
+    } else if (name !== newData.name && name) {
       //save
       newData.name = name;
 
       Axios.post("http://localhost:5000/api/update", {
         input: newData,
-        name: data.data.name,
+        name: newData.name,
         author: cookies.author,
         changes: "name",
       });
+      toast.success(`Name updated to ${name}`);
       dynamicUpdate(newData);
     }
+    if (!name) closePopups();
   }
 
   function addNode(d, method) {
@@ -268,9 +277,11 @@ export default function Tree(props) {
     let data;
     switch (method) {
       case "child":
+        toast.success("Child Added");
         data = d.target.__data__.data;
         break;
       case "sibling":
+        toast.success("Sibling Added");
         data = d.target.__data__.parent.data;
         break;
       default:
@@ -336,16 +347,16 @@ export default function Tree(props) {
         .append("button")
         .text("child")
         .on("click", () => {
-          editName(d.target.__data__);
+          editName(d.target);
           if (d.target.__data__.data.name) return addNode(d, "child");
-          //otherwise - no name - cant make child
+          toast.error(`Please set name before adding children`);
         });
 
       nav
         .append("button")
         .text("sib")
         .on("click", () => {
-          editName(d.target.__data__);
+          editName(d.target);
           addNode(d, "sibling");
         });
 
@@ -353,7 +364,7 @@ export default function Tree(props) {
         .append("button")
         .text("done")
         .on("click", () => {
-          editName(d.target.__data__);
+          editName(d.target);
         });
 
       return;
@@ -845,7 +856,6 @@ export default function Tree(props) {
       .val("")
       .attr("placeholder", "Search by Name or Birthdate");
     populateDatalist();
-    console.log(searchterm);
     if (searchterm !== "No results." && searchterm) found = true;
     //if focused, if textcontent isnt "No results."
     if (found) {
@@ -1116,6 +1126,17 @@ export default function Tree(props) {
         }}
       />
       <Modal close={closePopups} />
+      <ToastContainer
+        position="bottom-right"
+        autoClose={4000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 }
