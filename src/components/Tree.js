@@ -791,10 +791,15 @@ export default function Tree(props) {
     let str = "";
     datalistarr = [];
     let list = $("ul.datalist-ul");
+    let birthdate;
     //populate parentSearchDataList
     for (const x of tableData) {
-      if (x.id !== 0)
-        datalistarr.push(`${x.generation} ${x.name} ${x.birthdate} ${x.id}`);
+      if (x.id !== 0) {
+        birthdate = x.birthdate ? dateFormat(x.birthdate, "dS mmmm yyyy") : "";
+        datalistarr.push(
+          `${x.generation} ${x.name} <br/> ${birthdate} ${x.id}`
+        );
+      }
     }
 
     if ($("#datalist-input").val()) {
@@ -840,12 +845,9 @@ export default function Tree(props) {
       .val("")
       .attr("placeholder", "Search by Name or Birthdate");
     populateDatalist();
-
-    for (const x of datalistarr) {
-      if (searchterm === $.trim(x)) {
-        found = true;
-      }
-    }
+    console.log(searchterm);
+    if (searchterm !== "No results." && searchterm) found = true;
+    //if focused, if textcontent isnt "No results."
     if (found) {
       //get node object
       let n = searchterm.split(" ");
