@@ -125,11 +125,13 @@ export default function Tree(props) {
     switch (obj.method) {
       case "delete":
         data = data.filter((x) => x.id !== obj.id);
-        if (obj.isPartner) {
-          for (let i = 0; i < data.length; i++) {
+        for (let i = 0; i < data.length; i++) {
+          if (data[i.pid === obj.id]) data[i].pid = 0;
+          if (obj.isPartner) {
             if (data[i].id === obj.pid) data[i].partnerinfo = undefined;
           }
         }
+        toast.success(`Removed ${obj.name} from tree`);
         break;
       case "create":
         for (let i = 0; i < data.length; i++) {
@@ -161,6 +163,10 @@ export default function Tree(props) {
     setTimeout(() => {
       setTableData(data);
     }, 150);
+    if (obj.method !== "delete")
+      setTimeout(() => {
+        search(`${obj.id}`);
+      }, 500);
   }
 
   const closePopups = () => {
@@ -200,8 +206,6 @@ export default function Tree(props) {
       .stratify()
       .id((d) => d["id"])
       .parentId((d) => d["pid"])(treeData);
-
-    
   };
 
   function zoomed({ transform }) {
@@ -286,18 +290,18 @@ export default function Tree(props) {
 
   function addNode(d, method) {
     //new child
-    let data;
+    let node;
     switch (method) {
       case "child":
-        toast.success(`Child Added to ${d.target.__data__.data.name}`);
-        data = d.target.__data__.data;
+        node = d.target.__data__;
+        toast.success(`Child Added to ${node.data.name}`);
         break;
       case "sibling":
-        toast.success(`Sibling Added`);
-        data = d.target.__data__.parent.data;
+        node = d.target.__data__.parent;
+        toast.success(`Child Added to ${node.data.name}`);
         break;
       default:
-        data = d.target.__data__.data;
+        node = d.target.__data__;
         break;
     }
     //set unique insert ID
@@ -315,15 +319,12 @@ export default function Tree(props) {
       generation: "",
       name: "",
       deathdate: null,
-      pid: data.id,
+      pid: node.data.id,
       isPartner: 0,
-      parent: data.name,
+      parent: node.data.name,
       method: "create",
     };
     dynamicUpdate(newChild);
-    setTimeout(() => {
-      search(`${newChild.id}`)
-    }, 500);
   }
 
   function nodeClick(d, type) {
@@ -357,11 +358,13 @@ export default function Tree(props) {
         .attr("class", "edit-menu-input cancel")
         .on("click", () => {
           if (!d.target.__data__.data.name) {
-            console.log(d)
+            console.log(d);
             let obj = d.target.__data__.data;
             obj.method = "delete";
             dynamicUpdate(obj);
-            toast.success(`removed child from ${d.target.__data__.data.parent}`)
+            toast.success(
+              `removed child from ${d.target.__data__.data.parent}`
+            );
           }
           closePopups();
         });
@@ -887,6 +890,8 @@ export default function Tree(props) {
     if (searchterm !== "No results." && searchterm) found = true;
     //if focused, if textcontent isnt "No results."
     if (found) {
+      if ($("button.changeview-button")[0].textContent === "Read")
+        $("#card-container").css("display","block")
       //get node object
       let n = searchterm.split(" ");
       let id = Number(n[n.length - 1]);
@@ -894,18 +899,18 @@ export default function Tree(props) {
       for (const x of tempData) {
         if (x.id === id) {
           node = x;
+          console.log(x)
         }
       }
-      $("#card-container").css("display", "block");
       let nodeRect = d3.select("svg g.nodes").selectAll("text")._groups[0];
       let dimensions = [];
       for (const x of nodeRect) {
-        if (x.__data__.data.name === node.name) {
+        if (x.__data__.data.id === node.id) {
           dimensions[0] = x.__data__.x;
           dimensions[1] = x.__data__.y;
         } else {
           try {
-            if (x.__data__.data.partnerinfo.name === node.name) {
+            if (x.__data__.data.partnerinfo.id === node.id) {
               dimensions[0] = x.__data__.x;
               dimensions[1] = x.__data__.y;
             }
@@ -916,7 +921,6 @@ export default function Tree(props) {
         setInfoCard(node);
         zoom.scaleTo(svg.transition().duration(500), 0.25);
         $("ul.datalist-ul").html("");
-        $("#card-container").css("display", "block");
         zoom.translateTo(
           svg.transition().duration(500),
           dimensions[0],

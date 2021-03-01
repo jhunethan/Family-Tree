@@ -201,7 +201,6 @@ export default function Edit(props) {
 
       cancelDeleteConfirm();
       closeEditMenu();
-      props.update(node);
     } else {
       userValidation.css("border-bottom", "2px solid red");
       userValidation.val("");
