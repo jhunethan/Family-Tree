@@ -206,11 +206,11 @@ export default function LandingPage(props) {
               <button onClick={updatehistory}>⟳</button>
             </div>
             <div className="stat-card members">
-              <h1>Family Members in Database</h1>
+              <h1>Family Members</h1>
               <h2 className="edit-freq-display">{databasesize}</h2>
             </div>
             <div className="stat-card edits-freq">
-              <h1>Recent edits</h1>
+              <h1>Edits (14 days)</h1>
               <h2 className="edit-freq-display">{editHistory.length}</h2>
             </div>
           </div>

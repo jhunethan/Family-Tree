@@ -44,7 +44,6 @@ svg {
   display: flex;
   flex-direction: column;
 
-  padding: 50px 0px;
   height: 400px;
   width: 600px;
   filter: drop-shadow(5px 5px 5px rgba(65, 65, 65, 0.322));
@@ -65,6 +64,7 @@ svg {
 .edit-menu > input {
   margin: 0 100px;
   padding: 10px;
+  text-align: center;
 }
 
 .edit-menu-nav > button {
@@ -72,6 +72,12 @@ svg {
   flex-grow: 1;
   font-size: 36px;
   border: 2px solid black;
+}
+
+.cancel{
+  height: 200px;
+  margin-bottom: 20px;
+  border: none;
 }
 
 circle {

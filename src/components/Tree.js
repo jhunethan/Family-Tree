@@ -150,9 +150,9 @@ export default function Tree(props) {
             try {
               if (data[i].partnerinfo.id === obj.id)
                 data[i].partnerinfo = undefined;
-                for (let x = 0; x < data.length; x++) {
-                  if (data[x].oldpid === obj.id) data[x].pid = obj.id;
-                }
+              for (let x = 0; x < data.length; x++) {
+                if (data[x].oldpid === obj.id) data[x].pid = obj.id;
+              }
             } catch {}
         }
         break;
@@ -160,7 +160,7 @@ export default function Tree(props) {
     await setTableData([]);
     setTimeout(() => {
       setTableData(data);
-    }, 250);
+    }, 150);
   }
 
   const closePopups = () => {
@@ -200,6 +200,8 @@ export default function Tree(props) {
       .stratify()
       .id((d) => d["id"])
       .parentId((d) => d["pid"])(treeData);
+
+    
   };
 
   function zoomed({ transform }) {
@@ -287,11 +289,11 @@ export default function Tree(props) {
     let data;
     switch (method) {
       case "child":
-        toast.success("Child Added");
+        toast.success(`Child Added to ${d.target.__data__.data.name}`);
         data = d.target.__data__.data;
         break;
       case "sibling":
-        toast.success("Sibling Added");
+        toast.success(`Sibling Added`);
         data = d.target.__data__.parent.data;
         break;
       default:
@@ -319,6 +321,9 @@ export default function Tree(props) {
       method: "create",
     };
     dynamicUpdate(newChild);
+    setTimeout(() => {
+      search(`${newChild.id}`)
+    }, 500);
   }
 
   function nodeClick(d, type) {
@@ -346,7 +351,20 @@ export default function Tree(props) {
         .select("foreignObject.edit-menu")
         .append("xhtml:div")
         .attr("class", "edit-menu");
-      menu.append("label").text("Name");
+      menu
+        .append("button")
+        .text("X")
+        .attr("class", "edit-menu-input cancel")
+        .on("click", () => {
+          if (!d.target.__data__.data.name) {
+            console.log(d)
+            let obj = d.target.__data__.data;
+            obj.method = "delete";
+            dynamicUpdate(obj);
+            toast.success(`removed child from ${d.target.__data__.data.parent}`)
+          }
+          closePopups();
+        });
       menu
         .append("input")
         .attr("class", "edit-menu-input")
@@ -1138,7 +1156,7 @@ export default function Tree(props) {
       <Modal close={closePopups} />
       <ToastContainer
         position="bottom-right"
-        autoClose={4000}
+        autoClose={5000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
