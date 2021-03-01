@@ -146,11 +146,17 @@ export default function Tree(props) {
           if (data[i].id === obj.id) data[i] = obj;
           if (obj.isPartner) {
             if (data[i].id === obj.pid) data[i].partnerinfo = obj;
-          }
+          } else
+            try {
+              if (data[i].partnerinfo.id === obj.id)
+                data[i].partnerinfo = undefined;
+                for (let x = 0; x < data.length; x++) {
+                  if (data[x].oldpid === obj.id) data[x].pid = obj.id;
+                }
+            } catch {}
         }
         break;
     }
-
     await setTableData([]);
     setTimeout(() => {
       setTableData(data);
@@ -176,6 +182,11 @@ export default function Tree(props) {
       for (let x = 0; x < treeData.length; x++) {
         if (treeData[x].id === partners[i].pid) {
           treeData[x].partnerinfo = partners[i];
+        }
+        //if partner has children add it to partner's children list
+        if (treeData[x].pid === partners[i].id) {
+          treeData[x].pid = partners[i].pid;
+          treeData[x].oldpid = partners[i].id;
         }
       }
     }
@@ -247,7 +258,6 @@ export default function Tree(props) {
       target.classList[0] === "partnernode"
         ? target.__data__.data.partnerinfo
         : target.__data__.data;
-    console.log(newData);
     if (newData.name === "" && name) {
       newData.name = name;
       Axios.post("http://localhost:5000/api/insert", {
