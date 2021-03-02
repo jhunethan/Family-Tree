@@ -131,7 +131,7 @@ export default function Tree(props) {
             if (data[i].id === obj.pid) data[i].partnerinfo = undefined;
           }
         }
-        toast.success(`Removed ${obj.name} from tree`);
+        toast.success(`Removed ${obj.name}`);
         break;
       case "create":
         for (let i = 0; i < data.length; i++) {
@@ -142,6 +142,7 @@ export default function Tree(props) {
         }
         obj.method = undefined;
         data.push(obj);
+        if (obj.name) toast.success(`Added ${obj.name}`);
         break;
       default:
         for (let i = 0; i < data.length; i++) {
@@ -157,6 +158,7 @@ export default function Tree(props) {
               }
             } catch {}
         }
+        toast.success(`Changes made to ${obj.name}`);
         break;
     }
     await setTableData([]);
@@ -351,14 +353,13 @@ export default function Tree(props) {
       let menu = d3
         .select("foreignObject.edit-menu")
         .append("xhtml:div")
-        .attr("class", "edit-menu");
+        .attr("class", "edit-menu").call(d3.zoom());
       menu
         .append("button")
         .text("X")
         .attr("class", "edit-menu-input cancel")
         .on("click", () => {
           if (!d.target.__data__.data.name) {
-            console.log(d);
             let obj = d.target.__data__.data;
             obj.method = "delete";
             dynamicUpdate(obj);
@@ -891,7 +892,7 @@ export default function Tree(props) {
     //if focused, if textcontent isnt "No results."
     if (found) {
       if ($("button.changeview-button")[0].textContent === "Read")
-        $("#card-container").css("display","block")
+        $("#card-container").css("display", "block");
       //get node object
       let n = searchterm.split(" ");
       let id = Number(n[n.length - 1]);
@@ -899,7 +900,6 @@ export default function Tree(props) {
       for (const x of tempData) {
         if (x.id === id) {
           node = x;
-          console.log(x)
         }
       }
       let nodeRect = d3.select("svg g.nodes").selectAll("text")._groups[0];
