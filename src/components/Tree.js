@@ -260,12 +260,12 @@ export default function Tree(props) {
 
   var svg = d3.select("#Tree");
 
-  function editName(target) {
+  function editName(el) {
     let name = normalise($("input.edit-menu-input").val());
     let newData =
-      target.classList[0] === "partnernode"
-        ? target.__data__.data.partnerinfo
-        : target.__data__.data;
+      el.classList[0] === "partnernode"
+        ? el.__data__.data.partnerinfo
+        : el.__data__.data;
     if (newData.name === "" && name) {
       newData.name = name;
       Axios.post("http://localhost:5000/api/insert", {
@@ -290,20 +290,20 @@ export default function Tree(props) {
     if (!name) closePopups();
   }
 
-  function addNode(d, method) {
+  function addNode(el, method) {
     //new child
     let node;
     switch (method) {
       case "child":
-        node = d.target.__data__;
+        node = el.__data__;
         toast.success(`Child Added to ${node.data.name}`);
         break;
       case "sibling":
-        node = d.target.__data__.parent;
+        node = el.__data__.parent;
         toast.success(`Child Added to ${node.data.name}`);
         break;
       default:
-        node = d.target.__data__;
+        node = el.__data__;
         break;
     }
     //set unique insert ID
@@ -329,7 +329,7 @@ export default function Tree(props) {
     dynamicUpdate(newChild);
   }
 
-  function nodeClick(d, type) {
+  function nodeClick(el, type) {
     //alternative function
     //show a edit menu for a node letting the user change the tree dynamically
     if ($("button.changeview-button")[0].textContent === "Edit") {
@@ -340,31 +340,32 @@ export default function Tree(props) {
         .append("foreignObject")
         .attr("class", "edit-menu")
         .attr("x", function () {
-          if (d.target.__data__.data.partnerinfo) {
-            if (d.target.classList[0] === "partnernode")
-              return d.target.__data__.x + 47.5;
-            return d.target.__data__.x - 662.5;
+          if (el.__data__.data.partnerinfo) {
+            if (el.classList[0] === "partnernode")
+              return el.__data__.x + 47.5;
+            return el.__data__.x - 662.5;
           }
-          return d.target.__data__.x - 300;
+          return el.__data__.x - 300;
         })
-        .attr("y", d.target.__data__.y - 400)
+        .attr("y", el.__data__.y - 400)
         .attr("height", 500)
         .attr("width", 500);
       let menu = d3
         .select("foreignObject.edit-menu")
         .append("xhtml:div")
-        .attr("class", "edit-menu").call(d3.zoom());
+        .attr("class", "edit-menu")
+        .call(d3.zoom());
       menu
         .append("button")
         .text("X")
         .attr("class", "edit-menu-input cancel")
         .on("click", () => {
-          if (!d.target.__data__.data.name) {
-            let obj = d.target.__data__.data;
+          if (!el.__data__.data.name) {
+            let obj = el.__data__.data;
             obj.method = "delete";
             dynamicUpdate(obj);
             toast.success(
-              `removed child from ${d.target.__data__.data.parent}`
+              `removed child from ${el.__data__.data.parent}`
             );
           }
           closePopups();
@@ -379,8 +380,8 @@ export default function Tree(props) {
         .append("button")
         .text("child")
         .on("click", () => {
-          editName(d.target);
-          if (d.target.__data__.data.name) return addNode(d, "child");
+          editName(el);
+          if (el.__data__.data.name) return addNode(el, "child");
           toast.error(`Please set name before adding children`);
         });
 
@@ -388,15 +389,15 @@ export default function Tree(props) {
         .append("button")
         .text("sib")
         .on("click", () => {
-          editName(d.target);
-          addNode(d, "sibling");
+          editName(el);
+          addNode(el, "sibling");
         });
 
       nav
         .append("button")
         .text("done")
         .on("click", () => {
-          editName(d.target);
+          editName(el.target);
         });
 
       return;
@@ -404,16 +405,16 @@ export default function Tree(props) {
     //normal click node function - pan and zoom to clicked node
     let data =
       type === "partner"
-        ? d.target.__data__.data.partnerinfo
-        : d.target.__data__.data;
+        ? el.__data__.data.partnerinfo
+        : el.__data__.data;
 
     zoom.scaleTo(svg.transition().duration(500), 0.25);
     $("#card-container").css("display", "block");
     setInfoCard(data);
     zoom.translateTo(
       svg.transition().duration(500),
-      d.target.__data__.x,
-      d.target.__data__.y
+      el.__data__.x,
+      el.__data__.y
     );
     setTimeout(() => {
       zoom.scaleTo(svg.transition().duration(750), 0.4);
@@ -497,7 +498,7 @@ export default function Tree(props) {
           return true;
         }
       })
-      .on("click", (d) => nodeClick(d, "partner"));
+      .on("click", (d) => nodeClick(d.target, "partner"));
     //card pattern
     partnerShapes
       .enter()
@@ -553,7 +554,7 @@ export default function Tree(props) {
       })
       .attr("rx", 5)
       .attr("ry", 5)
-      .on("click", (d) => nodeClick(d, ""));
+      .on("click", (d) => nodeClick(d.target, ""));
 
     //card pattern
     shapes
@@ -908,6 +909,9 @@ export default function Tree(props) {
         if (x.__data__.data.id === node.id) {
           dimensions[0] = x.__data__.x;
           dimensions[1] = x.__data__.y;
+          if ($("button.changeview-button")[0].textContent === "Edit") {
+            nodeClick(x, "");
+          }
         } else {
           try {
             if (x.__data__.data.partnerinfo.id === node.id) {
