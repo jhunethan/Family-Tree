@@ -39,13 +39,21 @@ svg {
   transition: all 0.3s;
 }
 
-.edit-menu, .edit-menu-container {
+.edit-menu-container {
+  pointer-events: auto;
+}
+
+.edit-menu {
   background-color: white;
   display: flex;
   flex-direction: column;
 
-  height: 400px;
+  height: 300px;
   width: 600px;
+
+  padding-top: 100px;
+
+  transform: translateY(400px);
   filter: drop-shadow(5px 5px 5px rgba(65, 65, 65, 0.322));
 }
 
@@ -56,7 +64,7 @@ svg {
 
 .edit-menu-nav {
   display: flex;
-  padding: 20px;
+  padding: 50px 20px 0 20px;
   gap: 25px;
   height: 150px;
 }
@@ -74,7 +82,56 @@ svg {
   border: 2px solid black;
 }
 
-.cancel{
+.edit-menu-button {
+  position: absolute;
+  width: 300px;
+  height: 100px;
+}
+
+@keyframes sibling {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(650px, 50px);
+  }
+}
+@keyframes child {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(150px, 350px);
+  }
+}
+@keyframes parent {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(150px, -250px);
+  }
+}
+
+.sibling {
+  transform: translate(650px, 50px);
+  animation-name: sibling;
+  animation-duration: 0.5s;
+}
+
+.child {
+  transform: translate(150px, 350px);
+  animation-name: child;
+  animation-duration: 0.5s;
+}
+
+.parent {
+  transform: translate(150px, -250px);
+  animation-name: parent;
+  animation-duration: 0.5s;
+}
+
+.cancel {
   height: 200px;
   margin-bottom: 20px;
   border: none;
@@ -231,5 +288,4 @@ button:active {
   background-color: #000;
   color: #fff200;
   box-shadow: 0 1px #666;
-  transform: translateY(1px);
 }

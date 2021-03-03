@@ -63,7 +63,7 @@ export default function Tree(props) {
   const changeView = () => {
     seteditView((prev) => !prev);
     if (editview) {
-      $("foreignObject.edit-menu").remove();
+      $("foreignObject.edit-menu-container").remove();
       toast.info("Read Mode");
       return ($("button.changeview-button")[0].textContent = "Read");
     }
@@ -176,7 +176,7 @@ export default function Tree(props) {
     $("#editForm").css("display", "none");
     $("#deleteConfirmMenu").css("display", "none");
     $("div.edit-container").css("display", "none");
-    $("foreignObject.edit-menu").remove();
+    $("foreignObject.edit-menu-container").remove();
   };
 
   //convert to hierarchal tree form using d3.stratify()
@@ -266,6 +266,7 @@ export default function Tree(props) {
       el.classList[0] === "partnernode"
         ? el.__data__.data.partnerinfo
         : el.__data__.data;
+    if (!name || name === newData.name) return closePopups();
     if (newData.name === "" && name) {
       newData.name = name;
       Axios.post("http://localhost:5000/api/insert", {
@@ -287,7 +288,24 @@ export default function Tree(props) {
       toast.success(`Name updated to ${name}`);
       dynamicUpdate(newData);
     }
-    if (!name) closePopups();
+  }
+
+  function addParent(child, parent) {
+    //make sure parent is valid
+    let arr = filterChildren(Number(child.__data__.data.id), tableData);
+
+    if (arr.includes(parent)) {
+      let obj = child.__data__.data;
+      obj.pid = Number(parent.id);
+      obj.parent = parent.name;
+
+      dynamicUpdate(obj);
+    } else {
+      toast.error("Invalid parent, try again");
+      nodeClick(child);
+    }
+
+    //partner?
   }
 
   function addNode(el, method) {
@@ -334,79 +352,107 @@ export default function Tree(props) {
     //show a edit menu for a node letting the user change the tree dynamically
     if ($("button.changeview-button")[0].textContent === "Edit") {
       //remove other instances of edit menus
-      $("foreignObject.edit-menu").remove();
+      $("foreignObject.edit-menu-container").remove();
       //open edit menu
       d3.select("g.nodes")
         .append("foreignObject")
-        .attr("class", "edit-menu")
+        .attr("class", "edit-menu-container")
         .attr("x", function () {
           if (el.__data__.data.partnerinfo) {
-            if (el.classList[0] === "partnernode")
-              return el.__data__.x + 47.5;
+            if (el.classList[0] === "partnernode") return el.__data__.x + 47.5;
             return el.__data__.x - 662.5;
           }
           return el.__data__.x - 300;
         })
-        .attr("y", el.__data__.y - 400)
-        .attr("height", 500)
-        .attr("width", 500);
+        .attr("y", el.__data__.y - 800)
+        .attr("height", "1200px")
+        .attr("width", "1600px");
+
       let menu = d3
-        .select("foreignObject.edit-menu")
+        .select("foreignObject.edit-menu-container")
         .append("xhtml:div")
         .attr("class", "edit-menu")
         .call(d3.zoom());
+
       menu
+        .append("input")
+        .attr("value", el.__data__.data.name)
+        .attr("class", "edit-menu-input")
+        .attr("placeholder", "full name");
+      let nav = menu.append("div").attr("class", "edit-menu-nav");
+
+      nav
         .append("button")
-        .text("X")
-        .attr("class", "edit-menu-input cancel")
+        .text("cancel")
         .on("click", () => {
           if (!el.__data__.data.name) {
             let obj = el.__data__.data;
             obj.method = "delete";
             dynamicUpdate(obj);
-            toast.success(
-              `removed child from ${el.__data__.data.parent}`
-            );
           }
           closePopups();
         });
-      menu
-        .append("input")
-        .attr("class", "edit-menu-input")
-        .attr("placeholder", "full name");
-      let nav = menu.append("div").attr("class", "edit-menu-nav");
-      //buttons
       nav
         .append("button")
-        .text("child")
+        .text("done")
         .on("click", () => {
           editName(el);
-          if (el.__data__.data.name) return addNode(el, "child");
+        });
+
+      //buttons
+
+      menu
+        .append("button")
+        .attr("class", "edit-menu-button parent")
+        .text("parent")
+        .on("click", () => {
+          editName(el);
+          toast.info(`Click on parent`);
+          //add listener for next click
+          $(window).on("click", function (event) {
+            let classes = event.target.classList;
+            if (classes[0] !== "edit-menu-button") {
+              if (event.target.tagName === "rect")
+                addParent(el, event.target.__data__.data);
+              $(window).off("click");
+              $(window).on("click", function (event) {
+                //Hide the menus if visible
+                try {
+                  if (event.target !== $("#datalist-input")[0])
+                    $("ul.datalist-ul").html("");
+                } catch {}
+              });
+            }
+          });
+          // addParent(el);
+        });
+
+      menu
+        .append("button")
+        .attr("class", "edit-menu-button child")
+        .text("child")
+        .on("click", () => {
+          if (el.__data__.data.name) {
+            editName(el);
+            return addNode(el, "child");
+          }
           toast.error(`Please set name before adding children`);
         });
 
-      nav
+      menu
         .append("button")
+        .attr("class", "edit-menu-button sibling")
         .text("sib")
         .on("click", () => {
           editName(el);
           addNode(el, "sibling");
         });
-
-      nav
-        .append("button")
-        .text("done")
-        .on("click", () => {
-          editName(el.target);
-        });
-
+      $("input.edit-menu-input").trigger("focus");
       return;
     }
     //normal click node function - pan and zoom to clicked node
     let data =
-      type === "partner"
-        ? el.__data__.data.partnerinfo
-        : el.__data__.data;
+      type === "partner" ? el.__data__.data.partnerinfo : el.__data__.data;
 
     zoom.scaleTo(svg.transition().duration(500), 0.25);
     $("#card-container").css("display", "block");
@@ -974,20 +1020,17 @@ export default function Tree(props) {
     }
   };
 
-  const removeChildren = (id, arr) => {
+  const filterChildren = (id, arr) => {
     let children = arr.filter((x) => {
       return x.pid === Number(id);
     });
     arr = arr.filter((x) => {
       return x.pid !== Number(id);
     });
-    arr = arr.filter((x) => {
-      return x.isPartner !== 1;
-    });
     try {
       if (children.length > 0) {
         for (let i = 0; i < children.length; i++) {
-          arr = removeChildren(children[i].id, arr);
+          arr = filterChildren(children[i].id, arr);
         }
       }
     } catch {}
@@ -1019,7 +1062,7 @@ export default function Tree(props) {
     } catch {
       id = InfoCard.id;
     }
-    temparr = removeChildren(id, temparr);
+    temparr = filterChildren(id, temparr);
     setDatalist(temparr);
     for (var i = 0; i < temparr.length; ++i) {
       str +=
