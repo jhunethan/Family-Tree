@@ -109,10 +109,17 @@ svg {
     transform: translate(0, 0);
   }
   to {
-    transform: translate(150px, -250px);
+    transform: translate(100px, -250px);
   }
 }
-
+@keyframes delete-parent {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(100px, -400px);
+  }
+}
 .sibling {
   transform: translate(650px, 50px);
   animation-name: sibling;
@@ -126,8 +133,18 @@ svg {
 }
 
 .parent {
-  transform: translate(150px, -250px);
+  width: 400px;
+  
+  transform: translate(100px, -250px);
   animation-name: parent;
+  animation-duration: 0.5s;
+}
+
+.delete-parent {
+  width: 400px;
+  
+  transform: translate(100px, -400px);
+  animation-name: delete-parent;
   animation-duration: 0.5s;
 }
 

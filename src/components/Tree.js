@@ -291,6 +291,21 @@ export default function Tree(props) {
   }
 
   function addParent(child, parent) {
+    //delete parent
+    if (!parent) {
+      let obj = child.__data__.data;
+      obj.pid = 0;
+      obj.parent = "";
+      Axios.post("http://localhost:5000/api/update", {
+        input: obj,
+        name: obj.name,
+        author: cookies.author,
+        changes: "removed parent",
+      });
+      dynamicUpdate(obj);
+      return;
+    }
+
     //make sure parent is valid
     let arr = filterChildren(Number(child.__data__.data.id), tableData);
 
@@ -303,7 +318,7 @@ export default function Tree(props) {
         input: obj,
         name: obj.name,
         author: cookies.author,
-        changes: "name",
+        changes: "changed parent",
       });
       dynamicUpdate(obj);
     } else {
@@ -409,18 +424,31 @@ export default function Tree(props) {
 
       menu
         .append("button")
+        .attr("class", "edit-menu-button delete-parent")
+        .text("detach parent")
+        .on("click", () => {
+          addParent(el);
+        });
+
+      menu
+        .append("button")
         .attr("class", "edit-menu-button parent")
-        .text("parent")
+        .text("add parent")
         .on("click", () => {
           editName(el);
-          toast.info(`Click on parent`);
+          toast.info(`Click on new parent`);
           //add listener for next click
           $(window).on("click", function (event) {
             let classes = event.target.classList;
             if (classes[0] !== "edit-menu-button") {
-              if (event.target.tagName === "rect")
+              if (event.target.tagName === "rect") {
                 addParent(el, event.target.__data__.data);
+              } else {
+                toast.error("No parent selected, try again");
+                nodeClick(el);
+              }
               $(window).off("click");
+              //default
               $(window).on("click", function (event) {
                 //Hide the menus if visible
                 try {
