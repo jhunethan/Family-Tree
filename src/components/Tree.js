@@ -299,6 +299,12 @@ export default function Tree(props) {
       obj.pid = Number(parent.id);
       obj.parent = parent.name;
 
+      Axios.post("http://localhost:5000/api/update", {
+        input: obj,
+        name: obj.name,
+        author: cookies.author,
+        changes: "name",
+      });
       dynamicUpdate(obj);
     } else {
       toast.error("Invalid parent, try again");
@@ -1027,6 +1033,7 @@ export default function Tree(props) {
     arr = arr.filter((x) => {
       return x.pid !== Number(id);
     });
+    arr = arr.filter((x) => x.id !== id);
     try {
       if (children.length > 0) {
         for (let i = 0; i < children.length; i++) {
