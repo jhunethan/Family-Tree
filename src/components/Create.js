@@ -144,6 +144,7 @@ function Create(props) {
       <h2>Add New</h2>
       <p type="Generation">
         <input
+          autoComplete="off"
           id="genInputC"
           onChange={inputChangedHandler}
           onKeyUp={(event) => {
@@ -158,6 +159,7 @@ function Create(props) {
       </p>
       <p type="Name:">
         <input
+          autoComplete="off"
           id="nameInputC"
           onChange={inputChangedHandler}
           onKeyUp={(event) => {
@@ -172,6 +174,7 @@ function Create(props) {
       </p>
       <p type="Date of Birth">
         <input
+          autoComplete="off"
           type="date"
           id="birthdateInputC"
           onChange={inputChangedHandler}
@@ -191,6 +194,7 @@ function Create(props) {
 
       <p type="Parent/Partner">
         <input
+          autoComplete="off"
           id="parentInputC"
           placeholder="Name of Parent/ Partner"
           list="parentSearchDataList"

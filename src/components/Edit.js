@@ -319,6 +319,7 @@ export default function Edit(props) {
         </button>
         <p type="Generation">
           <input
+          autoComplete="off"
             id="genInput"
             className="extra-details-input"
             onChange={inputChangedHandler}
@@ -335,6 +336,7 @@ export default function Edit(props) {
         </p>
         <p type="Name:">
           <input
+          autoComplete="off"
             id="name"
             className="extra-details-input"
             onChange={inputChangedHandler}
@@ -402,6 +404,7 @@ export default function Edit(props) {
         {/* Search for parent autocomplete */}
         <p type="Parent/Partner">
           <input
+          autoComplete="off"
             id="parentInput"
             className="extra-details-input"
             placeholder="Name of Parent/ Partner"
@@ -420,6 +423,7 @@ export default function Edit(props) {
         </p>
         <div className="radio-toggles">
           <input
+          autoComplete="off"
             onClick={props.switchRadio}
             onChange={inputChangedHandler}
             type="radio"
@@ -430,6 +434,7 @@ export default function Edit(props) {
           />
           <label htmlFor="option-1">Child</label>
           <input
+          autoComplete="off"
             onClick={props.switchRadio}
             onChange={inputChangedHandler}
             type="radio"
@@ -445,6 +450,7 @@ export default function Edit(props) {
           Place of Birth
         </label>
         <input
+        autoComplete="off"
           type="text"
           name="birthplace-input"
           id="birthplace-input"
@@ -463,6 +469,7 @@ export default function Edit(props) {
           Current Location
         </label>
         <input
+        autoComplete="off"
           type="text"
           name="location-input"
           id="location-input"
@@ -481,6 +488,7 @@ export default function Edit(props) {
           Additional Names
         </label>
         <input
+        autoComplete="off"
           type="text"
           name="extranames-input"
           id="extranames-input"
@@ -499,6 +507,7 @@ export default function Edit(props) {
           Facebook Link
         </label>
         <input
+        autoComplete="off"
           type="text"
           name="fblink-input"
           id="fblink-input"
@@ -517,6 +526,7 @@ export default function Edit(props) {
           Profession
         </label>
         <input
+        autoComplete="off"
           type="text"
           name="profession-input"
           id="profession-input"

@@ -39,26 +39,60 @@ export default function Table(props) {
 
   async function dynamicUpdate(obj) {
     let data = tableData;
-    await setTableData([]);
-    //update an edited node
-    try {
-      for (let i = 0; i < data.length; i++) {
-        if (data[i].id === obj.id) data[i] = obj;
-      }
-      //delete node from table
-      if (obj.method === "delete") {
-        data = await data.filter((x) => x.id !== obj.id);
-      }
-    } catch {}
 
-    if (obj.method === "create") {
-      setTimeout(() => {
-        updateTable();
-      }, 500);
-    } else {
+    if (!obj) {
+      await setTableData([]);
       await setTableData(data);
+      return;
     }
+
+    //update an edited node
+    switch (obj.method) {
+      case "delete":
+        data = data.filter((x) => x.id !== obj.id);
+        for (let i = 0; i < data.length; i++) {
+          if (data[i.pid === obj.id]) data[i].pid = 0;
+          if (obj.isPartner) {
+            if (data[i].id === obj.pid) data[i].partnerinfo = undefined;
+          }
+        }
+        toast.success(`Removed ${obj.name}`);
+        break;
+      case "create":
+        for (let i = 0; i < data.length; i++) {
+          if (obj.id === data[i].id) return false;
+          if (obj.isPartner) {
+            if (data[i].id === obj.pid) data[i].partnerinfo = obj;
+          }
+        }
+        obj.method = undefined;
+        data.push(obj);
+        if (obj.name) toast.success(`Added ${obj.name}`);
+        break;
+      default:
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].id === obj.id) data[i] = obj;
+          if (obj.isPartner) {
+            if (data[i].id === obj.pid) data[i].partnerinfo = obj;
+          } else
+            try {
+              if (data[i].partnerinfo.id === obj.id)
+                data[i].partnerinfo = undefined;
+              for (let x = 0; x < data.length; x++) {
+                if (data[x].oldpid === obj.id) data[x].pid = obj.id;
+              }
+            } catch {}
+        }
+        toast.success(`Changes made to ${obj.name}`);
+        break;
+    }
+    await setTableData([]);
+    setTimeout(() => {
+      setTableData(data);
+    }, 150);
   }
+
+
   const populateEditFields = (inputNode) => {
     let node = getNode(inputNode.id);
     $("#genInput").val(node.generation);

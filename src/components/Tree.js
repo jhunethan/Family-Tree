@@ -53,7 +53,6 @@ export default function Tree(props) {
     birthdate: "",
     parent: "",
   });
-
   var dateFormat = require("dateformat");
 
   const switchRadio = () => {
@@ -73,9 +72,16 @@ export default function Tree(props) {
   };
 
   useEffect(() => {
-    Axios.get("http://localhost:5000/api/get").then((result) => {
-      setTableData(result.data);
-    });
+    Axios.get("http://localhost:5000/api/get")
+      .then((result) => {
+        setTableData(result.data);
+      })
+      .then(() =>
+        toast.success("Tree loaded!\n Try zooming out or use the search bar", {
+          position: "top-center",
+          autoClose:10000
+        })
+      );
   }, [update]);
 
   //update tree on tableData mutation
@@ -449,7 +455,7 @@ export default function Tree(props) {
         });
       nav
         .append("button")
-        .text("done")
+        .text("save")
         .on("click", () => {
           editName(el);
         });
@@ -478,7 +484,11 @@ export default function Tree(props) {
         .text("set partner")
         .on("click", () => {
           editName(el);
-          toast.info(`Click on new parent`);
+          toast.info(`Click person to set as partner`, {
+            autoClose: false,
+            position: "top-right",
+            toastId: "selectError",
+          });
           //add listener for next click
           $(window).on("click", function (event) {
             let classes = event.target.classList;
@@ -490,9 +500,10 @@ export default function Tree(props) {
                     : event.target.__data__.data;
                 addParent(el, parent, true);
               } else {
-                toast.error("No partner selected, try again");
+                toast.error("No partner selected.");
                 nodeClick(el);
               }
+              toast.dismiss("selectError");
               $(window).off("click");
               //default
               $(window).on("click", function (event) {
@@ -512,7 +523,11 @@ export default function Tree(props) {
         .text("set parent")
         .on("click", () => {
           editName(el);
-          toast.info(`Click on new parent`);
+          toast.info(`Click on person to set as parent`, {
+            autoClose: false,
+            position: "top-right",
+            toastId: "selectError",
+          });
           //add listener for next click
           $(window).on("click", function (event) {
             let classes = event.target.classList;
@@ -520,9 +535,10 @@ export default function Tree(props) {
               if (event.target.tagName === "rect") {
                 addParent(el, event.target.__data__.data);
               } else {
-                toast.error("No parent selected, try again");
+                toast.error("No parent selected");
                 nodeClick(el);
               }
+              toast.dismiss("selectError");
               $(window).off("click");
               //default
               $(window).on("click", function (event) {
@@ -1321,17 +1337,7 @@ export default function Tree(props) {
         }}
       />
       <Modal close={closePopups} />
-      <ToastContainer
-        position="bottom-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
+      <ToastContainer position="bottom-right" autoClose={5000} limit={5} />
     </div>
   );
 }

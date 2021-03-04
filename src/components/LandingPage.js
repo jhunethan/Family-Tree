@@ -103,6 +103,7 @@ function LandingNavigation(props) {
       {" "}
       <div className={authorInput}>
         <input
+        autoComplete="off"
           type="text"
           placeholder="Enter your name here"
           className="author-input"

@@ -20,16 +20,19 @@ export default function NodeCard(props) {
 
   const transform = () => {
     if (!cardexpanded) {
-      $("div.card-main").css("width", "100%");
-      $("#card-container").css("width", "100%").css("margin-left", "0px");
-      $("#card-expand").html("><");
+      $("div.card-main").css("width", "100%").css("height", "95vh");
+      $("#card-container")
+        .css("width", "100%")
+        .css("height", "95vh")
+        .css("margin", "-75px 0 0 0px");
+        $("#card-expand").html("><");
       cardexpanded = true;
-    } else {
-      $("div.card-main").css("width", 350);
-      $("#card-container").css("width", 350).css("margin-left", "10px");
-      $("#card-expand").html("<>");
-      cardexpanded = false;
+      return;
     }
+    $("div.card-main").css("width", 350).css("height", "auto");
+    $("#card-container").css("width", 350).css("margin", "0 0 0 10px");
+    $("#card-expand").html("<>");
+    cardexpanded = false;
   };
 
   const uploadImage = () => {
