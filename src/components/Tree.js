@@ -293,12 +293,35 @@ export default function Tree(props) {
   function addParent(child, parent, partner) {
     //delete parent
 
+    if (parent === "delete") {
+      let obj = child.__data__.data;
+
+      if (partner) {
+        obj = obj.partnerinfo;
+      }
+
+      obj.pid = 0;
+      obj.parent = "";
+      obj.partner = "";
+      obj.isPartner = 0;
+      // Axios.post("http://localhost:5000/api/update", {
+      //   input: obj,
+      //   name: obj.name,
+      //   author: cookies.author,
+      //   changes: "removed parent",
+      // });
+      dynamicUpdate(obj);
+      return;
+    }
+
     if (partner) {
       let obj = child.__data__.data;
+
       obj.pid = parent.id;
       obj.parent = "";
       obj.partner = parent.name;
       obj.isPartner = 1;
+
       Axios.post("http://localhost:5000/api/update", {
         input: obj,
         name: obj.name,
@@ -306,22 +329,7 @@ export default function Tree(props) {
         changes: "set parent",
       });
       dynamicUpdate(obj);
-      return;
-    }
 
-    if (parent === "delete") {
-      let obj = child.__data__.data;
-      obj.pid = 0;
-      obj.parent = "";
-      obj.partner = "";
-      obj.isPartner = 0;
-      Axios.post("http://localhost:5000/api/update", {
-        input: obj,
-        name: obj.name,
-        author: cookies.author,
-        changes: "removed parent",
-      });
-      dynamicUpdate(obj);
       return;
     }
 
@@ -388,6 +396,10 @@ export default function Tree(props) {
   }
 
   function nodeClick(el, type) {
+    let child =
+      el.classList[0] === "partnernode"
+        ? el.__data__.data.partnerinfo
+        : el.__data__.data;
     //alternative function
     //show a edit menu for a node letting the user change the tree dynamically
     if ($("button.changeview-button")[0].textContent === "Edit") {
@@ -398,8 +410,8 @@ export default function Tree(props) {
         .append("foreignObject")
         .attr("class", "edit-menu-container")
         .attr("x", function () {
-          if (el.__data__.data.partnerinfo) {
-            if (el.classList[0] === "partnernode") return el.__data__.x + 47.5;
+          if (child.isPartner) return el.__data__.x - 352.5;
+          if (child.partnerinfo) {
             return el.__data__.x - 1062.5;
           }
           return el.__data__.x - 700;
@@ -416,7 +428,7 @@ export default function Tree(props) {
 
       menu
         .append("input")
-        .attr("value", el.__data__.data.name)
+        .attr("value", child.name)
         .attr("class", "edit-menu-input")
         .attr("placeholder", "full name");
       let nav = menu.append("div").attr("class", "edit-menu-nav");
@@ -425,8 +437,8 @@ export default function Tree(props) {
         .append("button")
         .text("cancel")
         .on("click", () => {
-          if (!el.__data__.data.name) {
-            let obj = el.__data__.data;
+          if (!child.name) {
+            let obj = child;
             obj.method = "delete";
             dynamicUpdate(obj);
           }
@@ -440,13 +452,13 @@ export default function Tree(props) {
         });
 
       //buttons
-      if (el.__data__.data.parent || el.__data__.data.partner)
+      if (child.parent || child.partner)
         menu
           .append("button")
           .attr("class", "edit-menu-button delete-parent")
           .text("detach parent")
           .on("click", () => {
-            addParent(el, "delete");
+            addParent(el, "delete", child.isPartner);
           });
 
       menu
@@ -461,7 +473,11 @@ export default function Tree(props) {
             let classes = event.target.classList;
             if (classes[0] !== "edit-menu-button") {
               if (event.target.tagName === "rect") {
-                addParent(el, event.target.__data__.data, true);
+                let parent =
+                  el.classList[0] === "partnernode"
+                    ? event.target.__data__.data.partnerinfo
+                    : event.target.__data__.data;
+                addParent(el, parent, true);
               } else {
                 toast.error("No partner selected, try again");
                 nodeClick(el);
@@ -516,7 +532,7 @@ export default function Tree(props) {
         .attr("class", "edit-menu-button child")
         .text("child")
         .on("click", () => {
-          if (el.__data__.data.name) {
+          if (child.name) {
             editName(el);
             return addNode(el, "child");
           }
