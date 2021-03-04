@@ -304,31 +304,35 @@ export default function Tree(props) {
       obj.parent = "";
       obj.partner = "";
       obj.isPartner = 0;
-      // Axios.post("http://localhost:5000/api/update", {
-      //   input: obj,
-      //   name: obj.name,
-      //   author: cookies.author,
-      //   changes: "removed parent",
-      // });
+      Axios.post("http://localhost:5000/api/update", {
+        input: obj,
+        name: obj.name,
+        author: cookies.author,
+        changes: "removed parent",
+      });
       dynamicUpdate(obj);
       return;
     }
 
     if (partner) {
-      let obj = child.__data__.data;
+      if (parent.id !== child.__data__.data.id) {
+        let obj = child.__data__.data;
 
-      obj.pid = parent.id;
-      obj.parent = "";
-      obj.partner = parent.name;
-      obj.isPartner = 1;
-
-      Axios.post("http://localhost:5000/api/update", {
-        input: obj,
-        name: obj.name,
-        author: cookies.author,
-        changes: "set parent",
-      });
-      dynamicUpdate(obj);
+        obj.pid = parent.id;
+        obj.parent = "";
+        obj.partner = parent.name;
+        obj.isPartner = 1;
+        Axios.post("http://localhost:5000/api/update", {
+          input: obj,
+          name: obj.name,
+          author: cookies.author,
+          changes: "set parent",
+        });
+        dynamicUpdate(obj);
+      } else {
+        toast.error("Invalid partner, try again");
+        nodeClick(child);
+      }
 
       return;
     }
@@ -352,8 +356,6 @@ export default function Tree(props) {
       toast.error("Invalid parent, try again");
       nodeClick(child);
     }
-
-    //partner?
   }
 
   function addNode(el, method) {
