@@ -1,5 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@1,300&display=swap");
 
+@keyframes edit-menu-button {
+  from {
+    transform: translate(150px, 0);
+  }
+}
+
 /* //main svg container */
 #Tree {
   width: 100vw;
@@ -69,6 +75,18 @@ svg {
   height: 150px;
 }
 
+.edit-menu-details{
+  width: 300px;
+  height: 100px;
+  margin:20px;
+  padding: 10px;
+
+  transform: translate(375px, -100px);
+
+  margin-left: 275px;
+  
+}
+
 .edit-menu > input {
   margin: 0 100px;
   padding: 10px;
@@ -88,13 +106,7 @@ svg {
   height: 100px;
 }
 
-@keyframes edit-menu-button {
-  from {
-    transform: translate(150px, 0);
-  }
-}
-
-.sibling, .child, .parent, .delete-parent,.partner{
+.sibling, .child, .parent, .delete-parent,.partner,.edit-menu-details{
   animation-name: edit-menu-button;
   animation-duration: 0.5s;
 }

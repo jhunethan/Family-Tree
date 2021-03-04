@@ -402,6 +402,7 @@ export default function Tree(props) {
       el.classList[0] === "partnernode"
         ? el.__data__.data.partnerinfo
         : el.__data__.data;
+    setInfoCard(child);
     //alternative function
     //show a edit menu for a node letting the user change the tree dynamically
     if ($("button.changeview-button")[0].textContent === "Edit") {
@@ -420,7 +421,7 @@ export default function Tree(props) {
         })
         .attr("y", el.__data__.y - 800)
         .attr("height", "1200px")
-        .attr("width", "1600px");
+        .attr("width", "1400px");
 
       let menu = d3
         .select("foreignObject.edit-menu-container")
@@ -465,6 +466,14 @@ export default function Tree(props) {
 
       menu
         .append("button")
+        .text("edit details")
+        .attr("class", "edit-menu-button edit-menu-details")
+        .on("click", () => {
+          openNode(child);
+        });
+
+      menu
+        .append("button")
         .attr("class", "edit-menu-button partner")
         .text("set partner")
         .on("click", () => {
@@ -495,7 +504,6 @@ export default function Tree(props) {
               });
             }
           });
-          // addParent(el);
         });
 
       menu
@@ -1140,7 +1148,7 @@ export default function Tree(props) {
     return arr;
   };
 
-  const openNode = () => {
+  const openNode = (obj) => {
     $("#parentInput").css("border-bottom", "2px solid #bebed2");
     $("#parentInput").val("");
     $("#parentInput").attr("placeholder", "Parent/Partner");
@@ -1150,20 +1158,25 @@ export default function Tree(props) {
     let list = document.getElementById("parentSearchDataList");
     //populate parentSearchDataList
     let temparr = tableData;
+
+    let extData = obj ? obj : InfoCard;
+
+    if (obj) setInfoCard(obj);
+
     try {
-      if (InfoCard.isPartner === 1) {
+      if (extData.isPartner === 1) {
         id = null;
         for (let i = 0; i < tableData.length; i++) {
           let name = `${tableData[i].generation} ${tableData[i].name}`;
-          if (InfoCard.partner === name) {
+          if (extData.partner === name) {
             id = tableData[i].id;
           } else {
-            if (InfoCard.partner === tableData[i].name) id = tableData[i].id;
+            if (extData.partner === tableData[i].name) id = tableData[i].id;
           }
         }
-      } else id = InfoCard.id;
+      } else id = extData.id;
     } catch {
-      id = InfoCard.id;
+      id = extData.id;
     }
     temparr = filterChildren(id, temparr);
     setDatalist(temparr);
@@ -1178,7 +1191,7 @@ export default function Tree(props) {
     list.innerHTML = str;
 
     for (let i = 0; i < tableData.length; i++) {
-      if (InfoCard.id === tableData[i].id) node = tableData[i];
+      if (extData.id === tableData[i].id) node = tableData[i];
     }
 
     node.isPartner ? setRadiochecked(false) : setRadiochecked(true);
