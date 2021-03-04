@@ -290,12 +290,31 @@ export default function Tree(props) {
     }
   }
 
-  function addParent(child, parent) {
+  function addParent(child, parent, partner) {
     //delete parent
-    if (!parent) {
+
+    if (partner) {
+      let obj = child.__data__.data;
+      obj.pid = parent.id;
+      obj.parent = "";
+      obj.partner = parent.name;
+      obj.isPartner = 1;
+      Axios.post("http://localhost:5000/api/update", {
+        input: obj,
+        name: obj.name,
+        author: cookies.author,
+        changes: "set parent",
+      });
+      dynamicUpdate(obj);
+      return;
+    }
+
+    if (parent === "delete") {
       let obj = child.__data__.data;
       obj.pid = 0;
       obj.parent = "";
+      obj.partner = "";
+      obj.isPartner = 0;
       Axios.post("http://localhost:5000/api/update", {
         input: obj,
         name: obj.name,
@@ -381,9 +400,9 @@ export default function Tree(props) {
         .attr("x", function () {
           if (el.__data__.data.partnerinfo) {
             if (el.classList[0] === "partnernode") return el.__data__.x + 47.5;
-            return el.__data__.x - 662.5;
+            return el.__data__.x - 1062.5;
           }
-          return el.__data__.x - 300;
+          return el.__data__.x - 700;
         })
         .attr("y", el.__data__.y - 800)
         .attr("height", "1200px")
@@ -421,19 +440,50 @@ export default function Tree(props) {
         });
 
       //buttons
+      if (el.__data__.data.parent || el.__data__.data.partner)
+        menu
+          .append("button")
+          .attr("class", "edit-menu-button delete-parent")
+          .text("detach parent")
+          .on("click", () => {
+            addParent(el, "delete");
+          });
 
       menu
         .append("button")
-        .attr("class", "edit-menu-button delete-parent")
-        .text("detach parent")
+        .attr("class", "edit-menu-button partner")
+        .text("set partner")
         .on("click", () => {
-          addParent(el);
+          editName(el);
+          toast.info(`Click on new parent`);
+          //add listener for next click
+          $(window).on("click", function (event) {
+            let classes = event.target.classList;
+            if (classes[0] !== "edit-menu-button") {
+              if (event.target.tagName === "rect") {
+                addParent(el, event.target.__data__.data, true);
+              } else {
+                toast.error("No partner selected, try again");
+                nodeClick(el);
+              }
+              $(window).off("click");
+              //default
+              $(window).on("click", function (event) {
+                //Hide the menus if visible
+                try {
+                  if (event.target !== $("#datalist-input")[0])
+                    $("ul.datalist-ul").html("");
+                } catch {}
+              });
+            }
+          });
+          // addParent(el);
         });
 
       menu
         .append("button")
         .attr("class", "edit-menu-button parent")
-        .text("add parent")
+        .text("set parent")
         .on("click", () => {
           editName(el);
           toast.info(`Click on new parent`);
@@ -476,7 +526,7 @@ export default function Tree(props) {
       menu
         .append("button")
         .attr("class", "edit-menu-button sibling")
-        .text("sib")
+        .text("sibling")
         .on("click", () => {
           editName(el);
           addNode(el, "sibling");

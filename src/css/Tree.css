@@ -53,7 +53,7 @@ svg {
 
   padding-top: 100px;
 
-  transform: translateY(400px);
+  transform: translate(400px,400px);
   filter: drop-shadow(5px 5px 5px rgba(65, 65, 65, 0.322));
 }
 
@@ -88,64 +88,39 @@ svg {
   height: 100px;
 }
 
-@keyframes sibling {
+@keyframes edit-menu-button {
   from {
-    transform: translate(0, 0);
-  }
-  to {
-    transform: translate(650px, 50px);
+    transform: translate(150px, 0);
   }
 }
-@keyframes child {
-  from {
-    transform: translate(0, 0);
-  }
-  to {
-    transform: translate(150px, 350px);
-  }
+
+.sibling, .child, .parent, .delete-parent,.partner{
+  animation-name: edit-menu-button;
+  animation-duration: 0.5s;
 }
-@keyframes parent {
-  from {
-    transform: translate(0, 0);
-  }
-  to {
-    transform: translate(100px, -250px);
-  }
-}
-@keyframes delete-parent {
-  from {
-    transform: translate(0, 0);
-  }
-  to {
-    transform: translate(100px, -400px);
-  }
-}
+
 .sibling {
   transform: translate(650px, 50px);
-  animation-name: sibling;
-  animation-duration: 0.5s;
 }
 
 .child {
   transform: translate(150px, 350px);
-  animation-name: child;
-  animation-duration: 0.5s;
 }
 
-.parent {
+.parent , .delete-parent{
   width: 400px;
   
   transform: translate(100px, -250px);
-  animation-name: parent;
-  animation-duration: 0.5s;
 }
 
 .delete-parent {
   width: 400px;
-  
+
   transform: translate(100px, -400px);
-  animation-name: delete-parent;
-  animation-duration: 0.5s;
+}
+
+.partner{
+  transform: translate(-350px, 50px);
 }
 
 .cancel {
