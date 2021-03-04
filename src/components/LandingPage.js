@@ -19,6 +19,7 @@ function Edits(props) {
     changes[0] = props.data.changes;
   }
   if (props.data.method === "delete") changes[0] = `deleted ${props.data.name}`;
+  if (props.data.method === "create") changes[0] = `added ${props.data.name}`;
   return (
     <ul>
       {changes.map((n, index) => {
@@ -196,7 +197,7 @@ export default function LandingPage(props) {
     <div className="wrapper">
       <section className="content-container">
         <div className="header">
-          <h1>Lay Family Database</h1>
+          <h1>Lay Family Tree</h1>
           <LandingNavigation resetName={resetName} />
         </div>
         <h1 className="about-header">Edit History</h1>

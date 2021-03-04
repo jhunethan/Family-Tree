@@ -68,7 +68,7 @@ export default function Tree(props) {
     }
     $("button.changeview-button")[0].textContent = "Edit";
     $("#card-container").css("display", "none");
-    toast.info("Edit Mode");
+    toast.info("Edit mode, click any node to edit");
   };
 
   useEffect(() => {
@@ -79,7 +79,7 @@ export default function Tree(props) {
       .then(() =>
         toast.success("Tree loaded!\n Try zooming out or use the search bar", {
           position: "top-center",
-          autoClose:10000
+          autoClose: 10000,
         })
       );
   }, [update]);
@@ -322,19 +322,23 @@ export default function Tree(props) {
 
     if (partner) {
       if (parent.id !== child.__data__.data.id) {
-        let obj = child.__data__.data;
+        if (child.__data__.data.name) {
+          let obj = child.__data__.data;
 
-        obj.pid = parent.id;
-        obj.parent = "";
-        obj.partner = parent.name;
-        obj.isPartner = 1;
-        Axios.post("http://localhost:5000/api/update", {
-          input: obj,
-          name: obj.name,
-          author: cookies.author,
-          changes: "set parent",
-        });
-        dynamicUpdate(obj);
+          obj.pid = parent.id;
+          obj.parent = "";
+          obj.partner = parent.name;
+          obj.isPartner = 1;
+          Axios.post("http://localhost:5000/api/update", {
+            input: obj,
+            name: obj.name,
+            author: cookies.author,
+            changes: "set parent",
+          });
+          dynamicUpdate(obj);
+        } else {
+          toast.error("Please set name before setting as partner");
+        }
       } else {
         toast.error("Invalid partner, try again");
         nodeClick(child);
@@ -574,14 +578,14 @@ export default function Tree(props) {
           addNode(el, "sibling");
         });
       $("input.edit-menu-input").trigger("focus");
-      return;
     }
     //normal click node function - pan and zoom to clicked node
+    else $("#card-container").css("display", "block");
+
     let data =
       type === "partner" ? el.__data__.data.partnerinfo : el.__data__.data;
 
     zoom.scaleTo(svg.transition().duration(500), 0.25);
-    $("#card-container").css("display", "block");
     setInfoCard(data);
     zoom.translateTo(
       svg.transition().duration(500),
@@ -589,7 +593,7 @@ export default function Tree(props) {
       el.__data__.y
     );
     setTimeout(() => {
-      zoom.scaleTo(svg.transition().duration(750), 0.4);
+      zoom.scaleTo(svg.transition().duration(750), 0.25);
     }, 500);
   }
 
@@ -1103,7 +1107,7 @@ export default function Tree(props) {
           dimensions[1]
         );
         setTimeout(() => {
-          zoom.scaleTo(svg.transition().duration(750), 0.5);
+          zoom.scaleTo(svg.transition().duration(750), 0.25);
         }, 500);
       } catch {}
       return true;
