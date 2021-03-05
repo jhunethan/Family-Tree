@@ -23,10 +23,9 @@ svg {
 .partnernode {
   width: 600px;
   height: 400px;
-  padding: 8px 12px;
-  fill: #fff;
-  stroke: white;
-  stroke-dasharray: 0, 0;
+
+  filter: drop-shadow(15px 15px 10px rgba(141, 141, 141, 0.322));
+  background-color: rgb(255, 255, 255);
   transition: all 0.3s;
 }
 
@@ -59,7 +58,7 @@ svg {
 
   padding-top: 100px;
 
-  transform: translate(400px,400px);
+  transform: translate(400px, 400px);
   filter: drop-shadow(5px 5px 5px rgba(65, 65, 65, 0.322));
 }
 
@@ -75,16 +74,15 @@ svg {
   height: 150px;
 }
 
-.edit-menu-details{
+.edit-menu-details {
   width: 300px;
   height: 100px;
-  margin:20px;
+  margin: 20px;
   padding: 10px;
 
   transform: translate(375px, -100px);
 
   margin-left: 275px;
-  
 }
 
 .edit-menu > input {
@@ -106,7 +104,12 @@ svg {
   height: 100px;
 }
 
-.sibling, .child, .parent, .delete-parent,.partner,.edit-menu-details{
+.sibling,
+.child,
+.parent,
+.delete-parent,
+.partner,
+.edit-menu-details {
   animation-name: edit-menu-button;
   animation-duration: 0.5s;
 }
@@ -119,9 +122,10 @@ svg {
   transform: translate(150px, 350px);
 }
 
-.parent , .delete-parent{
+.parent,
+.delete-parent {
   width: 400px;
-  
+
   transform: translate(100px, -250px);
 }
 
@@ -131,7 +135,7 @@ svg {
   transform: translate(100px, -400px);
 }
 
-.partner{
+.partner {
   transform: translate(-350px, 50px);
 }
 
@@ -165,9 +169,7 @@ circle {
 
 .node:hover,
 .partnernode:hover {
-  fill: #eeeeee;
-  stroke: black;
-  stroke-dasharray: 0, 0, 100, 0;
+  background-color: #eeeeee;
 
   transition: all 0.3s;
   cursor: pointer;

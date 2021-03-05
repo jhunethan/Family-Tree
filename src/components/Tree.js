@@ -497,7 +497,7 @@ export default function Tree(props) {
           $(window).on("click", function (event) {
             let classes = event.target.classList;
             if (classes[0] !== "edit-menu-button") {
-              if (event.target.tagName === "rect") {
+              if (event.target.classList[0] === "node") {
                 let parent =
                   el.classList[0] === "partnernode"
                     ? event.target.__data__.data.partnerinfo
@@ -536,9 +536,13 @@ export default function Tree(props) {
           $(window).on("click", function (event) {
             let classes = event.target.classList;
             if (classes[0] !== "edit-menu-button") {
-              if (event.target.tagName === "rect") {
+              if (
+                event.target.classList[0] === "node" ||
+                event.target.classList[0] === "partnernode"
+              ) {
                 addParent(el, event.target.__data__.data);
               } else {
+                console.log(event.target.classList[0]);
                 toast.error("No parent selected");
                 nodeClick(el);
               }
@@ -655,24 +659,25 @@ export default function Tree(props) {
 
     partnerShapes
       .enter()
-      .append("rect")
-      .attr("class", function (d) {
-        return "partnernode level-" + d.depth;
-      })
+      .append("foreignObject").attr("class","partnernode-container")
       .attr("x", function (d) {
         return d.x + 50;
       })
       .attr("y", function (d) {
         return d.y - 400;
       })
-      .attr("rx", 5)
-      .attr("ry", 5)
+      .attr("width", 700)
+      .attr("height", 500)
       .classed("hide", function (d) {
         try {
           if (d.data.partnerinfo.name === "text") return false;
         } catch {
           return true;
         }
+      })
+      .append("xhtml:div")
+      .attr("class", function (d) {
+        return "partnernode level-" + d.depth;
       })
       .on("click", (d) => nodeClick(d.target, "partner"));
     //card pattern
@@ -684,7 +689,7 @@ export default function Tree(props) {
         return "pattern level-" + d.depth;
       })
       .attr("x", function (d) {
-        return d.x + 47.5;
+        return d.x + 50;
       })
       .attr("y", function (d) {
         return d.y - 400;
@@ -707,15 +712,17 @@ export default function Tree(props) {
     // Nodes
     var shapes = d3
       .select("svg g.nodes")
-      .selectAll("rect .node")
+      .selectAll("foreignObject .node")
       .data(treeData.descendants());
 
     //normal node rectangle
     shapes
       .enter()
-      .append("rect")
+      .append("foreignObject")
+      .attr("height", 500)
+      .attr("width", 700)
       .attr("class", function (d) {
-        return "node level-" + d.depth;
+        return "node-container level-" + d.depth;
       })
       .attr("x", function (d) {
         try {
@@ -728,8 +735,10 @@ export default function Tree(props) {
       .attr("y", function (d) {
         return d.y - 400;
       })
-      .attr("rx", 5)
-      .attr("ry", 5)
+      .append("xhtml:div")
+      .attr("class", function (d) {
+        return "node level-" + d.depth;
+      })
       .on("click", (d) => nodeClick(d.target, ""));
 
     //card pattern
@@ -738,12 +747,12 @@ export default function Tree(props) {
       .append("image")
       .attr("xlink:href", pattern)
       .attr("class", function (d) {
-        return "node pattern level-" + d.depth;
+        return "pattern level-" + d.depth;
       })
       .attr("x", function (d) {
         try {
           if (!d.data.partnerinfo.name === "text") return d.x;
-          return d.x - 662.5;
+          return d.x - 660;
         } catch {
           return d.x - 300;
         }
