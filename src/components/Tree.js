@@ -119,6 +119,7 @@ export default function Tree(props) {
   };
 
   async function dynamicUpdate(obj) {
+    console.log(obj);
     let data = tableData;
 
     if (!obj) {
@@ -279,7 +280,7 @@ export default function Tree(props) {
         input: newData,
         author: cookies.author,
       });
-      toast.success(`Name updated to ${name}`);
+      toast.success(`${name} added to tree`);
       dynamicUpdate(newData);
     } else if (name !== newData.name && name) {
       //save
@@ -479,7 +480,12 @@ export default function Tree(props) {
         .text("edit details")
         .attr("class", "edit-menu-button edit-menu-details")
         .on("click", () => {
-          openNode(child);
+          if (child.name) return openNode(child);
+          if ($("input.edit-menu-input").val()) {
+            editName(el);
+            return openNode(child);
+          }
+          toast.error("Set name before editing this person.");
         });
 
       menu
@@ -542,7 +548,6 @@ export default function Tree(props) {
               ) {
                 addParent(el, event.target.__data__.data);
               } else {
-                console.log(event.target.classList[0]);
                 toast.error("No parent selected");
                 nodeClick(el);
               }
@@ -659,7 +664,8 @@ export default function Tree(props) {
 
     partnerShapes
       .enter()
-      .append("foreignObject").attr("class","partnernode-container")
+      .append("foreignObject")
+      .attr("class", "partnernode-container")
       .attr("x", function (d) {
         return d.x + 50;
       })
@@ -1344,9 +1350,6 @@ export default function Tree(props) {
         nodedata={InfoCard}
         update={(obj) => {
           dynamicUpdate(obj);
-        }}
-        refresh={() => {
-          updateTree();
         }}
       />
       <Modal close={closePopups} />
