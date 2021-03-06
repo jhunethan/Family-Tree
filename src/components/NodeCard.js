@@ -25,7 +25,7 @@ export default function NodeCard(props) {
         .css("width", "100%")
         .css("height", "95vh")
         .css("margin", "-75px 0 0 0px");
-        $("#card-expand").html("><");
+      $("#card-expand").html("><");
       cardexpanded = true;
       return;
     }
@@ -39,6 +39,9 @@ export default function NodeCard(props) {
     const formData = new FormData();
     formData.append("file", imageToBeSent);
     formData.append("upload_preset", "oms6f6zi");
+    formData.append("id", props.node.id);
+
+    // Axios.post("http://localhost:5000/api/upload", formData);
 
     Axios.post(
       "https://api.cloudinary.com/v1_1/dqwu1p8fp/image/upload",

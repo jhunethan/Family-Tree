@@ -119,7 +119,6 @@ export default function Tree(props) {
   };
 
   async function dynamicUpdate(obj) {
-    console.log(obj);
     let data = tableData;
 
     if (!obj) {
@@ -713,7 +712,9 @@ export default function Tree(props) {
         return d.y - 362.5;
       })
       .append("xhtml:img")
-      .attr("src", profile)
+      .attr("src", function (d) {
+        return profile;
+      })
       .classed("profile-picture", true);
     // Nodes
     var shapes = d3
@@ -785,7 +786,20 @@ export default function Tree(props) {
         return d.y - 362.5;
       })
       .append("xhtml:img")
-      .attr("src", profile)
+      .attr("src", function (d) {
+        // try {
+        //   if (d.data.extradetails.photo_id.length > 1) {
+        //     console.log((d.data.extradetails.photo_id))
+        //     Axios.get("http://localhost:5000/api/get/photos/user", {
+        //       params: { id: d.data.id },
+        //     }).then((res) => {
+        //       console.log(res)
+        //       return 'data:image/png;base64,' + btoa(res.data);
+        //     });
+        //   }
+        // } catch {}
+        return profile;
+      })
       .classed("profile-picture", true);
 
     var partnerText = d3
@@ -1096,22 +1110,23 @@ export default function Tree(props) {
       }
       let nodeRect = d3.select("svg g.nodes").selectAll("text")._groups[0];
       let dimensions = [];
-      for (const x of nodeRect) {
-        if (x.__data__.data.id === node.id) {
-          dimensions[0] = x.__data__.x;
-          dimensions[1] = x.__data__.y;
-          if ($("button.changeview-button")[0].textContent === "Edit") {
-            nodeClick(x, "");
-          }
-        } else {
-          try {
-            if (x.__data__.data.partnerinfo.id === node.id) {
-              dimensions[0] = x.__data__.x;
-              dimensions[1] = x.__data__.y;
+      if (nodeRect)
+        for (const x of nodeRect) {
+          if (x.__data__.data.id === node.id) {
+            dimensions[0] = x.__data__.x;
+            dimensions[1] = x.__data__.y;
+            if ($("button.changeview-button")[0].textContent === "Edit") {
+              nodeClick(x, "");
             }
-          } catch {}
+          } else {
+            try {
+              if (x.__data__.data.partnerinfo.id === node.id) {
+                dimensions[0] = x.__data__.x;
+                dimensions[1] = x.__data__.y;
+              }
+            } catch {}
+          }
         }
-      }
       try {
         setInfoCard(node);
         zoom.scaleTo(svg.transition().duration(500), 0.25);
