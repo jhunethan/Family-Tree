@@ -659,7 +659,8 @@ export default function Tree(props) {
 
     partnerShapes
       .enter()
-      .append("foreignObject").attr("class","partnernode-container")
+      .append("foreignObject")
+      .attr("class", "partnernode-container")
       .attr("x", function (d) {
         return d.x + 50;
       })
@@ -707,7 +708,9 @@ export default function Tree(props) {
         return d.y - 362.5;
       })
       .append("xhtml:img")
-      .attr("src", profile)
+      .attr("src", function (d) {
+        return profile;
+      })
       .classed("profile-picture", true);
     // Nodes
     var shapes = d3
@@ -779,7 +782,20 @@ export default function Tree(props) {
         return d.y - 362.5;
       })
       .append("xhtml:img")
-      .attr("src", profile)
+      .attr("src", function (d) {
+        // try {
+        //   if (d.data.extradetails.photo_id.length > 1) {
+        //     console.log((d.data.extradetails.photo_id))
+        //     Axios.get("http://localhost:5000/api/get/photos/user", {
+        //       params: { id: d.data.id },
+        //     }).then((res) => {
+        //       console.log(res)
+        //       return 'data:image/png;base64,' + btoa(res.data);
+        //     });
+        //   }
+        // } catch {}
+        return profile;
+      })
       .classed("profile-picture", true);
 
     var partnerText = d3
