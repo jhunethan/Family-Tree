@@ -13,17 +13,9 @@ export default function Edit(props) {
   const [descriptionlimit, setdescriptionlimit] = useState(0);
   const [nodeInput, setNodeInput] = useState({
     id: props.nodedata.id,
-    generation: "",
     name: "",
-    birthdate: "",
     pid: 0,
     isPartner: 0,
-    parent: "",
-    partner: "",
-    location: "",
-    extranames: "",
-    fblink: "",
-    description: "",
   });
 
   var inputChangedHandler = () => {
@@ -246,38 +238,30 @@ export default function Edit(props) {
 
   const checkExtraChanges = () => {
     let arr = [];
+    let data = props.nodedata.extradetails;
     setExtrachanged(false);
     try {
-      if (
-        props.nodedata.extradetails.birthplace !== $("#birthplace-input").val()
-      ) {
+      if (data.birthplace !== $("#birthplace-input").val()) {
         arr.push("birthplace");
         setExtrachanged(true);
       }
-      if (props.nodedata.extradetails.location !== $("#location-input").val()) {
+      if (data.location !== $("#location-input").val()) {
         arr.push("location");
         setExtrachanged(true);
       }
-      if (
-        props.nodedata.extradetails.extranames !== $("#extranames-input").val()
-      ) {
+      if (data.extranames !== $("#extranames-input").val()) {
         arr.push("extranames");
         setExtrachanged(true);
       }
-      if (props.nodedata.extradetails.fblink !== $("#fblink-input").val()) {
+      if (data.fblink !== $("#fblink-input").val()) {
         arr.push("fblink");
         setExtrachanged(true);
       }
-      if (
-        props.nodedata.extradetails.profession !== $("#profession-input").val()
-      ) {
+      if (data.profession !== $("#profession-input").val()) {
         arr.push("profession");
         setExtrachanged(true);
       }
-      if (
-        props.nodedata.extradetails.description !==
-        $("textarea.description-input").val()
-      ) {
+      if (data.description !== $("textarea.description-input").val()) {
         arr.push("description");
         setExtrachanged(true);
       }
@@ -319,7 +303,7 @@ export default function Edit(props) {
         </button>
         <p type="Generation">
           <input
-          autoComplete="off"
+            autoComplete="off"
             id="genInput"
             className="extra-details-input"
             onChange={inputChangedHandler}
@@ -336,7 +320,7 @@ export default function Edit(props) {
         </p>
         <p type="Name:">
           <input
-          autoComplete="off"
+            autoComplete="off"
             id="name"
             className="extra-details-input"
             onChange={inputChangedHandler}
@@ -404,7 +388,7 @@ export default function Edit(props) {
         {/* Search for parent autocomplete */}
         <p type="Parent/Partner">
           <input
-          autoComplete="off"
+            autoComplete="off"
             id="parentInput"
             className="extra-details-input"
             placeholder="Name of Parent/ Partner"
@@ -423,8 +407,8 @@ export default function Edit(props) {
         </p>
         <div className="radio-toggles">
           <input
-          autoComplete="off"
-            onClick={props.switchRadio}
+            autoComplete="off"
+            onClick={(event) => props.switchRadio(event.target)}
             onChange={inputChangedHandler}
             type="radio"
             id="option-1"
@@ -434,8 +418,8 @@ export default function Edit(props) {
           />
           <label htmlFor="option-1">Child</label>
           <input
-          autoComplete="off"
-            onClick={props.switchRadio}
+            autoComplete="off"
+            onClick={(event) => props.switchRadio(event.target)}
             onChange={inputChangedHandler}
             type="radio"
             id="option-2"
@@ -450,7 +434,7 @@ export default function Edit(props) {
           Place of Birth
         </label>
         <input
-        autoComplete="off"
+          autoComplete="off"
           type="text"
           name="birthplace-input"
           id="birthplace-input"
@@ -469,7 +453,7 @@ export default function Edit(props) {
           Current Location
         </label>
         <input
-        autoComplete="off"
+          autoComplete="off"
           type="text"
           name="location-input"
           id="location-input"
@@ -488,7 +472,7 @@ export default function Edit(props) {
           Additional Names
         </label>
         <input
-        autoComplete="off"
+          autoComplete="off"
           type="text"
           name="extranames-input"
           id="extranames-input"
@@ -507,7 +491,7 @@ export default function Edit(props) {
           Facebook Link
         </label>
         <input
-        autoComplete="off"
+          autoComplete="off"
           type="text"
           name="fblink-input"
           id="fblink-input"
@@ -526,7 +510,7 @@ export default function Edit(props) {
           Profession
         </label>
         <input
-        autoComplete="off"
+          autoComplete="off"
           type="text"
           name="profession-input"
           id="profession-input"

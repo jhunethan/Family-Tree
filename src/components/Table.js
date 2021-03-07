@@ -23,8 +23,9 @@ export default function Table(props) {
   var [radiochecked, setRadiochecked] = useState(true);
   const [datalist, setDatalist] = useState([]);
 
-  const switchRadio = () => {
-    setRadiochecked(!radiochecked);
+  const switchRadio = (val) => {
+    if (val.value === "child") return setRadiochecked(true);
+    return setRadiochecked(false);
   };
   useEffect(() => {
     Axios.get("http://localhost:5000/api/get").then((result) => {
@@ -91,7 +92,6 @@ export default function Table(props) {
       setTableData(data);
     }, 150);
   }
-
 
   const populateEditFields = (inputNode) => {
     let node = getNode(inputNode.id);
@@ -287,8 +287,6 @@ export default function Table(props) {
       <div className="container">
         <div className="container-top">
           <div className="left">
-            <h2>Family Tree Interactive Table View</h2>
-            <p>Click the table to interact.</p>
             <button
               type="button"
               className="refresh-table"
@@ -313,15 +311,15 @@ export default function Table(props) {
       <Create
         data={tableData}
         getPID={getPID}
-        update={() => {
-          updateTable();
+        update={(obj) => {
+          dynamicUpdate(obj);
         }}
       />
       <Edit
         getPID={getPID}
         getNode={(id) => getNode(id)}
         radiochecked={radiochecked}
-        switchRadio={switchRadio}
+        switchRadio={(val) => switchRadio(val)}
         data={tableData}
         datalist={datalist}
         nodedata={nodestate}

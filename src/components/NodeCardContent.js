@@ -31,31 +31,11 @@ const getChildren = (id, data) => {
 export function NodeCardDetails(props) {
   switch (props.method) {
     case "birthdate":
-      try {
-        if (props.node.extradetails.birthplace && props.node.birthdate) {
-          return (
-            <section>
-              <h2>Born</h2>
-
-              <div>{dateFormat(props.node.birthdate, "dS mmmm yyyy")}</div>
-              <div>{props.node.extradetails.birthplace}</div>
-            </section>
-          );
-        }
-        if (props.node.extradetails.birthplace) {
-          return (
-            <section>
-              <h2>Born</h2>
-              <p>in {props.node.extradetails.birthplace}</p>
-            </section>
-          );
-        }
-      } catch {}
       if (props.node.birthdate)
         return (
           <section>
             <h2>Born</h2>
-            <p>{props.node.birthdate}</p>
+            <p>{dateFormat(props.node.birthdate, "dS mmmm yyyy")}</p>
           </section>
         );
       return null;
@@ -93,6 +73,18 @@ export function NodeCardDetails(props) {
         }
       } catch {}
       return null;
+    case "birthplace":
+      try {
+        if (props.node.extradetails.birthplace) {
+          return (
+            <section>
+              <h2>Birthplace</h2>
+              <p>{props.node.extradetails.birthplace}</p>
+            </section>
+          );
+        }
+      } catch {}
+      return null;
     case "profession":
       try {
         if (props.node.extradetails.profession) {
@@ -110,7 +102,7 @@ export function NodeCardDetails(props) {
         if (props.node.extradetails.extranames) {
           return (
             <section>
-              <h2>Additional Names</h2>
+              <h2>Other names</h2>
               <p>{props.node.extradetails.extranames}</p>
             </section>
           );
@@ -139,7 +131,7 @@ export function NodeCardDetails(props) {
           let count = 0;
           return (
             <section>
-              <h2>Description</h2>
+              <h2>Greatest Achievement</h2>
               <div>
                 {output.map((x) => {
                   count += 1;

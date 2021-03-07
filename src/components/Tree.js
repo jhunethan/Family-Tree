@@ -55,8 +55,9 @@ export default function Tree(props) {
   });
   var dateFormat = require("dateformat");
 
-  const switchRadio = () => {
-    setRadiochecked(!radiochecked);
+  const switchRadio = (val) => {
+    if (val.value === "child") return setRadiochecked(true);
+    return setRadiochecked(false);
   };
 
   const changeView = () => {
@@ -1354,7 +1355,7 @@ export default function Tree(props) {
         getPID={getPID}
         getNode={(id) => getNode(id)}
         radiochecked={radiochecked}
-        switchRadio={switchRadio}
+        switchRadio={(val)=>switchRadio(val)}
         data={tableData}
         datalist={datalist}
         nodedata={InfoCard}
