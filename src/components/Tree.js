@@ -280,7 +280,7 @@ export default function Tree(props) {
         input: newData,
         author: cookies.author,
       });
-      toast.success(`Name updated to ${name}`);
+      toast.success(`${name} added to tree`);
       dynamicUpdate(newData);
     } else if (name !== newData.name && name) {
       //save
@@ -480,7 +480,12 @@ export default function Tree(props) {
         .text("edit details")
         .attr("class", "edit-menu-button edit-menu-details")
         .on("click", () => {
-          openNode(child);
+          if (child.name) return openNode(child);
+          if ($("input.edit-menu-input").val()) {
+            editName(el);
+            return openNode(child);
+          }
+          toast.error("Set name before editing this person.");
         });
 
       menu
@@ -543,7 +548,6 @@ export default function Tree(props) {
               ) {
                 addParent(el, event.target.__data__.data);
               } else {
-                console.log(event.target.classList[0]);
                 toast.error("No parent selected");
                 nodeClick(el);
               }
@@ -1107,22 +1111,23 @@ export default function Tree(props) {
       }
       let nodeRect = d3.select("svg g.nodes").selectAll("text")._groups[0];
       let dimensions = [];
-      for (const x of nodeRect) {
-        if (x.__data__.data.id === node.id) {
-          dimensions[0] = x.__data__.x;
-          dimensions[1] = x.__data__.y;
-          if ($("button.changeview-button")[0].textContent === "Edit") {
-            nodeClick(x, "");
-          }
-        } else {
-          try {
-            if (x.__data__.data.partnerinfo.id === node.id) {
-              dimensions[0] = x.__data__.x;
-              dimensions[1] = x.__data__.y;
+      if (nodeRect)
+        for (const x of nodeRect) {
+          if (x.__data__.data.id === node.id) {
+            dimensions[0] = x.__data__.x;
+            dimensions[1] = x.__data__.y;
+            if ($("button.changeview-button")[0].textContent === "Edit") {
+              nodeClick(x, "");
             }
-          } catch {}
+          } else {
+            try {
+              if (x.__data__.data.partnerinfo.id === node.id) {
+                dimensions[0] = x.__data__.x;
+                dimensions[1] = x.__data__.y;
+              }
+            } catch {}
+          }
         }
-      }
       try {
         setInfoCard(node);
         zoom.scaleTo(svg.transition().duration(500), 0.25);
@@ -1361,9 +1366,6 @@ export default function Tree(props) {
         nodedata={InfoCard}
         update={(obj) => {
           dynamicUpdate(obj);
-        }}
-        refresh={() => {
-          updateTree();
         }}
       />
       <Modal close={closePopups} />
