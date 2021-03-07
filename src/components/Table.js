@@ -94,34 +94,38 @@ export default function Table(props) {
   }
 
   const populateEditFields = (inputNode) => {
-    let node = getNode(inputNode.id);
-    $("#genInput").val(node.generation);
-    $("#name").val(node.name);
-    $("#birthdate").val(node.birthdate);
+    let node = getNode(inputNode.id), opStack = [
+      "birthplace",
+      "location",
+      "extranames",
+      "fblink",
+      "profession",
+    ];;
 
-    if (node.deathdate) {
-      $("#isDeceased").attr("checked", true);
-      $("#deathdate").css("display", "block").val(node.deathdate);
-    } else {
-      $("#isDeceased").attr("checked", false);
-      $("#deathdate").css("display", "none");
-    }
+
+    $("#generation-input").val(node.generation);
+    $("#name-input").val(node.name);
+    $("#birthdate-input").val(node.birthdate);
+    
+    node.deathdate
+      ? $("#isDeceased").attr("checked", true)
+      : $("#isDeceased").attr("checked", false);
+
+    $("#deathdate-input")
+      .css("display", node.deathdate ? "block" : "none")
+      .val(node.deathdate ? node.deathdate : "");
 
     $("#parentInput").val(node.isPartner ? node.partner : node.parent);
 
     try {
-      $("#birthplace-input").val(node.extradetails.birthplace);
-      $("#location-input").val(node.extradetails.location);
-      $("#extranames-input").val(node.extradetails.extranames);
-      $("#fblink-input").val(node.extradetails.fblink);
-      $("#profession-input").val(node.extradetails.profession);
+      for (const x of opStack) {
+        $(`#${x}-input`).val(node.extradetails[x])
+      }
       $("textarea.description-input").val(node.extradetails.description);
     } catch {
-      $("#birthplace-input").val("");
-      $("#location-input").val("");
-      $("#extranames-input").val("");
-      $("#fblink-input").val("");
-      $("#profession-input").val("");
+      for (const x of opStack) {
+        $(`#${x}-input`).val("")
+      }
       $("textarea.description-input").val("");
     }
   };

@@ -23,12 +23,13 @@ export default function Edit(props) {
     let partner, parent, pid;
     let deathdate = null;
 
-    if ($("#isDeceased")[0].checked) deathdate = $("#deathdate").val();
+    CheckInput();
+
+    if ($("#isDeceased")[0].checked) deathdate = $("#deathdate-input").val();
 
     getRadioVal("option-1", "option-2") === "partner"
       ? (isPartner = 1)
       : (isPartner = 0);
-    CheckInput();
 
     if (isPartner === 1) {
       partner = $("#parentInput").val();
@@ -46,9 +47,9 @@ export default function Edit(props) {
 
     setNodeInput({
       id: props.nodedata.id,
-      generation: $("#genInput").val(),
-      name: $("#name").val(),
-      birthdate: $("#birthdate").val(),
+      generation: $("#generation-input").val(),
+      name: $("#name-input").val(),
+      birthdate: $("#birthdate-input").val(),
       pid: pid,
       deathdate: deathdate,
       isPartner: isPartner,
@@ -63,22 +64,27 @@ export default function Edit(props) {
   }
 
   function CheckInput() {
+    let changesStack = [],
+      opStack = ["generation", "name", "birthdate"];
+    let data = props.nodedata;
+
     setChanges("");
-    let changesStack = [];
     setChanged(false);
-    if ($("#genInput").val() !== props.nodedata.generation) {
-      setChanged(true);
-      changesStack.push("generation");
+
+    for (const x of opStack) {
+      if (data[x] !== $(`#${x}-input`).val()) {
+        changesStack.push(x);
+        setExtrachanged(true);
+      }
     }
-    if ($("#name").val() !== props.nodedata.name) {
+
+    //deal with empty string compared to null type
+    let deathdate = !data.deathdate ? "" : data.deathdate;
+
+    if ($("#deathdate-input").val() !== deathdate) {
       setChanged(true);
-      changesStack.push("name");
+      changesStack.push("deathdate");
     }
-    if ($("#birthdate").val() !== props.nodedata.birthdate) {
-      setChanged(true);
-      changesStack.push("birthdate");
-    }
-    // eslint-disable-next-line
     if (
       $("#parentInput").val() !== props.nodedata.parent &&
       !props.nodedata.partner
@@ -106,13 +112,6 @@ export default function Edit(props) {
     ) {
       setChanged(true);
       changesStack.push("isChild");
-    }
-    //deal with empty string compared to null type
-    let deathdate =
-      props.nodedata.deathdate === null ? "" : props.nodedata.deathdate;
-    if ($("#deathdate").val() !== deathdate) {
-      setChanged(true);
-      changesStack.push("deathdate");
     }
     setChanges(changesStack.join(","));
   }
@@ -237,60 +236,41 @@ export default function Edit(props) {
   };
 
   const checkExtraChanges = () => {
-    let arr = [];
+    let arr = [],
+      opStack = [
+        "birthplace",
+        "location",
+        "extranames",
+        "fblink",
+        "profession",
+      ];
     let data = props.nodedata.extradetails;
     setExtrachanged(false);
     try {
-      if (data.birthplace !== $("#birthplace-input").val()) {
-        arr.push("birthplace");
-        setExtrachanged(true);
-      }
-      if (data.location !== $("#location-input").val()) {
-        arr.push("location");
-        setExtrachanged(true);
-      }
-      if (data.extranames !== $("#extranames-input").val()) {
-        arr.push("extranames");
-        setExtrachanged(true);
-      }
-      if (data.fblink !== $("#fblink-input").val()) {
-        arr.push("fblink");
-        setExtrachanged(true);
-      }
-      if (data.profession !== $("#profession-input").val()) {
-        arr.push("profession");
-        setExtrachanged(true);
+      for (const x of opStack) {
+        if (data[x] !== $(`#${x}-input`).val()) {
+          arr.push(x);
+          setExtrachanged(true);
+        }
       }
       if (data.description !== $("textarea.description-input").val()) {
         arr.push("description");
         setExtrachanged(true);
       }
     } catch {
-      if ($("#birthplace-input").val().length > 0) {
-        arr.push("birthplace");
-        setExtrachanged(true);
+      for (const x of opStack) {
+        if ($.trim($(`#${x}-input`).val().length) > 0) {
+          arr.push(x);
+          setExtrachanged(true);
+        }
       }
-      if ($("#location-input").val().length > 0) {
-        arr.push("location");
-        setExtrachanged(true);
-      }
-      if ($("#extranames-input").val().length > 0) {
-        arr.push("extranames");
-        setExtrachanged(true);
-      }
-      if ($("#fblink-input").val().length > 0) {
-        arr.push("fblink");
-        setExtrachanged(true);
-      }
-      if ($("#profession-input").val().length > 0) {
-        arr.push("profession");
-        setExtrachanged(true);
-      }
+
       if ($("textarea.description-input").val().length > 0) {
         arr.push("description");
         setExtrachanged(true);
       }
     }
+    console.log(arr);
     setExtrachanges(arr.join(","));
   };
 
@@ -304,7 +284,7 @@ export default function Edit(props) {
         <p type="Generation">
           <input
             autoComplete="off"
-            id="genInput"
+            id="generation-input"
             className="extra-details-input"
             onChange={inputChangedHandler}
             onKeyUp={(event) => {
@@ -313,7 +293,7 @@ export default function Edit(props) {
                 // Cancel the default action, if needed
                 event.preventDefault();
                 // Focus on next element
-                document.getElementById("name").focus();
+                document.getElementById("name-input").focus();
               }
             }}
           />
@@ -321,7 +301,7 @@ export default function Edit(props) {
         <p type="Name:">
           <input
             autoComplete="off"
-            id="name"
+            id="name-input"
             className="extra-details-input"
             onChange={inputChangedHandler}
             onKeyUp={(event) => {
@@ -330,14 +310,14 @@ export default function Edit(props) {
                 // Cancel the default action, if needed
                 event.preventDefault();
                 // Focus on next element
-                document.getElementById("birthdate").focus();
+                document.getElementById("birthdate-input").focus();
               }
             }}
           />
         </p>
         <p type="Date of Birth">
           <input
-            id="birthdate"
+            id="birthdate-input"
             type="date"
             className="extra-details-input"
             onChange={inputChangedHandler}
@@ -359,18 +339,18 @@ export default function Edit(props) {
             type="checkbox"
             name="isDeceased"
             onClick={(e) => {
-              $("#deathdate").css(
+              $("#deathdate-input").css(
                 "display",
                 e.target.checked ? "block" : "none"
               );
-              $("#deathdate").val(
+              $("#deathdate-input").val(
                 e.target.checked ? props.nodedata.deathdate : null
               );
               inputChangedHandler();
             }}
           />
           <input
-            id="deathdate"
+            id="deathdate-input"
             type="date"
             className="extra-details-input"
             onChange={inputChangedHandler}
