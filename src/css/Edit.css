@@ -203,12 +203,12 @@ input[type="radio"] {
   height: 75px;
 }
 
-#extranames-display {
+.flex-cards-display {
   display: flex;
   flex-wrap: wrap;
 }
 
-#extranames-display > p {
+.flex-cards-edit {
   user-select: none;
 
   padding: 0 20px;
@@ -218,7 +218,7 @@ input[type="radio"] {
   transition: all 0.5s;
 }
 
-#extranames-display > p:hover {
+.flex-cards-edit:hover {
   cursor: pointer;
 
   border-color: red;

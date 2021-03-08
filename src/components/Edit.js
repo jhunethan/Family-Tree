@@ -6,17 +6,21 @@ import { useCookies } from "react-cookie";
 
 function ExtranamesDisplay(props) {
   try {
-    var names = props.node.extradetails.extranames;
+    var names = props.node.extradetails[props.method];
     return (
-      <div id="extranames-display">
+      <div
+        className="flex-cards-display"
+        id={`flex-cards-display-${props.method}`}
+      >
         {names.split(",").map((x, index) => {
           if (x)
             return (
               <p
+                className="flex-cards-edit"
                 onClick={(event) => {
-                  props.removeName(event.target.textContent);
+                  props.remove(event.target.textContent);
                 }}
-                key={"extranames" + index}
+                key={`${props.method}` + index}
               >
                 {x}
               </p>
@@ -26,7 +30,7 @@ function ExtranamesDisplay(props) {
       </div>
     );
   } catch {}
-  return <div id="extranames-display"></div>;
+  return <div id={`flex-cards-display-${props.method}`}></div>;
 }
 
 export default function Edit(props) {
@@ -53,13 +57,7 @@ export default function Edit(props) {
       parent,
       pid,
       deathdate = null,
-      extraopStack = [
-        "birthplace",
-        "location",
-        "fblink",
-        "profession",
-        "languages",
-      ];
+      extraopStack = ["birthplace", "location", "fblink", "profession"];
 
     CheckInput();
     checkExtraChanges();
@@ -94,6 +92,7 @@ export default function Edit(props) {
     }
     try {
       tempnode.extranames = nodeInput.extradetails.extranames;
+      tempnode.languages = nodeInput.extradetails.languages;
     } catch {}
     tempnode.description = $.trim($("textarea.description-input").val());
 
@@ -301,13 +300,11 @@ export default function Edit(props) {
         arr.push("additional names");
       }
 
-      //deal with empty string compared to null type
-      let languages = !data.languages ? "" : data.languages;
-
-      if ($("#languages-input").val() !== languages) {
+      if (nodeInput.extradetails.languages !== data.languages) {
         setChanged(true);
-        arr.push("languages");
+        arr.push("Spoken Languages");
       }
+
       if (data.description !== $("textarea.description-input").val()) {
         arr.push("description");
         setExtrachanged(true);
@@ -333,23 +330,23 @@ export default function Edit(props) {
     setExtrachanges(arr.join(","));
   };
 
-  function addExtraname() {
-    let val = $("#extranames-input").val()
+  function addOption(method) {
+    let val = $(`#${method}-input`).val();
     if ($.trim(val)) {
-      if ($("#extranames-display").children().length < 3) {
+      if ($(`#flex-cards-display-${method}`).children().length < 3) {
         let node = nodeInput,
           names = [];
         try {
-          names = node.extradetails.extranames.split(",");
-          if (!node.extradetails.extranames) {
+          names = node.extradetails[method].split(",");
+          if (!node.extradetails[method]) {
             names[0] = val;
           } else {
             names.push($.trim(val));
           }
-          node.extradetails.extranames = names.join(",");
+          node.extradetails[method] = names.join(",");
           setNodeInput(node);
         } catch {
-          node.extradetails.extranames = $.trim(val);
+          node.extradetails[method] = $.trim(val);
           setNodeInput(node);
         }
 
@@ -358,7 +355,7 @@ export default function Edit(props) {
         props.toast("maximum 3 names");
       }
     }
-    $("#extranames-input").val("")
+    $(`#${method}-input`).val("");
   }
 
   return (
@@ -416,7 +413,7 @@ export default function Edit(props) {
               onChange={inputChangedHandler}
               onKeyUp={function (event) {
                 if (event.key === "Enter") {
-                  addExtraname();
+                  addOption("extranames");
                 }
               }}
             />
@@ -425,14 +422,15 @@ export default function Edit(props) {
             type="button"
             className="edit-button"
             onClick={() => {
-              addExtraname();
+              addOption("extranames");
             }}
           >
             Add
           </button>
           <ExtranamesDisplay
             node={nodeInput}
-            removeName={(deleted) => {
+            method="extranames"
+            remove={(deleted) => {
               let node = nodeInput;
               try {
                 node.extradetails.extranames = node.extradetails.extranames
@@ -600,25 +598,52 @@ export default function Edit(props) {
             }
           }}
         />
-        <label htmlFor="languages-input" className="extra-details-label">
-          Languages spoken
-        </label>
-        <input
-          autoComplete="off"
-          type="text"
-          name="languages-input"
-          id="languages-input"
-          className="extra-details-input"
-          onChange={inputChangedHandler}
-          onKeyUp={(event) => {
-            if (event.key === "Enter") {
-              // Cancel the default action, if needed
-              event.preventDefault();
-              // Focus on next element
-              document.getElementById("fblink-input").focus();
-            }
-          }}
-        />
+
+        <div className="extranames-container">
+          <div>
+            <label htmlFor="languages-input" className="extra-details-label">
+              Languages spoken
+            </label>
+            <input
+              autoComplete="off"
+              type="text"
+              name="languages-input"
+              id="languages-input"
+              className="extra-details-input"
+              onChange={inputChangedHandler}
+              onKeyUp={function (event) {
+                if (event.key === "Enter") {
+                  addOption("languages");
+                }
+              }}
+            />
+          </div>
+          <button
+            type="button"
+            className="edit-button"
+            onClick={() => {
+              addOption("languages");
+            }}
+          >
+            Add
+          </button>
+          <ExtranamesDisplay
+            node={nodeInput}
+            method="languages"
+            remove={(deleted) => {
+              let node = nodeInput;
+              try {
+                node.extradetails.languages = node.extradetails.languages
+                  .split(",")
+                  .filter((x) => x !== deleted)
+                  .join(",");
+                setNodeInput(node);
+              } catch {}
+              inputChangedHandler();
+            }}
+          />
+        </div>
+
         <label htmlFor="fblink-input" className="extra-details-label">
           Facebook Link
         </label>
