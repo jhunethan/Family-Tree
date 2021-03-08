@@ -1150,19 +1150,19 @@ export default function Tree(props) {
   };
 
   const populateEditFields = (inputNode) => {
-    let node = getNode(inputNode.id), opStack = [
-      "birthplace",
-      "location",
-      "extranames",
-      "fblink",
-      "profession",
-    ];;
-
+    let node = getNode(inputNode.id),
+      opStack = [
+        "birthplace",
+        "location",
+        "extranames",
+        "fblink",
+        "profession",
+      ];
 
     $("#generation-input").val(node.generation);
     $("#name-input").val(node.name);
     $("#birthdate-input").val(node.birthdate);
-    
+
     node.deathdate
       ? $("#isDeceased").attr("checked", true)
       : $("#isDeceased").attr("checked", false);
@@ -1174,13 +1174,24 @@ export default function Tree(props) {
     $("#parentInput").val(node.isPartner ? node.partner : node.parent);
 
     try {
+      if (node.isPartner) {
+        $("#maidenname-input").css("display", "block");
+        $("label.maidenname").css("display", "block");
+        try {
+          $("#maidenname-input").val(node.extradetails.maidenname);
+        } catch {}
+      } else {
+        $("#maidenname-input").css("display", "none").val("");
+        $("label.maidenname").css("display", "none");
+      }
+
       for (const x of opStack) {
-        $(`#${x}-input`).val(node.extradetails[x])
+        $(`#${x}-input`).val(node.extradetails[x]);
       }
       $("textarea.description-input").val(node.extradetails.description);
     } catch {
       for (const x of opStack) {
-        $(`#${x}-input`).val("")
+        $(`#${x}-input`).val("");
       }
       $("textarea.description-input").val("");
     }

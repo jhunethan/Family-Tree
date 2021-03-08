@@ -33,8 +33,15 @@ export default function Edit(props) {
 
     if (isPartner === 1) {
       partner = $("#parentInput").val();
+      $("#maidenname-input").css("display", "block");
+      $("label.maidenname").css("display", "block");
+      try {
+        $("#maidenname-input").val(nodeInput.extradetails.maidenname);
+      } catch {}
     } else {
       parent = $("#parentInput").val();
+      $("#maidenname-input").css("display", "none").val("");
+      $("label.maidenname").css("display", "none");
     }
 
     try {
@@ -215,6 +222,8 @@ export default function Edit(props) {
     //set nodeInput
     let node = nodeInput;
     let tempnode = {};
+
+    tempnode.maidenname = $.trim($("#maidenname-input").val());
     tempnode.birthplace = $.trim($("#birthplace-input").val());
     tempnode.location = $.trim($("#location-input").val());
     tempnode.extranames = $.trim($("#extranames-input").val());
@@ -243,6 +252,7 @@ export default function Edit(props) {
         "extranames",
         "fblink",
         "profession",
+        "maidenname",
       ];
     let data = props.nodedata.extradetails;
     setExtrachanged(false);
@@ -382,7 +392,7 @@ export default function Edit(props) {
                 document.getElementById("birthplace-input").focus();
               }
             }}
-          ></input>
+          />
           <datalist id="parentSearchDataList"></datalist>
         </p>
         <div className="radio-toggles">
@@ -410,6 +420,28 @@ export default function Edit(props) {
           <label htmlFor="option-2">Partner</label>
           <div className="slide-item"></div>
         </div>
+        <label
+          htmlFor="maidenname-input"
+          className="extra-details-label maidenname"
+        >
+          Maiden name
+        </label>
+        <input
+          autoComplete="off"
+          type="text"
+          name="maidenname-input"
+          id="maidenname-input"
+          className="extra-details-input"
+          onChange={extraInputHandler}
+          onKeyUp={(event) => {
+            if (event.key === "Enter") {
+              // Cancel the default action, if needed
+              event.preventDefault();
+              // Focus on next element
+              document.getElementById("extranames-input").focus();
+            }
+          }}
+        />
         <label htmlFor="birthplace-input" className="extra-details-label">
           Place of Birth
         </label>
@@ -466,7 +498,7 @@ export default function Edit(props) {
               document.getElementById("fblink-input").focus();
             }
           }}
-        />{" "}
+        />
         <label htmlFor="fblink-input" className="extra-details-label">
           Facebook Link
         </label>

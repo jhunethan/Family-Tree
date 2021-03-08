@@ -183,6 +183,10 @@ input[type="radio"] {
   flex-grow: 1.5;
 }
 
+.maidenname-input{
+  display:none;
+}
+
 .edit-container-submit {
   margin: 10px 0;
 }
