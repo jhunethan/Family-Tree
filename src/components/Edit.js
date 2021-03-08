@@ -19,9 +19,19 @@ export default function Edit(props) {
   });
 
   var inputChangedHandler = () => {
-    let isPartner = false;
-    let partner, parent, pid;
-    let deathdate = null;
+    let isPartner = false,
+      partner,
+      parent,
+      pid,
+      deathdate = null,
+      extraopStack = [
+        "birthplace",
+        "location",
+        "extranames",
+        "fblink",
+        "profession",
+        "languages",
+      ];
 
     CheckInput();
     checkExtraChanges();
@@ -50,11 +60,10 @@ export default function Edit(props) {
 
     tempnode.maidenname =
       isPartner === 1 ? $.trim($("#maidenname-input").val()) : null;
-    tempnode.birthplace = $.trim($("#birthplace-input").val());
-    tempnode.location = $.trim($("#location-input").val());
-    tempnode.extranames = $.trim($("#extranames-input").val());
-    tempnode.fblink = $.trim($("#fblink-input").val());
-    tempnode.profession = $.trim($("#profession-input").val());
+
+    for (const x of extraopStack) {
+      tempnode[x] = $.trim($(`#${x}-input`).val());
+    }
     tempnode.description = $.trim($("textarea.description-input").val());
 
     setNodeInput({
@@ -144,6 +153,7 @@ export default function Edit(props) {
   }
 
   function saveEdit() {
+    console.log(nodeInput)
     if (changed === true && checkParent()) {
       //save
       Axios.post("http://localhost:5000/api/update", {
@@ -261,15 +271,16 @@ export default function Edit(props) {
         "extranames",
         "fblink",
         "profession",
+        "languages",
       ];
     let data = props.nodedata.extradetails;
     setExtrachanged(false);
 
     if (getRadioVal("option-1", "option-2") === "partner") {
-      opStack.push("maidenname")
+      opStack.push("maidenname");
       $("#maidenname-input").css("display", "block");
       $("label.maidenname").css("display", "block");
-    }else{
+    } else {
       $("#maidenname-input").css("display", "none");
       $("label.maidenname").css("display", "none");
     }
@@ -455,7 +466,7 @@ export default function Edit(props) {
               // Cancel the default action, if needed
               event.preventDefault();
               // Focus on next element
-              document.getElementById("extranames-input").focus();
+              document.getElementById("birthplace-input").focus();
             }
           }}
         />
@@ -505,6 +516,25 @@ export default function Edit(props) {
           type="text"
           name="extranames-input"
           id="extranames-input"
+          className="extra-details-input"
+          onChange={inputChangedHandler}
+          onKeyUp={(event) => {
+            if (event.key === "Enter") {
+              // Cancel the default action, if needed
+              event.preventDefault();
+              // Focus on next element
+              document.getElementById("languages-input").focus();
+            }
+          }}
+        />
+        <label htmlFor="languages-input" className="extra-details-label">
+          Languages spoken
+        </label>
+        <input
+          autoComplete="off"
+          type="text"
+          name="languages-input"
+          id="languages-input"
           className="extra-details-input"
           onChange={inputChangedHandler}
           onKeyUp={(event) => {

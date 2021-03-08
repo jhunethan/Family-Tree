@@ -101,6 +101,7 @@ export default function Table(props) {
         "extranames",
         "fblink",
         "profession",
+        "languages",
       ];
 
     $("#generation-input").val(node.generation);

@@ -1157,6 +1157,7 @@ export default function Tree(props) {
         "extranames",
         "fblink",
         "profession",
+        "languages",
       ];
 
     $("#generation-input").val(node.generation);
@@ -1196,6 +1197,7 @@ export default function Tree(props) {
       $("textarea.description-input").val("");
     }
   };
+
   const filterChildren = (id, arr) => {
     let children = arr.filter((x) => {
       return x.pid === Number(id);
