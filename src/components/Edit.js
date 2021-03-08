@@ -24,6 +24,7 @@ export default function Edit(props) {
     let deathdate = null;
 
     CheckInput();
+    checkExtraChanges();
 
     if ($("#isDeceased")[0].checked) deathdate = $("#deathdate-input").val();
 
@@ -33,15 +34,8 @@ export default function Edit(props) {
 
     if (isPartner === 1) {
       partner = $("#parentInput").val();
-      $("#maidenname-input").css("display", "block");
-      $("label.maidenname").css("display", "block");
-      try {
-        $("#maidenname-input").val(nodeInput.extradetails.maidenname);
-      } catch {}
     } else {
       parent = $("#parentInput").val();
-      $("#maidenname-input").css("display", "none").val("");
-      $("label.maidenname").css("display", "none");
     }
 
     try {
@@ -51,6 +45,17 @@ export default function Edit(props) {
     }
 
     if (pid === 0 || !pid) isPartner = 0;
+
+    let tempnode = {};
+
+    tempnode.maidenname =
+      isPartner === 1 ? $.trim($("#maidenname-input").val()) : null;
+    tempnode.birthplace = $.trim($("#birthplace-input").val());
+    tempnode.location = $.trim($("#location-input").val());
+    tempnode.extranames = $.trim($("#extranames-input").val());
+    tempnode.fblink = $.trim($("#fblink-input").val());
+    tempnode.profession = $.trim($("#profession-input").val());
+    tempnode.description = $.trim($("textarea.description-input").val());
 
     setNodeInput({
       id: props.nodedata.id,
@@ -62,6 +67,7 @@ export default function Edit(props) {
       isPartner: isPartner,
       parent: parent,
       partner: partner,
+      extradetails: tempnode,
     });
   };
 
@@ -147,7 +153,6 @@ export default function Edit(props) {
         changes: changes,
       });
     }
-    extraInputHandler();
     if (extrachanged) {
       Axios.post("http://localhost:5000/api/updateextra", {
         id: props.nodedata.id,
@@ -217,25 +222,29 @@ export default function Edit(props) {
     $("#deleteTextbox").css("border-bottom", "2px solid #bebed2");
   };
 
-  async function extraInputHandler() {
-    checkExtraChanges();
-    //set nodeInput
-    let node = nodeInput;
-    let tempnode = {};
+  // async function inputChangedHandler() {
+  //   checkExtraChanges();
+  //   //set nodeInput
 
-    tempnode.maidenname = $.trim($("#maidenname-input").val());
-    tempnode.birthplace = $.trim($("#birthplace-input").val());
-    tempnode.location = $.trim($("#location-input").val());
-    tempnode.extranames = $.trim($("#extranames-input").val());
-    tempnode.fblink = $.trim($("#fblink-input").val());
-    tempnode.profession = $.trim($("#profession-input").val());
-    tempnode.description = $.trim($("textarea.description-input").val());
-    node.extradetails = tempnode;
-    await setNodeInput(node);
-  }
+  //   let node = nodeInput;
+  //   let tempnode = {};
+
+  //   tempnode.maidenname = (node.isPartner === 1)
+  //     ? $.trim($("#maidenname-input").val())
+  //     : null;
+  //   tempnode.birthplace = $.trim($("#birthplace-input").val());
+  //   tempnode.location = $.trim($("#location-input").val());
+  //   tempnode.extranames = $.trim($("#extranames-input").val());
+  //   tempnode.fblink = $.trim($("#fblink-input").val());
+  //   tempnode.profession = $.trim($("#profession-input").val());
+  //   tempnode.description = $.trim($("textarea.description-input").val());
+  //   node.extradetails = tempnode;
+  //   console.log(tempnode.maidenname)
+  //   await setNodeInput(node);
+  // }
 
   const descriptionHandler = () => {
-    extraInputHandler();
+    inputChangedHandler();
     var numOfWords = $("textarea.description-input")
       .val()
       .replace(/^[\s,.;]+/, "")
@@ -252,10 +261,19 @@ export default function Edit(props) {
         "extranames",
         "fblink",
         "profession",
-        "maidenname",
       ];
     let data = props.nodedata.extradetails;
     setExtrachanged(false);
+
+    if (getRadioVal("option-1", "option-2") === "partner") {
+      opStack.push("maidenname")
+      $("#maidenname-input").css("display", "block");
+      $("label.maidenname").css("display", "block");
+    }else{
+      $("#maidenname-input").css("display", "none");
+      $("label.maidenname").css("display", "none");
+    }
+
     try {
       for (const x of opStack) {
         if (data[x] !== $(`#${x}-input`).val()) {
@@ -280,7 +298,6 @@ export default function Edit(props) {
         setExtrachanged(true);
       }
     }
-    console.log(arr);
     setExtrachanges(arr.join(","));
   };
 
@@ -432,7 +449,7 @@ export default function Edit(props) {
           name="maidenname-input"
           id="maidenname-input"
           className="extra-details-input"
-          onChange={extraInputHandler}
+          onChange={inputChangedHandler}
           onKeyUp={(event) => {
             if (event.key === "Enter") {
               // Cancel the default action, if needed
@@ -451,7 +468,7 @@ export default function Edit(props) {
           name="birthplace-input"
           id="birthplace-input"
           className="extra-details-input"
-          onChange={extraInputHandler}
+          onChange={inputChangedHandler}
           onKeyUp={(event) => {
             if (event.key === "Enter") {
               // Cancel the default action, if needed
@@ -470,7 +487,7 @@ export default function Edit(props) {
           name="location-input"
           id="location-input"
           className="extra-details-input"
-          onChange={extraInputHandler}
+          onChange={inputChangedHandler}
           onKeyUp={(event) => {
             if (event.key === "Enter") {
               // Cancel the default action, if needed
@@ -489,7 +506,7 @@ export default function Edit(props) {
           name="extranames-input"
           id="extranames-input"
           className="extra-details-input"
-          onChange={extraInputHandler}
+          onChange={inputChangedHandler}
           onKeyUp={(event) => {
             if (event.key === "Enter") {
               // Cancel the default action, if needed
@@ -508,7 +525,7 @@ export default function Edit(props) {
           name="fblink-input"
           id="fblink-input"
           className="extra-details-input"
-          onChange={extraInputHandler}
+          onChange={inputChangedHandler}
           onKeyUp={(event) => {
             if (event.key === "Enter") {
               // Cancel the default action, if needed
@@ -527,7 +544,7 @@ export default function Edit(props) {
           name="profession-input"
           id="profession-input"
           className="extra-details-input"
-          onChange={extraInputHandler}
+          onChange={inputChangedHandler}
           onKeyUp={(event) => {
             if (event.key === "Enter") {
               // Cancel the default action, if needed
