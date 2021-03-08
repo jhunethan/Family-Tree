@@ -317,6 +317,11 @@ export default function Edit(props) {
         }
       }
 
+      if (nodeInput.extradetails.extranames !== data.extranames) {
+        setChanged(true);
+        arr.push("additional names");
+      }
+
       if ($("#languages-input").val().length > 0) {
         setChanged(true);
         arr.push("languages");

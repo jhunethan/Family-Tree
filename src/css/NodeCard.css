@@ -261,6 +261,7 @@ footer {
 
 .file-submit{
   padding: 5px;
+  display: none;
 }
 
 .progress-bar{

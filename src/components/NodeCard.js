@@ -68,9 +68,17 @@ export default function NodeCard(props) {
         photo_id_string = Response.data.public_id;
       }
       $("#card-container").css("display", "none");
+
       let obj = props.node;
-      obj.extradetails.photo_id = photo_id_string;
-      props.update(obj);
+      try {
+        obj.extradetails.photo_id = photo_id_string;
+        props.update(obj);
+      } catch {
+        obj.extradetails = {};
+        obj.extradetails.photo_id = photo_id_string;
+        props.update(obj);
+      }
+
       Axios.put("http://localhost:5000/api/updateextra", {
         id: Number(props.node.id),
         name: props.node.name,

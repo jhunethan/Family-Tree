@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "dateformat";
 import * as $ from "jquery";
 import Axios from "axios";
@@ -298,6 +298,15 @@ export function MemberPhotos(props) {
 
 export function AddPhoto(props) {
   const [fileName, setFileName] = useState("");
+
+  useEffect(() => {
+    setFileName("");
+
+    //reset photo fields
+    $(".file-submit").css("display", "none");
+    $(".file-input-button").css("display", "block");
+  }, [props.node]);
+
   try {
     if (props.node.extradetails.photo_id.split(",").length < 3) {
       return (
@@ -313,6 +322,11 @@ export function AddPhoto(props) {
             onChange={(event) => {
               props.imageChangeHandler(event);
               setFileName(event.target.files[0].name);
+              console.log("working");
+              if (event.target.files[0].name) {
+                $(".file-input-button").css("display", "none");
+                $(".file-submit").css("display", "block");
+              }
             }}
           />
           {fileName}
@@ -341,16 +355,36 @@ export function AddPhoto(props) {
           id="file-input"
           className="file-input"
           accept="image/*"
-          onChange={(event) => props.imageChangeHandler(event)}
+          onChange={(event) => {
+            props.imageChangeHandler(event);
+            setFileName(event.target.files[0].name);
+            if (event.target.files[0].name) {
+              $(".file-input-button").css("display", "none");
+              $(".file-submit").css("display", "block");
+            }
+          }}
         />
+        {fileName}
         <input
           type="submit"
           className="file-submit"
           onClick={() => {
             props.uploadImage();
+            setFileName("");
           }}
           value="Submit Photo"
         />
+        <button
+          className="file-submit"
+          onClick={() => {
+            document.getElementById("file-input").value = "";
+            $(".file-input-button").css("display", "block");
+            $(".file-submit").css("display", "none");
+            setFileName("");
+          }}
+        >
+          Cancel
+        </button>
       </div>
     );
   }
