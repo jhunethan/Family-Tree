@@ -183,12 +183,46 @@ input[type="radio"] {
   flex-grow: 1.5;
 }
 
-.maidenname-input{
-  display:none;
+.maidenname-input {
+  display: none;
 }
 
-.edit-container-submit {
-  margin: 10px 0;
+.edit-button {
+  padding: 8px 12px;
+  margin: 10px;
+  font-family: "Montserrat", sans-serif;
+  background: 0;
+  font-size: 16px;
+
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.extranames-container {
+  display: flex;
+  height: 75px;
+}
+
+#extranames-display {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#extranames-display > p {
+  user-select: none;
+
+  padding: 0 20px;
+  margin: 5px;
+  height: 25px;
+  border: black 2px solid;
+  transition: all 0.5s;
+}
+
+#extranames-display > p:hover {
+  cursor: pointer;
+
+  border-color: red;
+  transition: all 0.3s;
 }
 
 @media only screen and (max-width: 500px) {

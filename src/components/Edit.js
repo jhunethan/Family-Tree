@@ -1,8 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../css/Edit.css";
 import Axios from "axios";
 import * as $ from "jquery";
 import { useCookies } from "react-cookie";
+
+function ExtranamesDisplay(props) {
+  try {
+    var names = props.node.extradetails.extranames;
+    return (
+      <div id="extranames-display">
+        {names.split(",").map((x, index) => {
+          if (x)
+            return (
+              <p
+                onClick={(event) => {
+                  props.removeName(event.target.textContent);
+                }}
+                key={"extranames" + index}
+              >
+                {x}
+              </p>
+            );
+          return null;
+        })}
+      </div>
+    );
+  } catch {}
+  return <div id="extranames-display"></div>;
+}
 
 export default function Edit(props) {
   const [cookies] = useCookies(["author"]);
@@ -18,6 +43,10 @@ export default function Edit(props) {
     isPartner: 0,
   });
 
+  useEffect(() => {
+    setNodeInput(props.nodedata);
+  }, [props.nodedata]);
+
   var inputChangedHandler = () => {
     let isPartner = false,
       partner,
@@ -27,7 +56,6 @@ export default function Edit(props) {
       extraopStack = [
         "birthplace",
         "location",
-        "extranames",
         "fblink",
         "profession",
         "languages",
@@ -64,6 +92,9 @@ export default function Edit(props) {
     for (const x of extraopStack) {
       tempnode[x] = $.trim($(`#${x}-input`).val());
     }
+    try {
+      tempnode.extranames = nodeInput.extradetails.extranames;
+    } catch {}
     tempnode.description = $.trim($("textarea.description-input").val());
 
     setNodeInput({
@@ -153,7 +184,7 @@ export default function Edit(props) {
   }
 
   function saveEdit() {
-    console.log(nodeInput)
+    console.log(nodeInput);
     if (changed === true && checkParent()) {
       //save
       Axios.post("http://localhost:5000/api/update", {
@@ -232,27 +263,6 @@ export default function Edit(props) {
     $("#deleteTextbox").css("border-bottom", "2px solid #bebed2");
   };
 
-  // async function inputChangedHandler() {
-  //   checkExtraChanges();
-  //   //set nodeInput
-
-  //   let node = nodeInput;
-  //   let tempnode = {};
-
-  //   tempnode.maidenname = (node.isPartner === 1)
-  //     ? $.trim($("#maidenname-input").val())
-  //     : null;
-  //   tempnode.birthplace = $.trim($("#birthplace-input").val());
-  //   tempnode.location = $.trim($("#location-input").val());
-  //   tempnode.extranames = $.trim($("#extranames-input").val());
-  //   tempnode.fblink = $.trim($("#fblink-input").val());
-  //   tempnode.profession = $.trim($("#profession-input").val());
-  //   tempnode.description = $.trim($("textarea.description-input").val());
-  //   node.extradetails = tempnode;
-  //   console.log(tempnode.maidenname)
-  //   await setNodeInput(node);
-  // }
-
   const descriptionHandler = () => {
     inputChangedHandler();
     var numOfWords = $("textarea.description-input")
@@ -265,14 +275,7 @@ export default function Edit(props) {
 
   const checkExtraChanges = () => {
     let arr = [],
-      opStack = [
-        "birthplace",
-        "location",
-        "extranames",
-        "fblink",
-        "profession",
-        "languages",
-      ];
+      opStack = ["birthplace", "location", "fblink", "profession"];
     let data = props.nodedata.extradetails;
     setExtrachanged(false);
 
@@ -292,6 +295,19 @@ export default function Edit(props) {
           setExtrachanged(true);
         }
       }
+
+      if (nodeInput.extradetails.extranames !== data.extranames) {
+        setChanged(true);
+        arr.push("additional names");
+      }
+
+      //deal with empty string compared to null type
+      let languages = !data.languages ? "" : data.languages;
+
+      if ($("#languages-input").val() !== languages) {
+        setChanged(true);
+        arr.push("languages");
+      }
       if (data.description !== $("textarea.description-input").val()) {
         arr.push("description");
         setExtrachanged(true);
@@ -304,6 +320,11 @@ export default function Edit(props) {
         }
       }
 
+      if ($("#languages-input").val().length > 0) {
+        setChanged(true);
+        arr.push("languages");
+      }
+
       if ($("textarea.description-input").val().length > 0) {
         arr.push("description");
         setExtrachanged(true);
@@ -311,6 +332,34 @@ export default function Edit(props) {
     }
     setExtrachanges(arr.join(","));
   };
+
+  function addExtraname() {
+    let val = $("#extranames-input").val()
+    if ($.trim(val)) {
+      if ($("#extranames-display").children().length < 3) {
+        let node = nodeInput,
+          names = [];
+        try {
+          names = node.extradetails.extranames.split(",");
+          if (!node.extradetails.extranames) {
+            names[0] = val;
+          } else {
+            names.push($.trim(val));
+          }
+          node.extradetails.extranames = names.join(",");
+          setNodeInput(node);
+        } catch {
+          node.extradetails.extranames = $.trim(val);
+          setNodeInput(node);
+        }
+
+        inputChangedHandler();
+      } else {
+        props.toast("maximum 3 names");
+      }
+    }
+    $("#extranames-input").val("")
+  }
 
   return (
     <div id="Edit">
@@ -353,6 +402,49 @@ export default function Edit(props) {
             }}
           />
         </p>
+        <div className="extranames-container">
+          <div>
+            <label htmlFor="extranames-input" className="extra-details-label">
+              Additional names
+            </label>
+            <input
+              autoComplete="off"
+              type="text"
+              name="extranames-input"
+              id="extranames-input"
+              className="extra-details-input"
+              onChange={inputChangedHandler}
+              onKeyUp={function (event) {
+                if (event.key === "Enter") {
+                  addExtraname();
+                }
+              }}
+            />
+          </div>
+          <button
+            type="button"
+            className="edit-button"
+            onClick={() => {
+              addExtraname();
+            }}
+          >
+            Add
+          </button>
+          <ExtranamesDisplay
+            node={nodeInput}
+            removeName={(deleted) => {
+              let node = nodeInput;
+              try {
+                node.extradetails.extranames = node.extradetails.extranames
+                  .split(",")
+                  .filter((x) => x !== deleted)
+                  .join(",");
+                setNodeInput(node);
+              } catch {}
+              inputChangedHandler();
+            }}
+          />
+        </div>
         <p type="Date of Birth">
           <input
             id="birthdate-input"
@@ -508,25 +600,6 @@ export default function Edit(props) {
             }
           }}
         />
-        <label htmlFor="extranames-input" className="extra-details-label">
-          Additional Names
-        </label>
-        <input
-          autoComplete="off"
-          type="text"
-          name="extranames-input"
-          id="extranames-input"
-          className="extra-details-input"
-          onChange={inputChangedHandler}
-          onKeyUp={(event) => {
-            if (event.key === "Enter") {
-              // Cancel the default action, if needed
-              event.preventDefault();
-              // Focus on next element
-              document.getElementById("languages-input").focus();
-            }
-          }}
-        />
         <label htmlFor="languages-input" className="extra-details-label">
           Languages spoken
         </label>
@@ -594,12 +667,18 @@ export default function Edit(props) {
           placeholder="description up to 250 words..."
           onChange={descriptionHandler}
         />
-        <button type="button" id="save" onClick={saveEdit}>
+        <button
+          type="button"
+          id="save"
+          className="edit-button"
+          onClick={saveEdit}
+        >
           Save Changes
         </button>
         <button
           type="button"
           id="cancel"
+          className="edit-button"
           onClick={() => closeEditMenu("unsave")}
         >
           Cancel
@@ -627,10 +706,18 @@ export default function Edit(props) {
           }}
         ></input>
         <div id="deleteButtonContainer">
-          <button type="button" onClick={cancelDeleteConfirm}>
+          <button
+            type="button"
+            className="edit-button"
+            onClick={cancelDeleteConfirm}
+          >
             Cancel
           </button>
-          <button type="button" onClick={confirmDeletion}>
+          <button
+            type="button"
+            className="edit-button"
+            onClick={confirmDeletion}
+          >
             Confirm
           </button>
         </div>

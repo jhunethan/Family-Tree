@@ -1374,6 +1374,7 @@ export default function Tree(props) {
         }}
       />
       <Edit
+        toast={(msg) => toast.error(msg)}
         getPID={getPID}
         getNode={(id) => getNode(id)}
         radiochecked={radiochecked}

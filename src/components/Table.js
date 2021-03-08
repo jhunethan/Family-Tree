@@ -332,6 +332,7 @@ export default function Table(props) {
         }}
       />
       <Edit
+        toast={(msg)=>toast(msg)}
         getPID={getPID}
         getNode={(id) => getNode(id)}
         radiochecked={radiochecked}
