@@ -1360,6 +1360,10 @@ export default function Tree(props) {
         Read
       </button>
       <NodeCard
+        show={(obj) => {
+          setInfoCard(obj);
+          search(obj.id);
+        }}
         update={() => updateTree()}
         node={InfoCard}
         treeData={tableData}

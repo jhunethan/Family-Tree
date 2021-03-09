@@ -154,16 +154,25 @@ export default function NodeCard(props) {
           <h1 className="card-subtitle">Immediate Family Members</h1>
           <section className="related-container">
             <ImmediateFamily
+              show={(obj) => {
+                props.show(obj);
+              }}
               node={props.node}
               treeData={props.treeData}
               method="children"
             />
             <ImmediateFamily
+              show={(obj) => {
+                props.show(obj);
+              }}
               node={props.node}
               treeData={props.treeData}
               method="parents"
             />
             <ImmediateFamily
+              show={(obj) => {
+                props.show(obj);
+              }}
               node={props.node}
               treeData={props.treeData}
               method="siblings"

@@ -332,7 +332,7 @@ export default function Table(props) {
         }}
       />
       <Edit
-        toast={(msg)=>toast(msg)}
+        toast={(msg) => toast.error(msg)}
         getPID={getPID}
         getNode={(id) => getNode(id)}
         radiochecked={radiochecked}
@@ -345,6 +345,9 @@ export default function Table(props) {
         }}
       />
       <NodeCard
+        show={(obj) => {
+          setNodestate(obj);
+        }}
         node={nodestate}
         treeData={TreeData}
         data={tableData}

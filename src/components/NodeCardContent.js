@@ -153,18 +153,28 @@ export function ImmediateFamily(props) {
     case "parents":
       try {
         let parent = getNode(props.node.parent, props.treeData);
-        let partner;
-        try {
-          partner = `${parent.partnerinfo.name} (${parent.partnerinfo.extradetails.extranames})`;
-        } catch {
-          partner = parent.partnerinfo.name;
-        }
+        let partner = parent.partnerinfo.name;
+
         if (parent.partnerinfo.name) {
           return (
             <div className="card-parents card-related">
               <h2>Parents</h2>
-              <p>{props.node.parent}</p>
-              <p>{partner}</p>
+              <p
+                onClick={() =>
+                  props.show(getNode(props.node.parent, props.treeData))
+                }
+              >
+                {props.node.parent}
+              </p>
+              <p
+                onClick={() =>
+                  props.show(
+                    getNode(props.node.parent, props.treeData).partnerinfo
+                  )
+                }
+              >
+                {partner}
+              </p>
             </div>
           );
         }
@@ -173,7 +183,13 @@ export function ImmediateFamily(props) {
           return (
             <div className="card-parents card-related">
               <h2>Parents</h2>
-              <p>{props.node.parent}</p>
+              <p
+                onClick={() =>
+                  props.show(getNode(props.node.parent, props.treeData))
+                }
+              >
+                {props.node.parent}
+              </p>
             </div>
           );
         } else {
@@ -192,11 +208,16 @@ export function ImmediateFamily(props) {
               {siblings.map((x) => {
                 if (x.name !== props.node.name) {
                   return (
-                    <p key={`siblings ${x.id}`}>
+                    <p
+                      key={`siblings ${x.id}`}
+                      onClick={() =>
+                        props.show(getNode(x.name, props.treeData))
+                      }
+                    >
                       {x.generation} {x.name}
                     </p>
                   );
-                } else return <p key={`siblings ${x.id}`}></p>;
+                } else return null;
               })}
             </div>
           );
@@ -216,7 +237,10 @@ export function ImmediateFamily(props) {
               <h2>Children</h2>
               {children.map((x, i) => {
                 return (
-                  <p key={`child ${x.id}${i}`}>
+                  <p
+                    key={`child ${x.id}${i}`}
+                    onClick={() => props.show(getNode(x.name, props.treeData))}
+                  >
                     {x.generation} {x.name}
                   </p>
                 );
@@ -300,92 +324,54 @@ export function AddPhoto(props) {
   const [fileName, setFileName] = useState("");
 
   useEffect(() => {
-    setFileName("");
-
     //reset photo fields
     $(".file-submit").css("display", "none");
     $(".file-input-button").css("display", "block");
   }, [props.node]);
 
   try {
-    if (props.node.extradetails.photo_id.split(",").length < 3) {
-      return (
-        <div className="file-input-container">
-          <label className="file-input-button" htmlFor="file-input">
-            Upload Photo
-          </label>
-          <input
-            type="file"
-            id="file-input"
-            className="file-input"
-            accept="image/*"
-            onChange={(event) => {
-              props.imageChangeHandler(event);
-              setFileName(event.target.files[0].name);
-              console.log("working");
-              if (event.target.files[0].name) {
-                $(".file-input-button").css("display", "none");
-                $(".file-submit").css("display", "block");
-              }
-            }}
-          />
-          {fileName}
-          <input
-            type="submit"
-            className="file-submit"
-            onClick={() => {
-              props.uploadImage();
-              setFileName("");
-            }}
-            value="Submit Photo"
-          />
-        </div>
-      );
-    } else {
-      return null;
-    }
-  } catch (error) {
-    return (
-      <div className="file-input-container">
-        <label className="file-input-button" htmlFor="file-input">
-          Upload Photo
-        </label>
-        <input
-          type="file"
-          id="file-input"
-          className="file-input"
-          accept="image/*"
-          onChange={(event) => {
-            props.imageChangeHandler(event);
-            setFileName(event.target.files[0].name);
-            if (event.target.files[0].name) {
-              $(".file-input-button").css("display", "none");
-              $(".file-submit").css("display", "block");
-            }
-          }}
-        />
-        {fileName}
-        <input
-          type="submit"
-          className="file-submit"
-          onClick={() => {
-            props.uploadImage();
-            setFileName("");
-          }}
-          value="Submit Photo"
-        />
-        <button
-          className="file-submit"
-          onClick={() => {
-            document.getElementById("file-input").value = "";
-            $(".file-input-button").css("display", "block");
-            $(".file-submit").css("display", "none");
-            setFileName("");
-          }}
-        >
-          Cancel
-        </button>
-      </div>
-    );
-  }
+    if (props.node.extradetails.photo_id.split(",").length >= 3) return null;
+  } catch (error) {}
+  return (
+    <div className="file-input-container">
+      <label className="file-input-button" htmlFor="file-input">
+        Upload Photo
+      </label>
+      <input
+        type="file"
+        id="file-input"
+        className="file-input"
+        accept="image/*"
+        onChange={(event) => {
+          props.imageChangeHandler(event);
+          setFileName(event.target.files[0].name);
+          if (event.target.files[0].name) {
+            $(".file-input-button").css("display", "none");
+            $(".file-submit").css("display", "block");
+          }
+        }}
+      />
+      {fileName}
+      <input
+        type="submit"
+        className="file-submit"
+        onClick={() => {
+          props.uploadImage();
+          setFileName("");
+        }}
+        value="Submit Photo"
+      />
+      <button
+        className="file-submit"
+        onClick={() => {
+          document.getElementById("file-input").value = "";
+          $(".file-input-button").css("display", "block");
+          $(".file-submit").css("display", "none");
+          setFileName("");
+        }}
+      >
+        Cancel
+      </button>
+    </div>
+  );
 }
