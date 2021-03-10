@@ -88,11 +88,13 @@ export default function NodeCard(props) {
       event.target.files[0].size <= 5 * 1024 * 1024 &&
       event.target.files[0].type.includes("image/")
     ) {
-      return setImageToBeSent(event.target.files[0]);
+      setImageToBeSent(event.target.files[0]);
+      return true;
     }
     //else err
     props.toast.error("file invalid or exceeds 5MB");
     event.target.files = null;
+    return false;
   };
 
   $("div.progress-bar").css("width", 0);

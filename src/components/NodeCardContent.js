@@ -263,7 +263,7 @@ export function MemberPhotos(props) {
 
   const imageEdit = (e) => {
     // Jcrop.attach(e.target.parentNode.previousElementSibling);
-    console.log(e.target.parentNode.previousElementSibling)
+    console.log(e.target.parentNode.previousElementSibling);
   };
 
   const imageDelete = (e) => {
@@ -354,11 +354,12 @@ export function AddPhoto(props) {
         className="file-input"
         accept="image/*"
         onChange={(event) => {
-          props.imageChangeHandler(event);
-          setFileName(event.target.files[0].name);
-          if (event.target.files[0].name) {
-            $(".file-input-button").css("display", "none");
-            $(".file-submit").css("display", "block");
+          if (props.imageChangeHandler(event)) {
+            setFileName(event.target.files[0].name);
+            if (event.target.files[0].name) {
+              $(".file-input-button").css("display", "none");
+              $(".file-submit").css("display", "block");
+            }
           }
         }}
       />

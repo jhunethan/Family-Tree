@@ -347,6 +347,7 @@ export default function Table(props) {
       <NodeCard
         show={(obj) => {
           setNodestate(obj);
+          document.getElementsByClassName("card-main")[0].scrollTop = 0;
         }}
         toast={toast}
         node={nodestate}
