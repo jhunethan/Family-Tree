@@ -5,6 +5,7 @@ import Axios from "axios";
 import { useCookies } from "react-cookie";
 import { Image } from "cloudinary-react";
 import placeholder from "../css/person-placeholder.jpg";
+// import Jcrop from "jcrop";
 var dateFormat = require("dateformat");
 
 const getNode = (name, data) => {
@@ -260,6 +261,11 @@ export function ImmediateFamily(props) {
 export function MemberPhotos(props) {
   const [cookies] = useCookies(["author"]);
 
+  const imageEdit = (e) => {
+    // Jcrop.attach(e.target.parentNode.previousElementSibling);
+    console.log(e.target.parentNode.previousElementSibling)
+  };
+
   const imageDelete = (e) => {
     Axios.post("http://localhost:5000/api/delete/image", {
       id: props.node.id,
@@ -298,7 +304,12 @@ export function MemberPhotos(props) {
                   className={"image " + x}
                 />
                 <div className="image-edit-menu">
-                  <div className="image-expand image-menu">EXPAND</div>
+                  <div
+                    className="image-expand image-menu"
+                    onClick={(e) => imageEdit(e)}
+                  >
+                    EDIT
+                  </div>
                   <div
                     className="image-delete image-menu"
                     onClick={(e) => imageDelete(e)}

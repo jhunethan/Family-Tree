@@ -348,6 +348,7 @@ export default function Table(props) {
         show={(obj) => {
           setNodestate(obj);
         }}
+        toast={toast}
         node={nodestate}
         treeData={TreeData}
         data={tableData}

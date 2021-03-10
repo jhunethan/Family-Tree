@@ -70,14 +70,9 @@ export default function NodeCard(props) {
       $("#card-container").css("display", "none");
 
       let obj = props.node;
-      try {
-        obj.extradetails.photo_id = photo_id_string;
-        props.update(obj);
-      } catch {
-        obj.extradetails = {};
-        obj.extradetails.photo_id = photo_id_string;
-        props.update(obj);
-      }
+      if (!obj.extradetails) obj.extradetails = {};
+      obj.extradetails.photo_id = photo_id_string;
+      props.update(obj);
 
       Axios.put("http://localhost:5000/api/updateextra", {
         id: Number(props.node.id),
@@ -96,7 +91,7 @@ export default function NodeCard(props) {
       return setImageToBeSent(event.target.files[0]);
     }
     //else err
-    console.log("file invalid or exceeds 5MB");
+    props.toast.error("file invalid or exceeds 5MB");
     event.target.files = null;
   };
 

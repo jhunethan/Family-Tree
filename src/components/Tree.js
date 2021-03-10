@@ -1362,8 +1362,10 @@ export default function Tree(props) {
       <NodeCard
         show={(obj) => {
           setInfoCard(obj);
+          document.getElementsByClassName("card-main")[0].scrollTop = 0;
           search(obj.id);
         }}
+        toast={toast}
         update={() => updateTree()}
         node={InfoCard}
         treeData={tableData}
