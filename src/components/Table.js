@@ -9,10 +9,27 @@ import Create from "./Create.js";
 import Modal from "./Modal";
 import Edit from "./Edit";
 import NodeCard from "./NodeCard";
+import EditPhoto from "./EditPhoto";
+
+// function EditPhotoCondition(props) {
+//   if (props.image)
+//     return (
+//       <EditPhoto
+//         node={props.node}
+//         update={(obj) => {
+//           props.update(obj);
+//         }}
+//         image={props.image}
+//         setImage={(img) => props.setImage(img)}
+//       />
+//     );
+//   return null;
+// }
 
 export default function Table(props) {
   const [update, setUpdate] = useState(0);
   const [tableData, setTableData] = useState([]);
+  const [currentImage, setCurrentImage] = useState(undefined);
 
   const [TreeData, setTreeData] = useState([]);
 
@@ -359,6 +376,9 @@ export default function Table(props) {
         edit={() => {
           openNode(currentRow);
         }}
+        setPhoto={(photo) => {
+          setCurrentImage(photo);
+        }}
       />
       <ToastContainer
         position="bottom-right"
@@ -371,6 +391,14 @@ export default function Table(props) {
         draggable
         pauseOnHover
       />
+      {/* <EditPhotoCondition
+        image={currentImage}
+        setImage={(img) => setCurrentImage(img)}
+        node={nodestate}
+        update={(obj) => {
+          dynamicUpdate(obj);
+        }}
+      /> */}
     </div>
   );
 }

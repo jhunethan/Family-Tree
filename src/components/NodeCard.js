@@ -55,7 +55,6 @@ export default function NodeCard(props) {
         },
       }
     ).then((Response) => {
-      console.log(Response);
       //save it to extradetails db as filename: `${Response.data.public_id}.${Response.data.format}`
       let photo_id_string;
       try {
@@ -89,6 +88,8 @@ export default function NodeCard(props) {
       event.target.files[0].type.includes("image/")
     ) {
       setImageToBeSent(event.target.files[0]);
+      props.setPhoto(event.target.files[0]);
+      $(".image-editor-container").css("display", "block");
       return true;
     }
     //else err

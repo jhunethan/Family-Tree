@@ -5,7 +5,6 @@ import Axios from "axios";
 import { useCookies } from "react-cookie";
 import { Image } from "cloudinary-react";
 import placeholder from "../css/person-placeholder.jpg";
-// import Jcrop from "jcrop";
 var dateFormat = require("dateformat");
 
 const getNode = (name, data) => {
@@ -262,7 +261,6 @@ export function MemberPhotos(props) {
   const [cookies] = useCookies(["author"]);
 
   const imageEdit = (e) => {
-    // Jcrop.attach(e.target.parentNode.previousElementSibling);
     console.log(e.target.parentNode.previousElementSibling);
   };
 
@@ -343,6 +341,7 @@ export function AddPhoto(props) {
   try {
     if (props.node.extradetails.photo_id.split(",").length >= 3) return null;
   } catch (error) {}
+  
   return (
     <div className="file-input-container">
       <label className="file-input-button" htmlFor="file-input">
