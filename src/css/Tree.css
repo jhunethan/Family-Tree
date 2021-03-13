@@ -95,7 +95,7 @@ svg {
   margin: 20px 0;
   flex-grow: 1;
   font-size: 36px;
-  border: 2px solid black;
+  border: 1px solid black;
 }
 
 .edit-menu-button {

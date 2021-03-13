@@ -5,7 +5,7 @@ body {
   overflow-x: hidden;
   height: 100vh;
   overflow: hidden;
-  background-color: #FED381;
+  background-color: #fed381;
 }
 /* #FED381 #EC7771 */
 
@@ -42,10 +42,10 @@ body {
   flex-wrap: wrap;
 }
 
-.refresh-table {
+.refresh-table, .history-button {
   padding: 8px 12px;
   font-family: "Montserrat", sans-serif;
-  border: 2px solid black;
+  border: 1px solid black;
   background: 0;
   font-size: 16px;
 
@@ -56,6 +56,14 @@ body {
 .left {
   padding: 20px;
   flex-grow: 1;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.left > button {
+  margin: 10px 10px 0 10px;
+  width: 150px;
 }
 
 .right {
