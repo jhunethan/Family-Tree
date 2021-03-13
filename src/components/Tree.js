@@ -1355,7 +1355,7 @@ export default function Tree(props) {
           } catch {}
         }}
       ></ul>
-      <button className="create-button" onClick={() => resetCreateFields()}>
+      <button className="tree-create-button" onClick={() => resetCreateFields()}>
         Add New
       </button>
       <button className="changeview-button" onClick={() => changeView()}>

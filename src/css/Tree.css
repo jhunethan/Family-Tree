@@ -269,7 +269,7 @@ text {
   transition: all 0.3s;
 }
 
-.create-button {
+.tree-create-button {
   position: absolute;
   top: 21px;
   right: 120px;
