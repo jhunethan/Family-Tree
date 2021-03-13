@@ -114,14 +114,6 @@
   padding: 4px;
   position: relative;
 }
-label {
-  user-select: none;
-  cursor: pointer;
-  padding: 10px 20px;
-  text-align: center;
-  width: 33.33%;
-  z-index: 2;
-}
 .slide-item {
   background: white;
   border-radius: 9999px;

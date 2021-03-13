@@ -26,28 +26,18 @@
 
 .header {
   margin: 0 auto;
-  text-align: center;
-  background-color: #ffeece;
-  padding: 30px;
+  background-color: #fff;
+  padding: 30px 30px 0 30px;
   border-radius: 2px;
   filter: drop-shadow(5px 5px 5px rgba(65, 65, 65, 0.322));
 }
 
 .header h1 {
-  font-size: 3rem;
-  font-weight: 600;
-  letter-spacing: 0.2rem;
+  font-size: 4rem;
+  font-weight: 500;
+  line-height: 1.1;
   padding: 0 20px 8px;
   margin: 10px;
-  text-decoration: underline red;
-  user-select: none;
-}
-.header p {
-  font-size: 1.5rem;
-  font-weight: 600;
-  letter-spacing: 0.1rem;
-  padding: 10px 15px;
-  filter: drop-shadow(5px 5px 5px rgba(65, 65, 65, 0.322));
   user-select: none;
 }
 #landingButton {
@@ -83,4 +73,17 @@
   margin: 20px;
   font-size: 20px;
   text-align: center;
+}
+
+.fake-hyperlink{
+  color: #0056B3;
+}
+
+.fake-hyperlink:hover{
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.no-margin{
+  margin:0;
 }

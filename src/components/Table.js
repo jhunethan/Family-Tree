@@ -318,8 +318,8 @@ export default function Table(props) {
   $("ul.header-navigation").removeClass("hidden");
 
   return (
-    <div className="TableContainer">
-      <div className="container">
+    <div className="table-page-container">
+      <div className="table-container">
         <div className="container-top">
           <div className="left">
             <button

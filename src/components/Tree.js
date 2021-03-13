@@ -660,7 +660,7 @@ export default function Tree(props) {
       .attr("y", function (d) {
         return d.y - 550;
       })
-      .attr("fill", "#FED381")
+      .attr("fill", "#ffeece")
       .attr("rx", 5)
       .attr("ry", 5);
 

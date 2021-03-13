@@ -212,16 +212,17 @@ function Create(props) {
       </p>
 
       <div className="radio-togglesC">
-        <p>Child</p>
+        <p className="create-radio-option">Child</p>
         <input
           type="checkbox"
+          className="create-checkbox"
           id="toggle-slide"
           onChange={() => {
             inputChangedHandler();
           }}
           name="radio-optionsC"
         />
-        <p> Partner</p>
+        <p className="create-radio-option"> Partner</p>
       </div>
       <button
         type="button"

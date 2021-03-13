@@ -48,13 +48,9 @@ nav {
   border-bottom: 2px solid #ff8800;
 }
 
-a {
+.nav-logo {
   text-decoration: none;
   color: white;
-  font-family: "Montserrat", sans-serif;
-}
-
-.nav-logo {
   font-family: "Montserrat", sans-serif;
   font-size: 2.5rem;
   font-weight: 600;
