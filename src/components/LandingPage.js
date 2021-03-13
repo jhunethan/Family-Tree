@@ -4,8 +4,6 @@ import { Link } from "react-router-dom";
 import * as $ from "jquery";
 import { useCookies } from "react-cookie";
 
-import EditHistory from "./EditHistory"
-
 function LandingNavigation(props) {
   const [cookies, setCookie] = useCookies(["author"]);
   let authorInput,
@@ -119,7 +117,6 @@ export default function LandingPage(props) {
           <h1>Lay Family Tree</h1>
           <LandingNavigation resetName={resetName} />
         </div>
-        <EditHistory/>
       </section>
     </div>
   );
