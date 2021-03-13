@@ -591,6 +591,8 @@ export default function Tree(props) {
     //normal click node function - pan and zoom to clicked node
     else $("#card-container").css("display", "block");
 
+    document.getElementsByClassName("card-main")[0].scrollTop = 0;
+
     let data =
       type === "partner" ? el.__data__.data.partnerinfo : el.__data__.data;
 

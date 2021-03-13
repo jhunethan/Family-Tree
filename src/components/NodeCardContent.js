@@ -259,6 +259,7 @@ export function ImmediateFamily(props) {
 
 export function MemberPhotos(props) {
   const [cookies] = useCookies(["author"]);
+  // var id;
 
   const imageEdit = (e) => {
     console.log(e.target.parentNode.previousElementSibling);
@@ -285,11 +286,20 @@ export function MemberPhotos(props) {
     });
   };
 
+  // //if facebook profile picture
+  // try {
+  //   if (props.node.extradetails.fblink) {
+  //     //get user id from link
+  //     id = props.node.extradetails.fblink.split("=").slice(-1);
+  //   }
+  // } catch {}
+
   try {
     if (props.node.extradetails.photo_id) {
       let photos = props.node.extradetails.photo_id.split(",");
       return (
         <div className="image-container">
+          {/* <img src={`http://graph.facebook.com/${id}/picture?type=large`} alt="fb profile" /> */}
           {photos.map((x, index) => {
             return (
               <div
@@ -341,7 +351,7 @@ export function AddPhoto(props) {
   try {
     if (props.node.extradetails.photo_id.split(",").length >= 3) return null;
   } catch (error) {}
-  
+
   return (
     <div className="file-input-container">
       <label className="file-input-button" htmlFor="file-input">
