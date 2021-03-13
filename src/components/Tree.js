@@ -430,7 +430,7 @@ export default function Tree(props) {
           }
           return el.__data__.x - 700;
         })
-        .attr("y", el.__data__.y - 800)
+        .attr("y", el.__data__.y - 900)
         .attr("height", "1200px")
         .attr("width", "1400px");
 
@@ -618,7 +618,7 @@ export default function Tree(props) {
     svg = d3.select("#Tree").call(zoom);
     zoom.scaleTo(svg.transition().duration(500), 0.25);
     var treeLayout = d3.tree();
-    treeLayout.nodeSize([1400, 570]);
+    treeLayout.nodeSize([1400, 670]);
     treeLayout(treeData);
     var linksData = treeData.links();
 
@@ -658,7 +658,7 @@ export default function Tree(props) {
         return d.x - 525;
       })
       .attr("y", function (d) {
-        return d.y - 450;
+        return d.y - 550;
       })
       .attr("fill", "#FED381")
       .attr("rx", 5)
@@ -672,7 +672,7 @@ export default function Tree(props) {
         return d.x + 50;
       })
       .attr("y", function (d) {
-        return d.y - 400;
+        return d.y - 500;
       })
       .attr("width", 700)
       .attr("height", 500)
@@ -700,7 +700,7 @@ export default function Tree(props) {
         return d.x + 50;
       })
       .attr("y", function (d) {
-        return d.y - 400;
+        return d.y - 500;
       });
     partnerShapes
       .enter()
@@ -712,7 +712,7 @@ export default function Tree(props) {
         return d.x + 275;
       })
       .attr("y", function (d) {
-        return d.y - 362.5;
+        return d.y - 462.5;
       })
       .append("xhtml:img")
       .attr("src", function (d) {
@@ -743,7 +743,7 @@ export default function Tree(props) {
         }
       })
       .attr("y", function (d) {
-        return d.y - 400;
+        return d.y - 500;
       })
       .append("xhtml:div")
       .attr("class", function (d) {
@@ -768,7 +768,7 @@ export default function Tree(props) {
         }
       })
       .attr("y", function (d) {
-        return d.y - 400;
+        return d.y - 500;
       });
 
     shapes
@@ -786,7 +786,7 @@ export default function Tree(props) {
         }
       })
       .attr("y", function (d) {
-        return d.y - 362.5;
+        return d.y - 462.5;
       })
       .append("xhtml:img")
       .attr("src", function (d) {
@@ -823,7 +823,7 @@ export default function Tree(props) {
         return d.x + 167.5;
       })
       .attr("y", function (d) {
-        return d.y - 250;
+        return d.y - 350;
       })
       .text(function (d) {
         try {
@@ -840,7 +840,7 @@ export default function Tree(props) {
         return d.x + 562.5;
       })
       .attr("y", function (d) {
-        return d.y - 250;
+        return d.y - 350;
       })
       .text(function (d) {
         try {
@@ -864,7 +864,7 @@ export default function Tree(props) {
         return d.x + 350;
       })
       .attr("y", function (d) {
-        return d.y - 100;
+        return d.y - 200;
       })
       .text(function (d) {
         try {
@@ -883,7 +883,7 @@ export default function Tree(props) {
         return d.x;
       })
       .attr("y", function (d) {
-        return d.y - 412.5;
+        return d.y - 512.5;
       })
       .text(function (d) {
         return "Married: YYYY";
@@ -906,7 +906,7 @@ export default function Tree(props) {
         }
       })
       .attr("y", function (d) {
-        return d.y - 250;
+        return d.y - 350;
       })
       .text(function (d) {
         if (d.data.birthdate)
@@ -926,7 +926,7 @@ export default function Tree(props) {
         }
       })
       .attr("y", function (d) {
-        return d.y - 250;
+        return d.y - 350;
       })
       .text(function (d) {
         if (d.data.deathdate) {
@@ -955,7 +955,7 @@ export default function Tree(props) {
         }
       })
       .attr("y", function (d) {
-        return d.y - 140;
+        return d.y - 240;
       })
       .text(function (d) {
         return d.data.generation;
@@ -973,7 +973,7 @@ export default function Tree(props) {
         }
       })
       .attr("y", function (d) {
-        return d.y - 100;
+        return d.y - 200;
       })
       .text(function (d) {
         return d.data.name;
@@ -992,7 +992,7 @@ export default function Tree(props) {
         }
       })
       .attr("y", function (d) {
-        return d.y - 10;
+        return d.y - 110;
       })
       .text(function (d) {
         try {
@@ -1015,11 +1015,11 @@ export default function Tree(props) {
           "M" +
           d.source.x +
           "," +
-          d.source.y +
-          " v 50 H" +
+          (d.source.y - 100) +
+          " v 125 H" +
           d.target.x +
           " V" +
-          d.target.y
+          (d.target.y - 100)
         );
       })
       .attr("x1", function (d) {

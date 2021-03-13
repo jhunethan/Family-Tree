@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Axios from "axios";
+import * as $ from "jquery";
+import "../css/EditHistory.css";
 
 export function Edits(props) {
   let changes = [];
@@ -34,10 +36,17 @@ export default function EditHistory(props) {
   const [editHistory, setEditHistory] = useState([]);
   const [databasesize, setDatabasesize] = useState(0);
   var dateFormat = require("dateformat");
+  let pagesize = 15,
+    count = 0,
+    slicesize = [page * pagesize, (page + 1) * pagesize];
 
   const updatehistory = () => {
     setupdate((prev) => prev + 1);
   };
+
+  const close = () => {
+    $(".edit-history").css("right", "-500px");
+  }
 
   useEffect(() => {
     Axios.get("http://localhost:5000/api/get/edithistory").then((result) => {
@@ -52,30 +61,33 @@ export default function EditHistory(props) {
   const changePage = (operator) => {
     if (page >= 0) {
       if (operator === "+") {
-        if (page < editHistory.length / 10 - 1) setPage((prev) => prev + 1);
+        if (page < editHistory.length / pagesize - 1)
+          setPage((prev) => prev + 1);
       } else {
         if (page !== 0) setPage((prev) => prev - 1);
       }
     }
   };
 
-  let pagesize = 15,
-    count = 0,
-    slicesize = [page * pagesize, (page + 1) * pagesize];
   return (
     <div className="edit-history">
       <div className="stats-container">
-        <div className="stat-card users">
-          <button onClick={updatehistory}>⟳</button>
+        <div className="stat-card stat-buttons">
+          <button className="stat-button" onClick={updatehistory}>
+            ⟳
+          </button>
+          <button className="stat-button" onClick={()=>close()}>
+            X
+          </button>
         </div>
         <div className="stat-card members">
           <h1>Family Members</h1>
           <h2 className="edit-freq-display">{databasesize}</h2>
-        </div>{" "}
-      </div>
-      <div className="stat-card edits-freq">
-        <h1>Edits (14 days)</h1>
-        <h2 className="edit-freq-display">{editHistory.length}</h2>
+        </div>
+        <div className="stat-card edits-freq">
+          <h1>Edits (14 days)</h1>
+          <h2 className="edit-freq-display">{editHistory.length}</h2>
+        </div>
       </div>
       <div>
         <h1 className="center">Edit History (Last 30 Days)</h1>

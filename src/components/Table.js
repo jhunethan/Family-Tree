@@ -9,6 +9,7 @@ import Create from "./Create.js";
 import Modal from "./Modal";
 import Edit from "./Edit";
 import NodeCard from "./NodeCard";
+import EditHistory from "./EditHistory";
 
 // function EditPhotoCondition(props) {
 //   if (props.image)
@@ -328,6 +329,14 @@ export default function Table(props) {
             >
               ⟳
             </button>
+            <button
+              className="history-button"
+              onClick={() => {
+                $(".edit-history").css("right", 0);
+              }}
+            >
+              Edit History
+            </button>
           </div>
           <div className="right">
             <button id="createNew" onClick={resetCreateFields}>
@@ -376,7 +385,7 @@ export default function Table(props) {
           openNode(currentRow);
         }}
         setPhoto={(photo) => {
-          console.log("inactive")
+          console.log("inactive");
           // setCurrentImage(photo);
         }}
       />
@@ -399,6 +408,7 @@ export default function Table(props) {
           dynamicUpdate(obj);
         }}
       /> */}
+      <EditHistory />
     </div>
   );
 }

@@ -31,7 +31,8 @@ function LandingNavigation(props) {
     if (option === "table") {
       $("#nav-link-one").addClass("active");
       $("#nav-link-two").removeClass("active");
-    } else {
+    } 
+    if (option === "tree") {
       $("#nav-link-one").removeClass("active");
       $("#nav-link-two").addClass("active");
     }
