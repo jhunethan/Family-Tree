@@ -74,6 +74,8 @@ svg {
   height: 150px;
 }
 
+
+
 .edit-menu-details {
   width: 300px;
   height: 100px;
@@ -92,9 +94,11 @@ svg {
 }
 
 .edit-menu-nav > button {
+  background-color: rgb(216, 216, 216);
+  
   margin: 20px 0;
   flex-grow: 1;
-  font-size: 36px;
+  font-size: 50px;
   border: 1px solid black;
 }
 
