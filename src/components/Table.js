@@ -9,7 +9,6 @@ import Create from "./Create.js";
 import Modal from "./Modal";
 import Edit from "./Edit";
 import NodeCard from "./NodeCard";
-import EditPhoto from "./EditPhoto";
 
 // function EditPhotoCondition(props) {
 //   if (props.image)
@@ -29,7 +28,7 @@ import EditPhoto from "./EditPhoto";
 export default function Table(props) {
   const [update, setUpdate] = useState(0);
   const [tableData, setTableData] = useState([]);
-  const [currentImage, setCurrentImage] = useState(undefined);
+  // const [currentImage, setCurrentImage] = useState(undefined);
 
   const [TreeData, setTreeData] = useState([]);
 
@@ -377,7 +376,8 @@ export default function Table(props) {
           openNode(currentRow);
         }}
         setPhoto={(photo) => {
-          setCurrentImage(photo);
+          console.log("inactive")
+          // setCurrentImage(photo);
         }}
       />
       <ToastContainer
