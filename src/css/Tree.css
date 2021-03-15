@@ -38,6 +38,7 @@ svg {
 }
 
 .partner-container {  
+  fill: #ffdfa4;
   width: 800px;
   height: 450px;
   padding: 8px 12px;

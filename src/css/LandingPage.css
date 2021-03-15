@@ -25,54 +25,39 @@
 }
 
 .header {
+  padding: 30px;
   margin: 0 auto;
   background-color: #fff;
-  padding: 30px 30px 0 30px;
   border-radius: 2px;
   filter: drop-shadow(5px 5px 5px rgba(65, 65, 65, 0.322));
+
+  transition: all 0.3s;
 }
 
-.header h1 {
-  font-size: 4rem;
-  font-weight: 500;
-  line-height: 1.1;
-  padding: 0 20px 8px;
-  margin: 10px;
+.landing-title{
   user-select: none;
-}
-#landingButton {
-  font-size: 1.5rem;
-  font-weight: 600;
-  letter-spacing: 0.15rem;
-  color: white;
-  background-color: red;
-  padding: 10px 20px;
-  margin: 20px 5px 0;
-  border: none;
-  cursor: pointer;
-  filter: drop-shadow(5px 5px 5px rgba(65, 65, 65, 0.322));
+  margin: 0 20px 40px 20px;
+  font-size: 4rem;
 }
 
-.landing-header {
+.landing-title:hover{
+  cursor: pointer;
+}
+
+.landing-buttons{
   display: flex;
   flex-direction: row;
 }
 
-#landingButton:hover {
-  background-color: black;
-  color: #fff200;
-  transition: all 0.3s;
+.landing-button{
+  margin: 0 auto 20px auto !important;
+  width: 40% !important;
 }
-.hidden {
-  display: none !important;
-}
-.author-input {
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  margin: 20px;
-  font-size: 20px;
-  text-align: center;
+
+.landing-guest{
+  display: block;
+  margin: 0 auto;
+  width: 90% !important;
 }
 
 .fake-hyperlink{
@@ -86,4 +71,8 @@
 
 .no-margin{
   margin:0;
+}
+
+.hidden{
+  display: none !important;
 }

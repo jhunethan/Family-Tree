@@ -14,17 +14,7 @@ body,
   margin: 0;
 }
 
-button {
-  background-color: white;
-  outline: none;
-  border: 1px solid grey;
-  transition: all 0.5s;
-}
-
-button:hover {
-  background-color: black;
-  color: white;
-  cursor: pointer;
-
-  transition: all 0.3s;
+a:hover {
+  color: inherit !important;
+  text-decoration: none !important;
 }

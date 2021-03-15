@@ -1,105 +1,9 @@
 import React, { useState } from "react";
 import "../css/LandingPage.css";
-// import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import * as $ from "jquery";
 import "bootstrap/dist/css/bootstrap.min.css";
 // import { useCookies } from "react-cookie";
-
-// function LandingNavigation(props) {
-//   const [cookies, setCookie] = useCookies(["author"]);
-//   let authorInput,
-//     landingNavigation = "";
-
-//   const changeAuthor = (newAuthor) => {
-//     //use context to set author as state of App.js
-//     //validation
-
-//     let author = $.trim(newAuthor).replace(/\w\S*/g, (w) =>
-//       w.replace(/^\w/, (c) => c.toUpperCase())
-//     );
-
-//     if (author.length > 1) {
-//       //set Cookie for global access
-//       setCookie("author", author, { path: "/" });
-//       $("div.author-input").addClass("hidden");
-//       $("div.landing-navigation").removeClass("hidden");
-//     } else {
-//       //empty invalid input
-//     }
-//   };
-
-//   const setActive = (option) => {
-//     if (option === "table") {
-//       $("#nav-link-one").addClass("active");
-//       $("#nav-link-two").removeClass("active");
-//     }
-//     if (option === "tree") {
-//       $("#nav-link-one").removeClass("active");
-//       $("#nav-link-two").addClass("active");
-//     }
-//     $("ul.header-navigation").removeClass("hidden");
-//   };
-
-//   if (cookies.author === undefined) {
-//     authorInput = "author-input";
-//     landingNavigation = "landing-navigation hidden";
-//   } else {
-//     authorInput = "author-input hidden";
-//     landingNavigation = "landing-navigation";
-//   }
-
-//   return (
-//     <div>
-//       <div className={authorInput}>
-//         <input
-//           autoComplete="off"
-//           type="text"
-//           placeholder="Enter your name here"
-//           className="author-input"
-//           onKeyUp={(event) => {
-//             // Number 13 is the "Enter" key on the keyboard
-//             if (event.key === "Enter") {
-//               // Cancel the default action, if needed
-//               event.preventDefault();
-//               // Focus on next element
-//               changeAuthor($("input.author-input").val());
-//             }
-//           }}
-//         />
-//         <button
-//           id="landingButton"
-//           onClick={() => changeAuthor($("input.author-input").val())}
-//         >
-//           Enter Name
-//         </button>
-//       </div>
-//       <div className={landingNavigation}>
-//         <p>Welcome {cookies.author}</p>
-//         <Link to="/table">
-//           <button
-//             type="button"
-//             id="landingButton"
-//             onClick={() => setActive("table")}
-//           >
-//             View Table
-//           </button>
-//         </Link>
-//         <Link to="/tree">
-//           <button
-//             type="button"
-//             id="landingButton"
-//             onClick={() => setActive("tree")}
-//           >
-//             View Tree
-//           </button>
-//         </Link>
-//         <div className="reset-button" onClick={() => props.resetName()}>
-//           Not You? Click to re-enter name
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
 
 function SignUp(props) {
   return (
@@ -200,12 +104,41 @@ function Login(props) {
 }
 
 function LoginControl(props) {
+  if (!props.view)
+    return (
+      <div>
+        <div className="landing-buttons">
+          <button
+            type="button"
+            className="btn btn-dark btn-lg btn-block landing-button"
+            onClick={props.setLogin}
+          >
+            Login
+          </button>
+          <button
+            type="button"
+            className="btn btn-dark btn-lg btn-block landing-button"
+            onClick={props.setSignUp}
+          >
+            Signup
+          </button>
+        </div>
+        <button
+          className="btn btn-dark btn-lg btn-block landing-guest"
+          onClick={props.setGuest}
+        >
+          Continue without login
+        </button>
+      </div>
+    );
   if (props.view === "login") return <Login setSignUp={props.setSignUp} />;
   return <SignUp setLogin={props.setLogin} />;
 }
 
 export default function LandingPage(props) {
-  const [view, setView] = useState("signup");
+  const [view, setView] = useState("");
+
+  var history = useHistory();
 
   // const resetName = () => {
   //   $("div.author-input").removeClass("hidden");
@@ -220,7 +153,9 @@ export default function LandingPage(props) {
     <div className="wrapper">
       <section className="content-container">
         <div className="header">
-          <h1>Lay Family Tree</h1>
+          <h1 className="landing-title" onClick={() => setView("")}>
+            Lay Family Tree
+          </h1>
           {/* <LandingNavigation resetName={resetName} /> */}
           <LoginControl
             view={view}
@@ -229,6 +164,10 @@ export default function LandingPage(props) {
             }}
             setSignUp={() => {
               setView("signup");
+            }}
+            setGuest={() => {
+              setView("");
+              history.push("/tree");
             }}
           />
         </div>
