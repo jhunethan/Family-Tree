@@ -2,10 +2,52 @@ import React, { useState } from "react";
 import "../css/LandingPage.css";
 import { useHistory } from "react-router-dom";
 import * as $ from "jquery";
+import Axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { ToastContainer, toast } from "react-toastify";
 // import { useCookies } from "react-cookie";
 
 function SignUp(props) {
+  const [user, setUser] = useState({});
+
+  function validateEmail() {
+    if (
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
+        user["email"]
+      )
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  const checkChanges = (method) => {
+    let tempUser = user;
+    tempUser[method] = $(`#signup-${method}`).val();
+    setUser(tempUser);
+  };
+
+  const submit = () => {
+    let valid = true;
+    //check for empty fields
+    for (const x of ["name", "email", "password"]) {
+      if (!user[x]) {
+        valid = false;
+        toast.error(`empty ${x}`);
+      }
+    }
+
+    if (!validateEmail() && valid) {
+      valid = false;
+      toast.error("invalid email");
+    }
+
+    if (valid) {
+      Axios.post("http://localhost:5000/api/signup", {
+        userdetails: user,
+      }).then((result) => console.log(result));
+    }
+  };
 
   return (
     <form>
@@ -13,7 +55,13 @@ function SignUp(props) {
 
       <div className="form-group">
         <label>Full name</label>
-        <input type="text" className="form-control" placeholder="Full name" />
+        <input
+          type="text"
+          className="form-control"
+          id="signup-name"
+          placeholder="Full name"
+          onChange={() => checkChanges("name")}
+        />
       </div>
 
       <div className="form-group">
@@ -21,7 +69,9 @@ function SignUp(props) {
         <input
           type="email"
           className="form-control"
+          id="signup-email"
           placeholder="Enter email"
+          onChange={() => checkChanges("email")}
         />
       </div>
 
@@ -30,11 +80,19 @@ function SignUp(props) {
         <input
           type="password"
           className="form-control"
+          id="signup-password"
           placeholder="Enter password"
+          onChange={() => checkChanges("password")}
         />
       </div>
 
-      <button type="submit" className="btn btn-dark btn-lg btn-block">
+      <button
+        type="button"
+        className="btn btn-dark btn-lg btn-block"
+        onClick={() => {
+          submit();
+        }}
+      >
         Register
       </button>
       <p className="forgot-password text-right">
@@ -48,6 +106,27 @@ function SignUp(props) {
 }
 
 function Login(props) {
+  const [user, setUser] = useState({});
+
+  const checkChanges = (method) => {
+    let tempUser = user;
+    tempUser[method] = $(`#login-${method}`).val();
+    setUser(tempUser);
+  };
+
+  const submit = () => {
+    let valid = true;
+    //check for empty fields
+    for (const x of ["email", "password"]) {
+      if (!user[x]) {
+        valid = false;
+        toast.error(`empty ${x}`);
+      }
+    }
+
+    if (valid) console.log("valid input");
+  };
+
   return (
     <form>
       <h3>Log in</h3>
@@ -56,8 +135,10 @@ function Login(props) {
         <label>Email</label>
         <input
           type="email"
+          id="login-email"
           className="form-control"
           placeholder="Enter email"
+          onClick={() => checkChanges("email")}
         />
       </div>
 
@@ -65,8 +146,10 @@ function Login(props) {
         <label>Password</label>
         <input
           type="password"
+          id="login-password"
           className="form-control"
           placeholder="Enter password"
+          onClick={() => checkChanges("password")}
         />
       </div>
 
@@ -83,7 +166,11 @@ function Login(props) {
         </div>
       </div>
 
-      <button type="submit" className="btn btn-dark btn-lg btn-block">
+      <button
+        type="button"
+        className="btn btn-dark btn-lg btn-block"
+        onClick={() => submit()}
+      >
         Sign in
       </button>
       <div className="etc-login-form">
@@ -173,6 +260,7 @@ export default function LandingPage(props) {
           />
         </div>
       </section>
+      <ToastContainer position="bottom-right" autoClose={5000} limit={5} />
     </div>
   );
 }
