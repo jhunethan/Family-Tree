@@ -6,6 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 // import { useCookies } from "react-cookie";
 
 function SignUp(props) {
+
   return (
     <form>
       <h3>Register</h3>

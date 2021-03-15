@@ -186,6 +186,7 @@ export default function Edit(props) {
     console.log(nodeInput);
     if (changed === true && checkParent()) {
       //save
+      console.log("id info updated")
       Axios.post("http://localhost:5000/api/update", {
         input: nodeInput,
         name: props.nodedata.name,
@@ -194,6 +195,7 @@ export default function Edit(props) {
       });
     }
     if (extrachanged) {
+      console.log("extra updated")
       Axios.post("http://localhost:5000/api/updateextra", {
         id: props.nodedata.id,
         name: props.nodedata.name,
@@ -315,11 +317,6 @@ export default function Edit(props) {
           arr.push(x);
           setExtrachanged(true);
         }
-      }
-
-      if (nodeInput.extradetails.extranames !== data.extranames) {
-        setChanged(true);
-        arr.push("additional names");
       }
 
       if ($("#languages-input").val().length > 0) {
