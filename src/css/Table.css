@@ -5,15 +5,15 @@ body {
   overflow-x: hidden;
   height: 100vh;
   overflow: hidden;
-  background-color: #fed381;
+  background-color: #ffeece;
 }
 /* #FED381 #EC7771 */
 
-.TableContainer {
+.table-page-container {
   display: flex;
 }
 
-.container {
+.table-container {
   margin: 2vh auto 5vh auto;
   padding: 2.5vh;
   width: 100%;
@@ -27,7 +27,7 @@ body {
   scrollbar-width: none; /* Firefox */
 }
 
-.container::-webkit-scrollbar {
+.table-container::-webkit-scrollbar {
   display: none;
 }
 
@@ -35,10 +35,10 @@ body {
 /*      top section of container       */
 /*                                     */
 
-.container-top {
+.table-container-top {
   display: flex;
   width: 100%;
-  height: 15vh;
+  height: 150px;
   flex-wrap: wrap;
 }
 

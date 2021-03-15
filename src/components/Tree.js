@@ -660,7 +660,7 @@ export default function Tree(props) {
       .attr("y", function (d) {
         return d.y - 550;
       })
-      .attr("fill", "#FED381")
+      .attr("fill", "#ffeece")
       .attr("rx", 5)
       .attr("ry", 5);
 
@@ -1355,7 +1355,7 @@ export default function Tree(props) {
           } catch {}
         }}
       ></ul>
-      <button className="create-button" onClick={() => resetCreateFields()}>
+      <button className="tree-create-button" onClick={() => resetCreateFields()}>
         Add New
       </button>
       <button className="changeview-button" onClick={() => changeView()}>
