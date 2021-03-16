@@ -10,6 +10,20 @@ import { ToastContainer, toast } from "react-toastify";
 function SignUp(props) {
   const [user, setUser] = useState({});
 
+  function capitalize(str) {
+    try {
+      return str
+        .toLowerCase()
+        .split(" ")
+        .map(function (word) {
+          return word[0].toUpperCase() + word.substr(1);
+        })
+        .join(" ");
+    } catch {
+      return str;
+    }
+  }
+
   function validateEmail() {
     if (
       /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
@@ -23,7 +37,10 @@ function SignUp(props) {
 
   const checkChanges = (method) => {
     let tempUser = user;
-    tempUser[method] = $(`#signup-${method}`).val();
+    tempUser[method] =
+      method === "name"
+        ? capitalize($(`#signup-${method}`).val())
+        : $(`#signup-${method}`).val();
     setUser(tempUser);
   };
 
@@ -107,6 +124,7 @@ function SignUp(props) {
 
 function Login(props) {
   const [user, setUser] = useState({});
+  var history = useHistory();
 
   const checkChanges = (method) => {
     let tempUser = user;
@@ -124,7 +142,15 @@ function Login(props) {
       }
     }
 
-    if (valid) console.log("valid input");
+    if (valid)
+      Axios.post("http://localhost:5000/api/login", {
+        userdetails: user,
+      }).then((result) => {
+        if (result.data === "success") {
+          return history.push("/tree");
+        }
+        toast.error(result.data);
+      });
   };
 
   return (
@@ -138,7 +164,7 @@ function Login(props) {
           id="login-email"
           className="form-control"
           placeholder="Enter email"
-          onClick={() => checkChanges("email")}
+          onChange={() => checkChanges("email")}
         />
       </div>
 
@@ -149,7 +175,7 @@ function Login(props) {
           id="login-password"
           className="form-control"
           placeholder="Enter password"
-          onClick={() => checkChanges("password")}
+          onChange={() => checkChanges("password")}
         />
       </div>
 
@@ -225,7 +251,6 @@ function LoginControl(props) {
 
 export default function LandingPage(props) {
   const [view, setView] = useState("");
-
   var history = useHistory();
 
   // const resetName = () => {
