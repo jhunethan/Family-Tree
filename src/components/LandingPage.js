@@ -202,7 +202,7 @@ function Login(props) {
       <div className="etc-login-form">
         <p className="no-margin">
           forgot your password?{" "}
-          <span className="fake-hyperlink" onClick={props.setLogin}>
+          <span className="fake-hyperlink" onClick={props.ResetPassword}>
             click here
           </span>
         </p>
@@ -214,6 +214,58 @@ function Login(props) {
         </p>
       </div>
     </form>
+  );
+}
+
+function ResetPassword(props) {
+  const [email, setEmail] = useState("")
+
+  function validateEmail(str) {
+    if (
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
+        str
+      )
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  const inputHandler = () => {
+    let pass = $("#reset-password-email").val()
+    if(validateEmail(pass)){
+      setEmail(pass)
+      return $("#reset-password-password").removeAttr("disabled")
+    }
+    setEmail("")
+    $("#reset-password-password").attr('disabled', 'disabled');
+  }
+
+  const checkEmail = () => {
+    if (email) {
+      alert("valid email");
+    }
+  };
+  return (
+    <div className="reset-container">
+      <div>Enter your email to send a password reminder</div>
+      <input
+        type="Email"
+        id="reset-password-email"
+        className="form-control"
+        placeholder="Enter Email"
+        onChange={() => inputHandler()}
+      />
+      <button
+        type="button"
+        id="reset-password-password"
+        className="btn btn-dark btn-lg btn-block"
+        onClick={() => checkEmail()}
+        disabled
+      >
+        Send Password Reminder
+      </button>
+    </div>
   );
 }
 
@@ -245,7 +297,11 @@ function LoginControl(props) {
         </button>
       </div>
     );
-  if (props.view === "login") return <Login setSignUp={props.setSignUp} />;
+  if (props.view === "reset") return <ResetPassword />;
+  if (props.view === "login")
+    return (
+      <Login ResetPassword={props.ResetPassword} setSignUp={props.setSignUp} />
+    );
   return <SignUp setLogin={props.setLogin} />;
 }
 
@@ -272,6 +328,9 @@ export default function LandingPage(props) {
           {/* <LandingNavigation resetName={resetName} /> */}
           <LoginControl
             view={view}
+            ResetPassword={() => {
+              setView("reset");
+            }}
             setLogin={() => {
               setView("login");
             }}
