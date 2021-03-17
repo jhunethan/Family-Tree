@@ -56,7 +56,7 @@ function SignUp(props) {
 
     if (!validateEmail() && valid) {
       valid = false;
-      toast.error("invalid email");
+      toast.error("invalid email", { toastId: "invalidEmail" });
     }
 
     if (valid) {
@@ -218,7 +218,7 @@ function Login(props) {
 }
 
 function ResetPassword(props) {
-  const [email, setEmail] = useState("")
+  const [email, setEmail] = useState("");
 
   function validateEmail(str) {
     if (
@@ -232,19 +232,22 @@ function ResetPassword(props) {
   }
 
   const inputHandler = () => {
-    let pass = $("#reset-password-email").val()
-    if(validateEmail(pass)){
-      setEmail(pass)
-      return $("#reset-password-password").removeAttr("disabled")
+    let input = $("#reset-password-email").val();
+    if (validateEmail(input)) {
+      return setEmail(input);
     }
-    setEmail("")
-    $("#reset-password-password").attr('disabled', 'disabled');
-  }
+    setEmail("");
+  };
 
-  const checkEmail = () => {
+  const resetPass = () => {
     if (email) {
-      alert("valid email");
+      return Axios.post("http://localhost:5000/api/login/resetpass", {
+        email: email,
+      }).then((result) => {
+        console.log(result);
+      });
     }
+    toast.error("Invalid email", { toastId: "invalidEmail" });
   };
   return (
     <div className="reset-container">
@@ -260,8 +263,7 @@ function ResetPassword(props) {
         type="button"
         id="reset-password-password"
         className="btn btn-dark btn-lg btn-block"
-        onClick={() => checkEmail()}
-        disabled
+        onClick={() => resetPass()}
       >
         Send Password Reminder
       </button>
