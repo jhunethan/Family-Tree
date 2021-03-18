@@ -14,7 +14,6 @@ export default function Resetpassword() {
       let password = document.getElementById("password-input").value;
       let url = `http://localhost:5000/api/resetpass/success`;
 
-      console.log(token);
       if (token.includes("/reset-password/")) return;
 
       Axios.post(url, { email: email, password: password }).then((result) => {
@@ -45,28 +44,28 @@ export default function Resetpassword() {
         </p>
       </div>
     );
-  } else {
-    return (
-      <div className="Resetpassword-container">
-        <h1 className="Resetpassword-Title">Lay Family Tree</h1>
-        <h2 className="Resetpassword-subtitle">Reset Password Form</h2>
-        <h3>{email}</h3>
-        <label className="Resetpassword-label">Enter a new password</label>
-        <input
-          type="password"
-          className="Resetpassword-input"
-          id="password-input"
-        />
-        <label className="Resetpassword-label">Repeat your new password</label>
-        <input
-          type="password"
-          className="Resetpassword-input"
-          id="password-input-2"
-        />
-        <button onClick={() => resetPass()} className="Resetpassword-button">
-          Reset Password
-        </button>
-      </div>
-    );
   }
+
+  return (
+    <div className="Resetpassword-container">
+      <h1 className="Resetpassword-Title">Lay Family Tree</h1>
+      <h2 className="Resetpassword-subtitle">Reset Password Form</h2>
+      <h3>{email}</h3>
+      <label className="Resetpassword-label">Enter a new password</label>
+      <input
+        type="password"
+        className="Resetpassword-input"
+        id="password-input"
+      />
+      <label className="Resetpassword-label">Repeat your new password</label>
+      <input
+        type="password"
+        className="Resetpassword-input"
+        id="password-input-2"
+      />
+      <button onClick={() => resetPass()} className="Resetpassword-button">
+        Reset Password
+      </button>
+    </div>
+  );
 }

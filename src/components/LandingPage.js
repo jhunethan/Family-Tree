@@ -8,11 +8,8 @@ import { ToastContainer, toast } from "react-toastify";
 // import { useCookies } from "react-cookie";
 
 function SignUp(props) {
-  const [user, setUser] = useState({
-    name: "",
-    password: "",
-    email: "",
-  });
+  const [user, setUser] = useState({});
+  var history = useHistory();
 
   function capitalize(str) {
     try {
@@ -63,10 +60,31 @@ function SignUp(props) {
       toast.error("invalid email", { toastId: "invalidEmail" });
     }
 
+    const passwordValidation = () => {
+      let check = true;
+      if ($("#signup-password").val() !== $("#signup-password-repeat").val()) {
+        toast.error("Passwords dont match, please re-enter");
+        check = false;
+      }
+      if($("#signup-password").val().length > 5){
+        toast.error("Password must be longer than 5 characters");
+        check = false;
+      }
+      return check
+    };
+
+    if (!passwordValidation()) valid = false;
+
     if (valid) {
       Axios.post("http://localhost:5000/api/signup", {
         userdetails: user,
-      }).then((result) => console.log(result));
+      }).then((result) => {
+        if (result.data === "success") history.push("/tree");
+        if (result.data === "email exists")
+          toast.error(
+            "There is already an account with that email, please sign in"
+          );
+      });
     }
   };
 
@@ -102,6 +120,17 @@ function SignUp(props) {
           type="password"
           className="form-control"
           id="signup-password"
+          placeholder="Enter password"
+          onChange={() => checkChanges("password")}
+        />
+      </div>
+
+      <div className="form-group">
+        <label>Re-enter password</label>
+        <input
+          type="password"
+          className="form-control"
+          id="signup-password-repeat"
           placeholder="Enter password"
           onChange={() => checkChanges("password")}
         />
@@ -223,6 +252,7 @@ function Login(props) {
 
 function ResetPassword(props) {
   const [email, setEmail] = useState("");
+  const [sent, setSent] = useState(false);
 
   function validateEmail(str) {
     if (
@@ -248,11 +278,28 @@ function ResetPassword(props) {
       return Axios.post("http://localhost:5000/api/login/resetpass", {
         email: email,
       }).then((result) => {
-        console.log(result);
+        if (result.data === "email not found")
+          return toast.error(
+            "Email address not found, please check your email or try to sign up"
+          );
+        setSent(true);
       });
     }
     toast.error("Invalid email", { toastId: "invalidEmail" });
   };
+
+  if (sent)
+    return (
+      <div className="reset-container">
+        <h2>Reset request email has to been sent to </h2>
+        <h3>{email}</h3>
+        <p>
+          Please allow a few minutes for the email to be sent, it may also be in
+          your spam folder
+        </p>
+      </div>
+    );
+
   return (
     <div className="reset-container">
       <div>Enter your email to send a password reminder</div>
