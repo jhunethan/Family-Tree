@@ -8,6 +8,7 @@ import Table from "./components/Table";
 import Error from "./components/Error";
 import Tree from "./components/Tree";
 import Header from "./components/Header.js";
+import Resetpassword from "./components/Resetpassword";
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
           <Route exact path="/" render={() => <LandingPage />} />
           <Route path="/table" render={() => <Table />} />
           <Route path="/tree" render={() => <Tree />} />
+          <Route path="/reset-password" render={() => <Resetpassword />} />
           <Route component={Error} />
         </Switch>
       </CookiesProvider>

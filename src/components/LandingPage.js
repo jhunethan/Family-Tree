@@ -8,7 +8,11 @@ import { ToastContainer, toast } from "react-toastify";
 // import { useCookies } from "react-cookie";
 
 function SignUp(props) {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState({
+    name: "",
+    password: "",
+    email: "",
+  });
 
   function capitalize(str) {
     try {
@@ -39,8 +43,8 @@ function SignUp(props) {
     let tempUser = user;
     tempUser[method] =
       method === "name"
-        ? capitalize($(`#signup-${method}`).val())
-        : $(`#signup-${method}`).val();
+        ? $.trim(capitalize($(`#signup-${method}`).val()))
+        : $.trim($(`#signup-${method}`).val());
     setUser(tempUser);
   };
 
@@ -129,7 +133,7 @@ function Login(props) {
   const checkChanges = (method) => {
     let tempUser = user;
     tempUser[method] = $(`#login-${method}`).val();
-    setUser(tempUser);
+    setUser($.trim(tempUser));
   };
 
   const submit = () => {
