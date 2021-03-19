@@ -73,7 +73,7 @@ export default function Tree(props) {
   };
 
   useEffect(() => {
-    Axios.get("http://localhost:5000/api/get")
+    Axios.get("https://layfamily.herokuapp.com/api/get")
       .then((result) => {
         setTableData(result.data);
       })
@@ -276,7 +276,7 @@ export default function Tree(props) {
     if (!name || name === newData.name) return closePopups();
     if (newData.name === "" && name) {
       newData.name = name;
-      Axios.post("http://localhost:5000/api/insert", {
+      Axios.post("https://layfamily.herokuapp.com/api/insert", {
         input: newData,
         author: cookies.author,
       });
@@ -286,7 +286,7 @@ export default function Tree(props) {
       //save
       newData.name = name;
 
-      Axios.post("http://localhost:5000/api/update", {
+      Axios.post("https://layfamily.herokuapp.com/api/update", {
         input: newData,
         name: newData.name,
         author: cookies.author,
@@ -311,7 +311,7 @@ export default function Tree(props) {
       obj.parent = "";
       obj.partner = "";
       obj.isPartner = 0;
-      Axios.post("http://localhost:5000/api/update", {
+      Axios.post("https://layfamily.herokuapp.com/api/update", {
         input: obj,
         name: obj.name,
         author: cookies.author,
@@ -330,7 +330,7 @@ export default function Tree(props) {
           obj.parent = "";
           obj.partner = parent.name;
           obj.isPartner = 1;
-          Axios.post("http://localhost:5000/api/update", {
+          Axios.post("https://layfamily.herokuapp.com/api/update", {
             input: obj,
             name: obj.name,
             author: cookies.author,
@@ -356,7 +356,7 @@ export default function Tree(props) {
       obj.pid = Number(parent.id);
       obj.parent = parent.name;
 
-      Axios.post("http://localhost:5000/api/update", {
+      Axios.post("https://layfamily.herokuapp.com/api/update", {
         input: obj,
         name: obj.name,
         author: cookies.author,
@@ -793,7 +793,7 @@ export default function Tree(props) {
         // try {
         //   if (d.data.extradetails.photo_id.length > 1) {
         //     console.log((d.data.extradetails.photo_id))
-        //     Axios.get("http://localhost:5000/api/get/photos/user", {
+        //     Axios.get("https://layfamily.herokuapp.com/api/get/photos/user", {
         //       params: { id: d.data.id },
         //     }).then((res) => {
         //       console.log(res)
