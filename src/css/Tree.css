@@ -29,6 +29,14 @@ svg {
   transition: all 0.3s;
 }
 
+.node:hover,
+.partnernode:hover {
+  background-color: #eeeeee;
+
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
 .partner {
   width: 600px;
   height: 180px;
@@ -37,13 +45,110 @@ svg {
   transition: all 0.3s;
 }
 
-.partner-container {  
+.partner-container {
   fill: #ffdfa4;
   width: 800px;
   height: 450px;
   padding: 8px 12px;
   transition: all 0.3s;
 }
+
+.pattern {
+  display: block;
+  height: 100px;
+  pointer-events: none;
+  stroke: none;
+}
+
+.profile-picture {
+  border-radius: 150px;
+  height: 150px;
+  position: absolute;
+  transform: translate(225px, -75px);
+}
+
+.tree-card-main {
+  height: 300px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.tree-card-birth {
+  height: 75px;
+  width: 300px;
+  padding-right: 75px;
+  text-align: center;
+
+  font-size: 32px;
+}
+
+.tree-card-age {
+  padding: 0 0 0 100px;
+}
+
+.tree-card-name {
+  height: 175px;
+  width: 600px;
+  padding: 20px 50px;
+  line-height: 50px;
+  margin-top: 5px;
+
+  font-size: 52px;
+}
+
+.tree-card-generation {
+  font-size: 42px;
+}
+
+.tree-card-name > p {
+  height: 50px;
+  margin: 0;
+  text-align: center;
+}
+
+.tree-card-footer {
+  height: 50px;
+  width: 600px;
+  font-size: 30px;
+
+  margin-right: 10px;
+  text-align: right;
+}
+
+/* Tree card display */
+/* 
+.name-field {
+  font-size: 38px;
+}
+
+.profession {
+  text-anchor: end;
+}
+
+text {
+  text-anchor: middle;
+  user-select: none;
+  pointer-events: none;
+  font-size: 30px;
+}
+ */
+
+.level-0 {
+  display: none;
+}
+
+.hide {
+  display: none;
+}
+
+.link {
+  max-width: 150px;
+  fill: none;
+  stroke: #cd211d;
+  stroke-width: 2.5px;
+}
+
+/* Edit Menu */
 
 .edit-menu-container {
   pointer-events: auto;
@@ -75,8 +180,6 @@ svg {
   height: 150px;
 }
 
-
-
 .edit-menu-details {
   width: 300px;
   height: 100px;
@@ -96,7 +199,7 @@ svg {
 
 .edit-menu-nav > button {
   background-color: rgb(216, 216, 216);
-  
+
   margin: 20px 0;
   flex-grow: 1;
   font-size: 50px;
@@ -148,70 +251,6 @@ svg {
   height: 200px;
   margin-bottom: 20px;
   border: none;
-}
-
-circle {
-  fill: none;
-  stroke: black;
-}
-
-.profile-container {
-  pointer-events: none;
-  height: 150px;
-  width: 150px;
-}
-
-.profile-picture {
-  border-radius: 150px;
-  height: 150px;
-}
-
-.pattern {
-  height: 100px;
-  pointer-events: none;
-  stroke: none;
-}
-
-.node:hover,
-.partnernode:hover {
-  background-color: #eeeeee;
-
-  transition: all 0.3s;
-  cursor: pointer;
-}
-
-.name-field {
-  font-size: 38px;
-}
-
-.profession {
-  text-anchor: end;
-}
-
-.link {
-  max-width: 150px;
-  fill: none;
-  stroke: #cd211d;
-  stroke-width: 2.5px;
-}
-text {
-  text-anchor: middle;
-  user-select: none;
-  pointer-events: none;
-  font-size: 30px;
-}
-
-.level-0 {
-  display: none;
-}
-
-.level-0 > text {
-  user-select: none;
-  pointer-events: none;
-}
-
-.hide {
-  display: none;
 }
 
 /*                 */

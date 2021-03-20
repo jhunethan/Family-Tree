@@ -12,7 +12,6 @@ import pattern from "../css/pattern.jpg";
 import profile from "../css/person-placeholder.jpg";
 
 import NodeCard from "./NodeCard";
-import Create from "./Create.js";
 import Modal from "./Modal";
 import Edit from "./Edit";
 
@@ -100,8 +99,9 @@ export default function Tree(props) {
   }, [tableData]);
 
   //triggers a data request
-  const updateTree = () => {
-    setUpdate((prevUpdate) => !prevUpdate);
+  const updateTree = async () => {
+    await converttreeData();
+    d3.select("svg g.nodes").enter().data(treeData.descendants());
   };
 
   const getNode = (idKey) => {
@@ -688,37 +688,38 @@ export default function Tree(props) {
         return "partnernode level-" + d.depth;
       })
       .on("click", (d) => nodeClick(d.target, "partner"));
-    //card pattern
-    partnerShapes
-      .enter()
-      .append("image")
-      .attr("xlink:href", pattern)
-      .attr("class", function (d) {
-        return "pattern level-" + d.depth;
-      })
-      .attr("x", function (d) {
-        return d.x + 50;
-      })
-      .attr("y", function (d) {
-        return d.y - 500;
-      });
-    partnerShapes
-      .enter()
-      .append("foreignObject")
-      .attr("class", function (d) {
-        return "profile-container level-" + d.depth;
-      })
-      .attr("x", function (d) {
-        return d.x + 275;
-      })
-      .attr("y", function (d) {
-        return d.y - 462.5;
-      })
-      .append("xhtml:img")
-      .attr("src", function (d) {
-        return profile;
-      })
-      .classed("profile-picture", true);
+    // //card pattern
+    // partnerShapes
+    //   .enter()
+    //   .append("image")
+    //   .attr("xlink:href", pattern)
+    //   .attr("class", function (d) {
+    //     return "pattern level-" + d.depth;
+    //   })
+    //   .attr("x", function (d) {
+    //     return d.x + 50;
+    //   })
+    //   .attr("y", function (d) {
+    //     return d.y - 500;
+    //   });
+    // partnerShapes
+    //   .enter()
+    //   .append("foreignObject")
+    //   .attr("class", function (d) {
+    //     return "profile-container level-" + d.depth;
+    //   })
+    //   .attr("x", function (d) {
+    //     return d.x + 275;
+    //   })
+    //   .attr("y", function (d) {
+    //     return d.y - 462.5;
+    //   })
+    //   .append("xhtml:img")
+    //   .attr("src", function (d) {
+    //     return profile;
+    //   })
+    //   .classed("profile-picture", true);
+      
     // Nodes
     var shapes = d3
       .select("svg g.nodes")
@@ -726,7 +727,7 @@ export default function Tree(props) {
       .data(treeData.descendants());
 
     //normal node rectangle
-    shapes
+    let container = shapes
       .enter()
       .append("foreignObject")
       .attr("height", 500)
@@ -751,43 +752,14 @@ export default function Tree(props) {
       })
       .on("click", (d) => nodeClick(d.target, ""));
 
-    //card pattern
-    shapes
-      .enter()
-      .append("image")
-      .attr("xlink:href", pattern)
+    container
+      .append("xhtml:img")
+      .attr("src", pattern)
       .attr("class", function (d) {
         return "pattern level-" + d.depth;
-      })
-      .attr("x", function (d) {
-        try {
-          if (!d.data.partnerinfo.name === "text") return d.x;
-          return d.x - 660;
-        } catch {
-          return d.x - 300;
-        }
-      })
-      .attr("y", function (d) {
-        return d.y - 500;
       });
 
-    shapes
-      .enter()
-      .append("foreignObject")
-      .attr("class", function (d) {
-        return "profile-container level-" + d.depth;
-      })
-      .attr("x", function (d) {
-        try {
-          if (!d.data.partnerinfo.name === "text") return d.x;
-          return d.x - 450;
-        } catch {
-          return d.x - 75;
-        }
-      })
-      .attr("y", function (d) {
-        return d.y - 462.5;
-      })
+    container
       .append("xhtml:img")
       .attr("src", function (d) {
         // try {
@@ -805,130 +777,22 @@ export default function Tree(props) {
       })
       .classed("profile-picture", true);
 
-    var partnerText = d3
-      .select("svg g.nodes")
-      .selectAll("text .node")
-      .data(
-        treeData.descendants().filter(function (d) {
-          try {
-            if (d.data.partnerinfo.name) return true;
-          } catch {}
-          return false;
-        })
-      );
-    partnerText
-      .enter()
-      .append("text")
-      .attr("x", function (d) {
-        return d.x + 167.5;
-      })
-      .attr("y", function (d) {
-        return d.y - 350;
-      })
-      .text(function (d) {
-        try {
-          if (d.data.partnerinfo.birthdate)
-            return dateFormat(d.data.partnerinfo.birthdate, "dS mmmm yyyy");
-        } catch {}
-        return "";
-      })
-      .call(wrap, 200);
-    partnerText
-      .enter()
-      .append("text")
-      .attr("x", function (d) {
-        return d.x + 562.5;
-      })
-      .attr("y", function (d) {
-        return d.y - 350;
-      })
-      .text(function (d) {
-        try {
-          if (d.data.partnerinfo.birthdate) {
-            let firstDate = new Date(d.data.partnerinfo.birthdate),
-              now = new Date(),
-              timeDifference = Math.floor(
-                Math.abs((now.getTime() - firstDate.getTime()) / 31449600000)
-              );
-            return `${timeDifference} years old`;
-          }
-        } catch {}
-        return "";
-      })
-      .call(wrap, 200);
+    let treeCardMain = container
+      .append("xhtml:section")
+      .attr("class", "tree-card-main");
 
-    partnerText
-      .enter()
-      .append("text")
-      .attr("x", function (d) {
-        return d.x + 350;
-      })
-      .attr("y", function (d) {
-        return d.y - 200;
-      })
-      .text(function (d) {
-        try {
-          return d.data.partnerinfo.name;
-        } catch {
-          return "";
-        }
-      })
-      .classed("name-field", true)
-      .call(wrap, 400);
-
-    partnerText
-      .enter()
-      .append("text")
-      .attr("x", function (d) {
-        return d.x;
-      })
-      .attr("y", function (d) {
-        return d.y - 512.5;
-      })
-      .text(function (d) {
-        return "Married: YYYY";
-      })
-      .classed("name-field", true)
-      .call(wrap, 400);
-    var text = d3
-      .select("svg g.nodes")
-      .selectAll("text .node")
-      .data(treeData.descendants());
-    text
-      .enter()
-      .append("text")
-      .attr("x", function (d) {
-        try {
-          if (!d.data.partnerinfo.name === "text") return d.x;
-          return d.x - 550;
-        } catch {
-          return d.x - 187.5;
-        }
-      })
-      .attr("y", function (d) {
-        return d.y - 350;
-      })
-      .text(function (d) {
+    treeCardMain
+      .append("xhtml:div")
+      .attr("class", "tree-card-birth")
+      .html(function (d) {
         if (d.data.birthdate)
           return dateFormat(d.data.birthdate, "dS mmmm yyyy");
         return "";
-      })
-      .call(wrap, 200);
-    text
-      .enter()
-      .append("text")
-      .attr("x", function (d) {
-        try {
-          if (!d.data.partnerinfo.name === "text") return d.x;
-          return d.x - 165;
-        } catch {
-          return d.x + 200;
-        }
-      })
-      .attr("y", function (d) {
-        return d.y - 350;
-      })
-      .text(function (d) {
+      });
+    treeCardMain
+      .append("xhtml:div")
+      .attr("class", "tree-card-birth tree-card-age")
+      .html(function (d) {
         if (d.data.deathdate) {
           return dateFormat(d.data.deathdate, "dS mmmm yyyy");
         }
@@ -941,59 +805,21 @@ export default function Tree(props) {
           return `${timeDifference} years old`;
         }
         return "";
-      })
-      .call(wrap, 200);
-    text
-      .enter()
-      .append("text")
-      .attr("x", function (d) {
-        try {
-          if (!d.data.partnerinfo.name === "text") return d.x;
-          return d.x - 375;
-        } catch {
-          return d.x;
-        }
-      })
-      .attr("y", function (d) {
-        return d.y - 240;
-      })
+      });
+    let name = treeCardMain.append("xhtml:div").attr("class", "tree-card-name");
+
+    name
+      .append("p")
+      .html("Hau")
+      .attr("class", "tree-card-generation")
       .text(function (d) {
         return d.data.generation;
-      })
-      .call(wrap, 300);
-    text
-      .enter()
-      .append("text")
-      .attr("x", function (d) {
-        try {
-          if (!d.data.partnerinfo.name === "text") return d.x;
-          return d.x - 375;
-        } catch {
-          return d.x;
-        }
-      })
-      .attr("y", function (d) {
-        return d.y - 200;
-      })
-      .text(function (d) {
-        return d.data.name;
-      })
-      .classed("name-field", true)
-      .call(wrap, 400);
-    text
-      .enter()
-      .append("text")
-      .attr("x", function (d) {
-        try {
-          if (!d.data.partnerinfo.name === "text") return d.x;
-          return d.x - 80;
-        } catch {
-          return d.x + 280;
-        }
-      })
-      .attr("y", function (d) {
-        return d.y - 110;
-      })
+      });
+    name.append("p").text(function (d) {
+      return d.data.name;
+    });
+    treeCardMain
+      .append("xhtml:p")
       .text(function (d) {
         try {
           return d.data.extradetails.profession;
@@ -1001,7 +827,94 @@ export default function Tree(props) {
           return "";
         }
       })
-      .classed("profession", true);
+      .attr("class", "tree-card-footer");
+
+
+    // var partnerText = d3
+    //   .select("svg g.nodes")
+    //   .selectAll("text .node")
+    //   .data(
+    //     treeData.descendants().filter(function (d) {
+    //       try {
+    //         if (d.data.partnerinfo.name) return true;
+    //       } catch {}
+    //       return false;
+    //     })
+    //   );
+    // partnerText
+    //   .enter()
+    //   .append("text")
+    //   .attr("x", function (d) {
+    //     return d.x + 167.5;
+    //   })
+    //   .attr("y", function (d) {
+    //     return d.y - 350;
+    //   })
+    //   .text(function (d) {
+    //     try {
+    //       if (d.data.partnerinfo.birthdate)
+    //         return dateFormat(d.data.partnerinfo.birthdate, "dS mmmm yyyy");
+    //     } catch {}
+    //     return "";
+    //   })
+    //   .call(wrap, 200);
+    // partnerText
+    //   .enter()
+    //   .append("text")
+    //   .attr("x", function (d) {
+    //     return d.x + 562.5;
+    //   })
+    //   .attr("y", function (d) {
+    //     return d.y - 350;
+    //   })
+    //   .text(function (d) {
+    //     try {
+    //       if (d.data.partnerinfo.birthdate) {
+    //         let firstDate = new Date(d.data.partnerinfo.birthdate),
+    //           now = new Date(),
+    //           timeDifference = Math.floor(
+    //             Math.abs((now.getTime() - firstDate.getTime()) / 31449600000)
+    //           );
+    //         return `${timeDifference} years old`;
+    //       }
+    //     } catch {}
+    //     return "";
+    //   })
+    //   .call(wrap, 200);
+
+    // partnerText
+    //   .enter()
+    //   .append("text")
+    //   .attr("x", function (d) {
+    //     return d.x + 350;
+    //   })
+    //   .attr("y", function (d) {
+    //     return d.y - 200;
+    //   })
+    //   .text(function (d) {
+    //     try {
+    //       return d.data.partnerinfo.name;
+    //     } catch {
+    //       return "";
+    //     }
+    //   })
+    //   .classed("name-field", true)
+    //   .call(wrap, 400);
+
+    // partnerText
+    //   .enter()
+    //   .append("text")
+    //   .attr("x", function (d) {
+    //     return d.x;
+    //   })
+    //   .attr("y", function (d) {
+    //     return d.y - 512.5;
+    //   })
+    //   .text(function (d) {
+    //     return "Married: YYYY";
+    //   })
+    //   .classed("name-field", true)
+    //   .call(wrap, 400);
 
     links = d3.select("svg g.links").selectAll("path").data(linksData);
     links
@@ -1273,35 +1186,6 @@ export default function Tree(props) {
     $("div.edit-container").css("display", "flex");
   };
 
-  const resetCreateFields = () => {
-    let str = "";
-    let temparr = [];
-    let list = document.getElementById("parentSearchDataList");
-    //populate parentSearchDataList
-    for (const x of tableData) {
-      temparr.push(`${x.generation} ${x.name}`);
-    }
-    for (var i = 0; i < temparr.length; ++i) {
-      str += '<option value="' + temparr[i] + '" />';
-    }
-    list.innerHTML = str;
-    try {
-      $("#toggle-slide").checked = false;
-      $("div.Create").css("display", "block");
-      $("#Modal").css("display", "block");
-      $("#nameInputC")
-        .attr("placeholder", "")
-        .val("")
-        .css("border-bottom", "2px solid #bebed2");
-      $("#genInputC").val("");
-      $("#birthdateInputC").val("");
-      $("#parentInputC")
-        .val("")
-        .css("border-bottom", "2px solid #bebed2")
-        .attr("placeholder", "");
-    } catch {}
-  };
-
   $("ul.header-navigation").removeClass("hidden");
   $(window).on("click", function (event) {
     //Hide the menus if visible
@@ -1355,8 +1239,8 @@ export default function Tree(props) {
           } catch {}
         }}
       ></ul>
-      <button className="tree-create-button" onClick={() => resetCreateFields()}>
-        Add New
+      <button className="tree-create-button" onClick={() => updateTree()}>
+        Test Update
       </button>
       <button className="changeview-button" onClick={() => changeView()}>
         Read
@@ -1368,19 +1252,12 @@ export default function Tree(props) {
           search(obj.id);
         }}
         toast={toast}
-        update={() => updateTree()}
+        update={() => setUpdate((prevUpdate) => !prevUpdate)}
         node={InfoCard}
         treeData={tableData}
         edit={() => openNode()}
       />
       <svg id="Tree"></svg>
-      <Create
-        data={tableData}
-        getPID={getPID}
-        update={(obj) => {
-          dynamicUpdate(obj);
-        }}
-      />
       <Edit
         toast={(msg) => toast.error(msg)}
         getPID={getPID}
