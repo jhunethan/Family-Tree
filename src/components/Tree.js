@@ -221,41 +221,6 @@ export default function Tree(props) {
     d3.select("svg").selectAll("g").attr("transform", transform);
   }
 
-  function wrap(text, width) {
-    text.each(function () {
-      var text = d3.select(this),
-        words = text.text().split(/\s+/).reverse(),
-        word,
-        line = [],
-        lineNumber = 0,
-        lineHeight = 1.1, // ems
-        x = text.attr("x"),
-        y = text.attr("y"),
-        dy = 0, //parseFloat(text.attr("dy")),
-        tspan = text
-          .text(null)
-          .append("tspan")
-          .attr("x", x)
-          .attr("y", y)
-          .attr("dy", dy + "em");
-      while ((word = words.pop())) {
-        line.push(word);
-        tspan.text(line.join(" "));
-        if (tspan.node().getComputedTextLength() > width) {
-          line.pop();
-          tspan.text(line.join(" "));
-          line = [word];
-          tspan = text
-            .append("tspan")
-            .attr("x", x)
-            .attr("y", y)
-            .attr("dy", ++lineNumber * lineHeight + dy + "em")
-            .text(word);
-        }
-      }
-    });
-  }
-
   var zoom = d3
     .zoom()
     .extent([
@@ -664,7 +629,7 @@ export default function Tree(props) {
       .attr("rx", 5)
       .attr("ry", 5);
 
-    partnerShapes
+    let partnerContainer = partnerShapes
       .enter()
       .append("foreignObject")
       .attr("class", "partnernode-container")
@@ -688,6 +653,86 @@ export default function Tree(props) {
         return "partnernode level-" + d.depth;
       })
       .on("click", (d) => nodeClick(d.target, "partner"));
+
+    partnerContainer
+      .append("xhtml:img")
+      .attr("src", pattern)
+      .attr("class", function (d) {
+        return "pattern level-" + d.depth;
+      });
+
+    partnerContainer
+      .append("xhtml:img")
+      .attr("src", function (d) {
+        // try {
+        //   if (d.data.extradetails.photo_id.length > 1) {
+        //     console.log((d.data.extradetails.photo_id))
+        //     Axios.get("https://layfamily.herokuapp.com/api/get/photos/user", {
+        //       params: { id: d.data.id },
+        //     }).then((res) => {
+        //       console.log(res)
+        //       return 'data:image/png;base64,' + btoa(res.data);
+        //     });
+        //   }
+        // } catch {}
+        return profile;
+      })
+      .classed("profile-picture", true);
+
+    let partnerTreeCardMain = partnerContainer
+      .append("xhtml:section")
+      .attr("class", "tree-card-main");
+
+    partnerTreeCardMain
+      .append("xhtml:div")
+      .attr("class", "tree-card-birth")
+      .html(function (d) {
+        if (d.data.partnerinfo.birthdate)
+          return dateFormat(d.data.partnerinfo.birthdate, "dS mmmm yyyy");
+        return "";
+      });
+    partnerTreeCardMain
+      .append("xhtml:div")
+      .attr("class", "tree-card-birth tree-card-age")
+      .html(function (d) {
+        if (d.data.partnerinfo.deathdate) {
+          return dateFormat(d.data.partnerinfo.deathdate, "dS mmmm yyyy");
+        }
+        if (d.data.partnerinfo.birthdate) {
+          let firstDate = new Date(d.data.partnerinfo.birthdate),
+            now = new Date(),
+            timeDifference = Math.floor(
+              Math.abs((now.getTime() - firstDate.getTime()) / 31449600000)
+            );
+          return `${timeDifference} years old`;
+        }
+        return "";
+      });
+    let partnerName = partnerTreeCardMain
+      .append("xhtml:div")
+      .attr("class", "tree-card-name");
+
+    partnerName
+      .append("p")
+      .html("Hau")
+      .attr("class", "tree-card-generation")
+      .text(function (d) {
+        return d.data.partnerinfo.generation;
+      });
+    partnerName.append("p").text(function (d) {
+      return d.data.partnerinfo.name;
+    });
+    partnerTreeCardMain
+      .append("xhtml:p")
+      .text(function (d) {
+        try {
+          return d.data.partnerinfo.extradetails.profession;
+        } catch {
+          return "";
+        }
+      })
+      .attr("class", "tree-card-footer");
+
     // //card pattern
     // partnerShapes
     //   .enter()
@@ -719,7 +764,7 @@ export default function Tree(props) {
     //     return profile;
     //   })
     //   .classed("profile-picture", true);
-      
+
     // Nodes
     var shapes = d3
       .select("svg g.nodes")
@@ -828,7 +873,6 @@ export default function Tree(props) {
         }
       })
       .attr("class", "tree-card-footer");
-
 
     // var partnerText = d3
     //   .select("svg g.nodes")

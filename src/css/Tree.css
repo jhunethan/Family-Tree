@@ -6,7 +6,8 @@
   }
 }
 
-/* //main svg container */
+/* main svg container */
+
 #Tree {
   width: 100vw;
   height: 100vh;
@@ -18,6 +19,8 @@ svg {
   height: 100vh;
   width: 100vw;
 }
+
+/* Tree card display */
 
 .node,
 .partnernode {
@@ -114,24 +117,6 @@ svg {
   margin-right: 10px;
   text-align: right;
 }
-
-/* Tree card display */
-/* 
-.name-field {
-  font-size: 38px;
-}
-
-.profession {
-  text-anchor: end;
-}
-
-text {
-  text-anchor: middle;
-  user-select: none;
-  pointer-events: none;
-  font-size: 30px;
-}
- */
 
 .level-0 {
   display: none;
