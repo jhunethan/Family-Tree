@@ -1043,6 +1043,7 @@ export default function Tree(props) {
       let nodeRect = d3.select("svg g.nodes").selectAll("foreignObject")
         ._groups[0];
       let dimensions = [];
+      console.log(nodeRect)
       if (nodeRect)
         for (const x of nodeRect) {
           if (x.__data__.data.id === node.id) {

@@ -66,7 +66,7 @@ function SignUp(props) {
         toast.error("Passwords dont match, please re-enter");
         check = false;
       }
-      if($("#signup-password").val().length > 5){
+      if($("#signup-password").val().length < 5){
         toast.error("Password must be longer than 5 characters");
         check = false;
       }
@@ -162,7 +162,7 @@ function Login(props) {
   const checkChanges = (method) => {
     let tempUser = user;
     tempUser[method] = $(`#login-${method}`).val();
-    setUser($.trim(tempUser));
+    setUser(tempUser);
   };
 
   const submit = () => {
@@ -339,7 +339,7 @@ function LoginControl(props) {
             className="btn btn-dark btn-lg btn-block landing-button"
             onClick={props.setSignUp}
           >
-            Signup
+            Signup 
           </button>
         </div>
         <button
