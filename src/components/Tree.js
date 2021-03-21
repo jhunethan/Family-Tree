@@ -80,6 +80,7 @@ export default function Tree(props) {
         toast.success("Tree loaded!\n Try zooming out or use the search bar", {
           position: "top-center",
           autoClose: 10000,
+          toastId: "TreeLoaded",
         })
       );
   }, [update]);
@@ -98,11 +99,11 @@ export default function Tree(props) {
     // eslint-disable-next-line
   }, [tableData]);
 
-  //triggers a data request
-  const updateTree = async () => {
-    await converttreeData();
-    d3.select("svg g.nodes").enter().data(treeData.descendants());
-  };
+  // //triggers a data request
+  // const updateTree = async () => {
+  //   await converttreeData();
+  //   d3.select("svg g.nodes").enter().data(treeData.descendants());
+  // };
 
   const getNode = (idKey) => {
     for (var i = 0; i < tableData.length; i++) {
@@ -1039,7 +1040,8 @@ export default function Tree(props) {
           node = x;
         }
       }
-      let nodeRect = d3.select("svg g.nodes").selectAll("foreignObject")._groups[0];
+      let nodeRect = d3.select("svg g.nodes").selectAll("foreignObject")
+        ._groups[0];
       let dimensions = [];
       if (nodeRect)
         for (const x of nodeRect) {
@@ -1254,9 +1256,9 @@ export default function Tree(props) {
           } catch {}
         }}
       ></ul>
-      <button className="tree-create-button" onClick={() => updateTree()}>
+      {/* <button className="tree-create-button" onClick={() => updateTree()}>
         Test Update
-      </button>
+      </button> */}
       <button className="changeview-button" onClick={() => changeView()}>
         Read
       </button>
