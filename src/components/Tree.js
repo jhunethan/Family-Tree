@@ -633,6 +633,9 @@ export default function Tree(props) {
       .enter()
       .append("foreignObject")
       .attr("class", "partnernode-container")
+      .attr("id", function (d) {
+        return `partnernode ${d.data.partnerinfo.id}`;
+      })
       .attr("x", function (d) {
         return d.x + 50;
       })
@@ -732,38 +735,6 @@ export default function Tree(props) {
         }
       })
       .attr("class", "tree-card-footer");
-
-    // //card pattern
-    // partnerShapes
-    //   .enter()
-    //   .append("image")
-    //   .attr("xlink:href", pattern)
-    //   .attr("class", function (d) {
-    //     return "pattern level-" + d.depth;
-    //   })
-    //   .attr("x", function (d) {
-    //     return d.x + 50;
-    //   })
-    //   .attr("y", function (d) {
-    //     return d.y - 500;
-    //   });
-    // partnerShapes
-    //   .enter()
-    //   .append("foreignObject")
-    //   .attr("class", function (d) {
-    //     return "profile-container level-" + d.depth;
-    //   })
-    //   .attr("x", function (d) {
-    //     return d.x + 275;
-    //   })
-    //   .attr("y", function (d) {
-    //     return d.y - 462.5;
-    //   })
-    //   .append("xhtml:img")
-    //   .attr("src", function (d) {
-    //     return profile;
-    //   })
-    //   .classed("profile-picture", true);
 
     // Nodes
     var shapes = d3
@@ -1068,7 +1039,7 @@ export default function Tree(props) {
           node = x;
         }
       }
-      let nodeRect = d3.select("svg g.nodes").selectAll("text")._groups[0];
+      let nodeRect = d3.select("svg g.nodes").selectAll("foreignObject")._groups[0];
       let dimensions = [];
       if (nodeRect)
         for (const x of nodeRect) {

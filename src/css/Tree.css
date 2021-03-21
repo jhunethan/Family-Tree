@@ -32,6 +32,10 @@ svg {
   transition: all 0.3s;
 }
 
+.node>*{
+  user-select: none;
+}
+
 .node:hover,
 .partnernode:hover {
   background-color: #eeeeee;
