@@ -376,9 +376,7 @@ export default function Tree(props) {
 
   function nodeClick(el, type) {
     let child =
-      el.classList[0] === "partnernode"
-        ? el.__data__.data.partnerinfo
-        : el.__data__.data;
+      type === "partner" ? el.__data__.data.partnerinfo : el.__data__.data;
     setInfoCard(child);
     //alternative function
     //show a edit menu for a node letting the user change the tree dynamically
@@ -936,12 +934,13 @@ export default function Tree(props) {
     } else {
       searchterm = $.trim(text);
     }
+
     $("#datalist-input")
       .val("")
       .attr("placeholder", "Search by Name or Birthdate");
     populateDatalist();
     if (searchterm !== "No results." && searchterm) found = true;
-    //if focused, if textcontent isnt "No results."
+    //if search term isnt null && if textcontent isnt "No results."
     if (found) {
       if ($("button.changeview-button")[0].textContent === "Read")
         $("#card-container").css("display", "block");
