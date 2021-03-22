@@ -165,7 +165,7 @@ export default function Edit(props) {
       setChanged(true);
       changesStack.push("isChild");
     }
-    console.log(changesStack)
+    console.log(changesStack);
     setChanges(changesStack.join(","));
   }
 
@@ -185,11 +185,11 @@ export default function Edit(props) {
 
   function saveEdit() {
     console.log(nodeInput);
-    console.log(changed)
-    console.log(checkParent())
+    console.log(changed);
+    console.log(checkParent());
     if (changed && checkParent()) {
       //save
-      console.log("id info updated")
+      console.log("id info updated");
       Axios.post("https://layfamily.herokuapp.com/api/update", {
         input: nodeInput,
         name: props.nodedata.name,
@@ -198,7 +198,7 @@ export default function Edit(props) {
       });
     }
     if (extrachanged) {
-      console.log("extra updated")
+      console.log("extra updated");
       Axios.post("https://layfamily.herokuapp.com/api/updateextra", {
         id: props.nodedata.id,
         name: props.nodedata.name,
@@ -516,8 +516,16 @@ export default function Edit(props) {
               }
             }}
           />
-          <datalist id="parentSearchDataList"></datalist>
         </p>
+        <ul
+          className="datalist-ul"
+          id="parentSearchDataList"
+          onClick={(e) => {
+            try {
+              console.log(e.target.closest("li").textContent);
+            } catch {}
+          }}
+        ></ul>
         <div className="radio-toggles">
           <input
             autoComplete="off"
@@ -529,7 +537,7 @@ export default function Edit(props) {
             checked={props.radiochecked}
             value="child"
           />
-          <label htmlFor="option-1">Child</label>
+          <label htmlFor="option-1">Parent</label>
           <input
             autoComplete="off"
             onClick={(event) => props.switchRadio(event.target)}

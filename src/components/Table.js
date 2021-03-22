@@ -177,18 +177,9 @@ export default function Table(props) {
   };
 
   const resetCreateFields = () => {
-    let str = "";
-    let temparr = [];
-    let list = document.getElementById("parentSearchDataList");
-    //populate parentSearchDataList
-    for (const x of tableData) {
-      temparr.push(`${x.generation} ${x.name}`);
-    }
-    for (var i = 0; i < temparr.length; ++i) {
-      str += '<option value="' + temparr[i] + '" />';
-    }
-    list.innerHTML = str;
     try {
+      $(".radio-togglesC").css("display","none")
+      $("#parentSearchDataList").html("");
       $("#toggle-slide").checked = false;
       $("div.Create").css("display", "block");
       $("#Modal").css("display", "block");
@@ -252,12 +243,8 @@ export default function Table(props) {
     temparr = removeChildren(id, temparr);
     setDatalist(temparr);
     for (var i = 0; i < temparr.length; ++i) {
-      str +=
-        '<option value="' +
-        temparr[i].generation +
-        " " +
-        temparr[i].name +
-        '" />';
+      if (temparr[i].name)
+        str += `<li>${temparr[i].generation} ${temparr[i].name} </li>`;
     }
     list.innerHTML = str;
 
@@ -316,6 +303,12 @@ export default function Table(props) {
   $("#nav-link-one").removeClass("active");
   $("#nav-link-one").addClass("active");
   $("ul.header-navigation").removeClass("hidden");
+  $(window).on("click", function (event) {
+    //Hide the menus if visible
+    try {
+      if (event.target !== $("#parentInputC")[0]) $("ul.datalist-ul").html("");
+    } catch {}
+  });
 
   return (
     <div className="table-page-container">

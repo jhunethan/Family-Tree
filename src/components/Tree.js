@@ -1094,12 +1094,8 @@ export default function Tree(props) {
     temparr = filterChildren(id, temparr);
     setDatalist(temparr);
     for (var i = 0; i < temparr.length; ++i) {
-      str +=
-        '<option value="' +
-        temparr[i].generation +
-        " " +
-        temparr[i].name +
-        '" />';
+      if (temparr[i].name)
+        str += `<li>${temparr[i].generation} ${temparr[i].name} </li>`;
     }
     list.innerHTML = str;
 

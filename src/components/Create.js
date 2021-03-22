@@ -32,6 +32,42 @@ function Create(props) {
       id += 1;
     }
 
+    //if parent field is populated, show relationship
+
+    $(".radio-togglesC").css(
+      "display",
+      $.trim($("#parentInputC").val()) ? "flex" : "none"
+    );
+
+    //if parent field, populate Create-Datalist
+    //filter by input
+    let list = $("#Create-Datalist").html(""),
+      datalistcount = 0,
+      filteredDatalist = [];
+
+    if ($.trim($("#parentInputC").val())) {
+      for (const x of props.data) {
+        if (x.name && datalistcount < 5) {
+          filteredDatalist.push(`${x.generation} ${x.name}`);
+        }
+      }
+
+      let parsed = $.trim($("#parentInputC").val().toLowerCase()).split(" ");
+      filteredDatalist = filteredDatalist.filter((x) => {
+        for (const word of parsed) {
+          if (!x.toLowerCase().includes(word)) return false;
+        }
+        return true;
+      });
+
+      for (const n of filteredDatalist) {
+        if (datalistcount < 5) {
+          list.append(`<li>${n}</li>`);
+          datalistcount += 1;
+        }
+      }
+    }
+
     node.parentNode = $("#parentInputC").val();
     let pid = document.getElementById("toggle-slide").checked,
       isPartner = 0;
@@ -197,8 +233,8 @@ function Create(props) {
           autoComplete="off"
           id="parentInputC"
           placeholder="Name of Parent/ Partner"
-          list="parentSearchDataList"
           onChange={inputChangedHandler}
+          onClick={inputChangedHandler}
           onKeyUp={(event) => {
             if (event.key === "Enter") {
               // Cancel the default action, if needed
@@ -208,11 +244,19 @@ function Create(props) {
             }
           }}
         ></input>
-        <datalist id="parentSearchDataList"></datalist>
       </p>
+      <ul
+        className="datalist-ul"
+        id="Create-Datalist"
+        onClick={(e) => {
+          try {
+            $("#parentInputC").val($.trim(e.target.closest("li").textContent));
+          } catch {}
+        }}
+      ></ul>
 
       <div className="radio-togglesC">
-        <p className="create-radio-option">Child</p>
+        <p className="create-radio-option">Parent-</p>
         <input
           type="checkbox"
           className="create-checkbox"

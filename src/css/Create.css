@@ -68,11 +68,12 @@
 /* relationship selection */
 
 .radio-togglesC{
+  display: none;
+
   align-items: center;
   background: #eee;
   border: 1px solid lightgrey;
   border-radius: 9999px;
-  display: flex;
   justify-content: center;
   margin: 20px auto;
   max-width: 400px;
@@ -131,4 +132,12 @@ button:hover {
   color: white;
   background-color: black;
   transition: all 0.3s;
+}
+
+#Create-Datalist{
+  position: absolute;
+  font-size: 20px;
+  padding: 0;
+  left:30px;
+  width: 82.5%;
 }
