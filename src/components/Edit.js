@@ -126,7 +126,7 @@ export default function Edit(props) {
     for (const x of opStack) {
       if (data[x] !== $(`#${x}-input`).val()) {
         changesStack.push(x);
-        setExtrachanged(true);
+        setChanged(true);
       }
     }
 
@@ -165,6 +165,7 @@ export default function Edit(props) {
       setChanged(true);
       changesStack.push("isChild");
     }
+    console.log(changesStack)
     setChanges(changesStack.join(","));
   }
 
@@ -184,7 +185,9 @@ export default function Edit(props) {
 
   function saveEdit() {
     console.log(nodeInput);
-    if (changed === true && checkParent()) {
+    console.log(changed)
+    console.log(checkParent())
+    if (changed && checkParent()) {
       //save
       console.log("id info updated")
       Axios.post("https://layfamily.herokuapp.com/api/update", {

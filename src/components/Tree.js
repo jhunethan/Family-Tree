@@ -846,92 +846,6 @@ export default function Tree(props) {
       })
       .attr("class", "tree-card-footer");
 
-    // var partnerText = d3
-    //   .select("svg g.nodes")
-    //   .selectAll("text .node")
-    //   .data(
-    //     treeData.descendants().filter(function (d) {
-    //       try {
-    //         if (d.data.partnerinfo.name) return true;
-    //       } catch {}
-    //       return false;
-    //     })
-    //   );
-    // partnerText
-    //   .enter()
-    //   .append("text")
-    //   .attr("x", function (d) {
-    //     return d.x + 167.5;
-    //   })
-    //   .attr("y", function (d) {
-    //     return d.y - 350;
-    //   })
-    //   .text(function (d) {
-    //     try {
-    //       if (d.data.partnerinfo.birthdate)
-    //         return dateFormat(d.data.partnerinfo.birthdate, "dS mmmm yyyy");
-    //     } catch {}
-    //     return "";
-    //   })
-    //   .call(wrap, 200);
-    // partnerText
-    //   .enter()
-    //   .append("text")
-    //   .attr("x", function (d) {
-    //     return d.x + 562.5;
-    //   })
-    //   .attr("y", function (d) {
-    //     return d.y - 350;
-    //   })
-    //   .text(function (d) {
-    //     try {
-    //       if (d.data.partnerinfo.birthdate) {
-    //         let firstDate = new Date(d.data.partnerinfo.birthdate),
-    //           now = new Date(),
-    //           timeDifference = Math.floor(
-    //             Math.abs((now.getTime() - firstDate.getTime()) / 31449600000)
-    //           );
-    //         return `${timeDifference} years old`;
-    //       }
-    //     } catch {}
-    //     return "";
-    //   })
-    //   .call(wrap, 200);
-
-    // partnerText
-    //   .enter()
-    //   .append("text")
-    //   .attr("x", function (d) {
-    //     return d.x + 350;
-    //   })
-    //   .attr("y", function (d) {
-    //     return d.y - 200;
-    //   })
-    //   .text(function (d) {
-    //     try {
-    //       return d.data.partnerinfo.name;
-    //     } catch {
-    //       return "";
-    //     }
-    //   })
-    //   .classed("name-field", true)
-    //   .call(wrap, 400);
-
-    // partnerText
-    //   .enter()
-    //   .append("text")
-    //   .attr("x", function (d) {
-    //     return d.x;
-    //   })
-    //   .attr("y", function (d) {
-    //     return d.y - 512.5;
-    //   })
-    //   .text(function (d) {
-    //     return "Married: YYYY";
-    //   })
-    //   .classed("name-field", true)
-    //   .call(wrap, 400);
-
     links = d3.select("svg g.links").selectAll("path").data(linksData);
     links
       .enter()
@@ -1043,7 +957,6 @@ export default function Tree(props) {
       let nodeRect = d3.select("svg g.nodes").selectAll("foreignObject")
         ._groups[0];
       let dimensions = [];
-      console.log(nodeRect)
       if (nodeRect)
         for (const x of nodeRect) {
           if (x.__data__.data.id === node.id) {

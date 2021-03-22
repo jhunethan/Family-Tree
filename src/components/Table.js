@@ -334,7 +334,6 @@ export default function Table(props) {
             <button
               className="history-button"
               onClick={() => {
-                console.log($(".edit-history").css("right"))
                 if ($(".edit-history").css("right") === "0px")
                   return $(".edit-history").css("right", "-500px");
                 $(".edit-history").css("right", 0);
