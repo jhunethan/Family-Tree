@@ -8,11 +8,11 @@
   max-height: 80vh;
   min-width: 250px;
   width: auto;
-  max-width: 800px;
+  max-width: 350px;
   margin: 0 auto;
 
   top: 50px;
-  left: calc(35vw - 200px);
+  left: calc(50vw - 175px);
   z-index: 1000;
 
   background: #e6e6e6;
@@ -188,7 +188,7 @@ input[type="radio"] {
 
 .extranames-container {
   display: flex;
-  height: 75px;
+  flex-wrap: wrap;
 }
 
 .flex-cards-display {
@@ -213,9 +213,3 @@ input[type="radio"] {
   transition: all 0.3s;
 }
 
-@media only screen and (max-width: 500px) {
-  .form {
-    left: 20px;
-    width: 300px;
-  }
-}

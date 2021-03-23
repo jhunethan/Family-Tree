@@ -11,7 +11,7 @@
   padding: 20px 30px;
   position: absolute;
   top: 10vh;
-  left: calc(50% - 200px);
+  left: calc(50vw - 167.5px);
   z-index: 1000;
 }
 .Create > h2 {
@@ -89,8 +89,8 @@
 
 .create-checkbox {
   position: relative;
-  width: 4vw;
-  height: 2vw;
+  width: 50px;
+  height: 25px;
   -webkit-appearance: none;
   background: #c6c6c6;
   border-radius: 100px;
@@ -131,9 +131,9 @@ button:hover {
 }
 
 #Create-Datalist {
-  position: absolute;
   font-size: 20px;
   padding: 0;
+  top:unset;
   left: 30px;
   width: 82.5%;
 }

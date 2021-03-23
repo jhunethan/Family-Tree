@@ -389,13 +389,7 @@ export default function Table(props) {
       <ToastContainer
         position="bottom-right"
         autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
+        hideProgressBar={true}
       />
       {/* <EditPhotoCondition
         image={currentImage}

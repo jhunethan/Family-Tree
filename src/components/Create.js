@@ -245,7 +245,6 @@ function Create(props) {
           } catch {}
         }}
       ></ul>
-
       <div className="radio-togglesC">
         <p className="create-radio-option">Parent</p>
         <input
@@ -257,7 +256,7 @@ function Create(props) {
           }}
           name="radio-optionsC"
         />
-        <p className="create-radio-option"> Partner</p>
+        <p className="create-radio-option">Partner</p>
       </div>
       <button
         type="button"

@@ -69,7 +69,7 @@ export default function Tree(props) {
     }
     $("button.changeview-button")[0].textContent = "Edit Mode";
     $("#card-container").css("display", "none");
-    toast.info("Edit mode, click any node to edit");
+    toast.info("Edit Mode, click any node to edit");
   };
 
   useEffect(() => {
@@ -401,7 +401,7 @@ export default function Tree(props) {
     setInfoCard(child);
     //alternative function
     //show a edit menu for a node letting the user change the tree dynamically
-    if ($("button.changeview-button")[0].textContent === "Edit") {
+    if ($("button.changeview-button")[0].textContent === "Edit Mode") {
       //remove other instances of edit menus
       $("foreignObject.edit-menu-container").remove();
       //open edit menu
@@ -963,7 +963,7 @@ export default function Tree(props) {
     if (searchterm !== "No results." && searchterm) found = true;
     //if search term isnt null && if textcontent isnt "No results."
     if (found) {
-      if ($("button.changeview-button")[0].textContent === "Read")
+      if ($("button.changeview-button")[0].textContent === "Read mode")
         $("#card-container").css("display", "block");
       //get node object
       let n = searchterm.split(" ");
@@ -982,7 +982,7 @@ export default function Tree(props) {
           if (x.__data__.data.id === node.id) {
             dimensions[0] = x.__data__.x;
             dimensions[1] = x.__data__.y;
-            if ($("button.changeview-button")[0].textContent === "Edit") {
+            if ($("button.changeview-button")[0].textContent === "Edit Mode") {
               nodeClick(x, "");
             }
           } else {
@@ -1229,7 +1229,12 @@ export default function Tree(props) {
           dynamicUpdate(obj);
         }}
       />
-      <ToastContainer position="bottom-right" autoClose={5000} limit={5} />
+      <ToastContainer
+        hideProgressBar={true}
+        position="bottom-right"
+        autoClose={5000}
+        limit={5}
+      />
     </div>
   );
 }
