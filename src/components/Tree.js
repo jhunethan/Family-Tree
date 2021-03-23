@@ -14,6 +14,7 @@ import profile from "../css/person-placeholder.jpg";
 import NodeCard from "./NodeCard";
 import Modal from "./Modal";
 import Edit from "./Edit";
+import Create from "./Create";
 
 var height;
 var width;
@@ -64,9 +65,9 @@ export default function Tree(props) {
     if (editview) {
       $("foreignObject.edit-menu-container").remove();
       toast.info("Read Mode");
-      return ($("button.changeview-button")[0].textContent = "Read");
+      return ($("button.changeview-button")[0].textContent = "Read Mode");
     }
-    $("button.changeview-button")[0].textContent = "Edit";
+    $("button.changeview-button")[0].textContent = "Edit Mode";
     $("#card-container").css("display", "none");
     toast.info("Edit mode, click any node to edit");
   };
@@ -104,6 +105,26 @@ export default function Tree(props) {
   //   await converttreeData();
   //   d3.select("svg g.nodes").enter().data(treeData.descendants());
   // };
+
+  const resetCreateFields = () => {
+    try {
+      $(".radio-togglesC").css("display", "none");
+      $("#parentSearchDataList").html("");
+      $("#toggle-slide").checked = false;
+      $("div.Create").css("display", "block");
+      $("#Modal").css("display", "block");
+      $("#nameInputC")
+        .attr("placeholder", "")
+        .val("")
+        .css("border-bottom", "2px solid #bebed2");
+      $("#genInputC").val("");
+      $("#birthdateInputC").val("");
+      $("#parentInputC")
+        .val("")
+        .css("border-bottom", "2px solid #bebed2")
+        .attr("placeholder", "");
+    } catch {}
+  };
 
   const getNode = (idKey) => {
     for (var i = 0; i < tableData.length; i++) {
@@ -1165,11 +1186,14 @@ export default function Tree(props) {
           } catch {}
         }}
       ></ul>
-      {/* <button className="tree-create-button" onClick={() => updateTree()}>
-        Test Update
-      </button> */}
+      <button
+        className="tree-create-button"
+        onClick={() => resetCreateFields()}
+      >
+        ➕
+      </button>
       <button className="changeview-button" onClick={() => changeView()}>
-        Read
+        Read Mode
       </button>
       <NodeCard
         show={(obj) => {
@@ -1198,6 +1222,13 @@ export default function Tree(props) {
         }}
       />
       <Modal close={closePopups} />
+      <Create
+        data={tableData}
+        getPID={getPID}
+        update={(obj) => {
+          dynamicUpdate(obj);
+        }}
+      />
       <ToastContainer position="bottom-right" autoClose={5000} limit={5} />
     </div>
   );

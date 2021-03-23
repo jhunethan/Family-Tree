@@ -96,7 +96,7 @@ function Create(props) {
   };
 
   const whitespace = (str) => {
-    if (str === undefined) return "";
+    if (!str) return "";
     return $.trim(str);
   };
 
@@ -114,38 +114,29 @@ function Create(props) {
   const validation = () => {
     let nameinput = $("#nameInputC");
     let parentInputC = $("#parentInputC");
-    let check1,
-      check2 = false;
+    let check = true;
 
     //check child or partner
     if (document.getElementById("toggle-slide").checked) node.isPartner = 1;
 
     if (node.isPartner === 1 && whitespace(parentInputC.val()).length < 1) {
-      check1 = false;
+      check = false;
       parentInputC.css("border-bottom", "2px solid red");
       parentInputC.attr(
         "placeholder",
         "This field cant be empty when partner is chosen"
       );
-    } else {
-      check1 = true;
     }
-    if (whitespace(nameinput.val())) {
-      whitespace(node.generation);
-      whitespace(node.name);
-      whitespace(node.birthdate);
-      whitespace(node.parent);
-      whitespace(node.partner);
-      setsendNode(node);
-      check2 = true;
-    } else {
+    if (!whitespace(nameinput.val())) {
       //empty, apply error styles
       nameinput.css("border-bottom", "2px solid red");
       nameinput.attr("placeholder", "Name cannot be empty");
+      check = false;
     }
-    if (check1 && check2) {
-      return true;
-    }
+
+    if (!checkParent()) check = false;
+
+    return check;
   };
 
   function checkParent() {
@@ -167,7 +158,7 @@ function Create(props) {
     if (node.isPartner === 0) {
       node.parent = node.parentNode;
     }
-    if (validation() && checkParent()) {
+    if (validation()) {
       Axios.post("https://layfamily.herokuapp.com/api/insert", {
         input: sendNode,
         author: cookies.author,
@@ -256,7 +247,7 @@ function Create(props) {
       ></ul>
 
       <div className="radio-togglesC">
-        <p className="create-radio-option">Parent-</p>
+        <p className="create-radio-option">Parent</p>
         <input
           type="checkbox"
           className="create-checkbox"

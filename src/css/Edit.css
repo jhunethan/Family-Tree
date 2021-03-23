@@ -5,7 +5,7 @@
   display: none;
   overflow: auto;
   position: absolute;
-  height: 80vh;
+  max-height: 80vh;
   min-width: 250px;
   width: auto;
   max-width: 800px;
@@ -56,6 +56,7 @@
   margin: 10px;
   float: left;
   border: rgb(255, 100, 100) 2px double;
+  background-color:rgb(255, 130, 130);
 }
 
 #deleteNode {
@@ -182,11 +183,6 @@ input[type="radio"] {
 .edit-button {
   padding: 8px 12px;
   margin: 10px;
-  font-family: "Montserrat", sans-serif;
-  background: 0;
-  font-size: 16px;
-
-  cursor: pointer;
   transition: all 0.3s;
 }
 

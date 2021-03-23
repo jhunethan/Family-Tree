@@ -44,10 +44,6 @@ body {
 
 .refresh-table, .history-button {
   padding: 8px 12px;
-  font-family: "Montserrat", sans-serif;
-  border: 1px solid black;
-  background: 0;
-  font-size: 16px;
 
   cursor: pointer;
   transition: all 0.3s;

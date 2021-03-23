@@ -18,3 +18,8 @@ a:hover {
   color: inherit !important;
   text-decoration: none !important;
 }
+
+button{
+  background-color: #23272B;
+  color: white;
+}
