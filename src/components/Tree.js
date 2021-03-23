@@ -1210,7 +1210,7 @@ export default function Tree(props) {
       <svg id="Tree"></svg>
       <Edit
         toast={(msg) => toast.error(msg)}
-        getPID={getPID}
+        getPID={(data) => getPID(data)}
         getNode={(id) => getNode(id)}
         radiochecked={radiochecked}
         switchRadio={(val) => switchRadio(val)}
@@ -1224,7 +1224,7 @@ export default function Tree(props) {
       <Modal close={closePopups} />
       <Create
         data={tableData}
-        getPID={getPID}
+        getPID={(data) => getPID(data)}
         update={(obj) => {
           dynamicUpdate(obj);
         }}
