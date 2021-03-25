@@ -186,6 +186,10 @@ input[type="radio"] {
   transition: all 0.3s;
 }
 
+.edit-button-container{
+  height:50px;
+}
+
 .extranames-container {
   display: flex;
   flex-wrap: wrap;
@@ -212,4 +216,5 @@ input[type="radio"] {
   border-color: red;
   transition: all 0.3s;
 }
+
 

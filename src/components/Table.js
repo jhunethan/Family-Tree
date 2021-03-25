@@ -115,10 +115,8 @@ export default function Table(props) {
       opStack = [
         "birthplace",
         "location",
-        "extranames",
         "fblink",
         "profession",
-        "languages",
       ];
 
     $("#generation-input").val(node.generation);

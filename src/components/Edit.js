@@ -4,7 +4,7 @@ import Axios from "axios";
 import * as $ from "jquery";
 import { useCookies } from "react-cookie";
 
-function ExtranamesDisplay(props) {
+function ListDisplay(props) {
   try {
     var names = props.node.extradetails[props.method];
     return (
@@ -165,7 +165,6 @@ export default function Edit(props) {
       setChanged(true);
       changesStack.push("isChild");
     }
-    console.log(changesStack);
     setChanges(changesStack.join(","));
   }
 
@@ -301,12 +300,12 @@ export default function Edit(props) {
       }
 
       if (nodeInput.extradetails.extranames !== data.extranames) {
-        setChanged(true);
+        setExtrachanged(true);
         arr.push("additional names");
       }
 
       if (nodeInput.extradetails.languages !== data.languages) {
-        setChanged(true);
+        setExtrachanged(true);
         arr.push("Spoken Languages");
       }
 
@@ -323,7 +322,7 @@ export default function Edit(props) {
       }
 
       if ($("#languages-input").val().length > 0) {
-        setChanged(true);
+        setExtrachanged(true);
         arr.push("languages");
       }
 
@@ -432,7 +431,7 @@ export default function Edit(props) {
           >
             Add
           </button>
-          <ExtranamesDisplay
+          <ListDisplay
             node={nodeInput}
             method="extranames"
             remove={(deleted) => {
@@ -640,7 +639,7 @@ export default function Edit(props) {
           >
             Add
           </button>
-          <ExtranamesDisplay
+          <ListDisplay
             node={nodeInput}
             method="languages"
             remove={(deleted) => {
@@ -705,22 +704,26 @@ export default function Edit(props) {
           placeholder="description up to 250 words..."
           onChange={descriptionHandler}
         />
-        <button
-          type="button"
-          id="save"
-          className="edit-button"
-          onClick={saveEdit}
-        >
-          Save Changes
-        </button>
-        <button
-          type="button"
-          id="cancel"
-          className="edit-button"
-          onClick={() => closeEditMenu("unsave")}
-        >
-          Cancel
-        </button>
+
+        <div className="edit-button-container">
+          {" "}
+          <button
+            type="button"
+            id="save"
+            className="edit-button"
+            onClick={saveEdit}
+          >
+            Save Changes
+          </button>
+          <button
+            type="button"
+            id="cancel"
+            className="edit-button"
+            onClick={() => closeEditMenu("unsave")}
+          >
+            Cancel
+          </button>
+        </div>
       </div>
 
       <div id="deleteConfirmMenu" className="form">
