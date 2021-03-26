@@ -66,11 +66,11 @@ function SignUp(props) {
         toast.error("Passwords dont match, please re-enter");
         check = false;
       }
-      if($("#signup-password").val().length < 5){
+      if ($("#signup-password").val().length < 5) {
         toast.error("Password must be longer than 5 characters");
         check = false;
       }
-      return check
+      return check;
     };
 
     if (!passwordValidation()) valid = false;
@@ -339,7 +339,7 @@ function LoginControl(props) {
             className="btn btn-dark btn-lg btn-block landing-button"
             onClick={props.setSignUp}
           >
-            Signup 
+            Signup
           </button>
         </div>
         <button
@@ -370,6 +370,11 @@ export default function LandingPage(props) {
   // };
 
   $("ul.header-navigation").addClass("hidden");
+
+  //ping backend and check if database is working
+  Axios.get("https://layfamily.herokuapp.com/testconnection").then((result) => {
+    console.log(result);
+  });
 
   return (
     <div className="wrapper">
