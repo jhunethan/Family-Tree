@@ -89,7 +89,7 @@ function SignUp(props) {
   };
 
   return (
-    <form>
+    <form id="form-register">
       <h3>Register</h3>
 
       <div className="form-group">
@@ -187,7 +187,7 @@ function Login(props) {
   };
 
   return (
-    <form>
+    <form id="form-login">
       <h3>Log in</h3>
 
       <div className="form-group">
@@ -323,7 +323,8 @@ function ResetPassword(props) {
 }
 
 function LoginControl(props) {
-  if (!props.view)
+  if (!props.view) {
+    $(".header").css("max-height", "400px");
     return (
       <div>
         <div className="landing-buttons">
@@ -350,6 +351,9 @@ function LoginControl(props) {
         </button>
       </div>
     );
+  }
+  $(".header").css("max-height", "700px");
+
   if (props.view === "reset") return <ResetPassword />;
   if (props.view === "login")
     return (
