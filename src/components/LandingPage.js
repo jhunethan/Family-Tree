@@ -324,7 +324,6 @@ function ResetPassword(props) {
 
 function LoginControl(props) {
   if (!props.view) {
-    $(".header").css("max-height", "400px");
     return (
       <div>
         <div className="landing-buttons">
@@ -352,7 +351,6 @@ function LoginControl(props) {
       </div>
     );
   }
-  $(".header").css("max-height", "700px");
 
   if (props.view === "reset") return <ResetPassword />;
   if (props.view === "login")
