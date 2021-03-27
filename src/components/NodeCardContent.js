@@ -262,7 +262,7 @@ export function MemberPhotos(props) {
   // var id;
 
   const imageEdit = (e) => {
-    console.log(e.target.parentNode.previousElementSibling);
+    props.editPhoto(e.target.parentNode.previousElementSibling.src)
   };
 
   const imageDelete = (e) => {

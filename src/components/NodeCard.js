@@ -119,7 +119,11 @@ export default function NodeCard(props) {
       </div>
       <div className="card-main">
         <section className="top-card">
-          <MemberPhotos node={props.node} update={props.update} />
+          <MemberPhotos
+            node={props.node}
+            update={props.update}
+            editPhoto={(src) => props.editPhoto(src)}
+          />
         </section>
         <AddPhoto
           imageChangeHandler={imageChangeHandler}

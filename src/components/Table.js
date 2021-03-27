@@ -10,26 +10,30 @@ import Modal from "./Modal";
 import Edit from "./Edit";
 import NodeCard from "./NodeCard";
 import EditHistory from "./EditHistory";
+import EditPhoto from "./EditPhoto";
 
-// function EditPhotoCondition(props) {
-//   if (props.image)
-//     return (
-//       <EditPhoto
-//         node={props.node}
-//         update={(obj) => {
-//           props.update(obj);
-//         }}
-//         image={props.image}
-//         setImage={(img) => props.setImage(img)}
-//       />
-//     );
-//   return null;
-// }
+function EditPhotoCondition(props) {
+  console.log(
+    props.image ? `image src updated : ${props.image}` : "image src empty"
+  );
+  if (props.image)
+    return (
+      <EditPhoto
+        node={props.node}
+        update={(obj) => {
+          props.update(obj);
+        }}
+        image={props.image}
+        setImage={(img) => props.setImage(img)}
+      />
+    );
+  return null;
+}
 
 export default function Table(props) {
   const [update, setUpdate] = useState(0);
   const [tableData, setTableData] = useState([]);
-  // const [currentImage, setCurrentImage] = useState(undefined);
+  const [currentImage, setCurrentImage] = useState(undefined);
 
   const [TreeData, setTreeData] = useState([]);
 
@@ -112,12 +116,7 @@ export default function Table(props) {
 
   const populateEditFields = (inputNode) => {
     let node = getNode(inputNode.id),
-      opStack = [
-        "birthplace",
-        "location",
-        "fblink",
-        "profession",
-      ];
+      opStack = ["birthplace", "location", "fblink", "profession"];
 
     $("#generation-input").val(node.generation);
     $("#name-input").val(node.name);
@@ -176,7 +175,7 @@ export default function Table(props) {
 
   const resetCreateFields = () => {
     try {
-      $(".radio-togglesC").css("display","none")
+      $(".radio-togglesC").css("display", "none");
       $("#parentSearchDataList").html("");
       $("#toggle-slide").checked = false;
       $("div.Create").css("display", "block");
@@ -379,9 +378,8 @@ export default function Table(props) {
         edit={() => {
           openNode(currentRow);
         }}
-        setPhoto={(photo) => {
-          console.log("inactive");
-          // setCurrentImage(photo);
+        editPhoto={(src) => {
+          setCurrentImage(src);
         }}
       />
       <ToastContainer
@@ -389,14 +387,14 @@ export default function Table(props) {
         autoClose={5000}
         hideProgressBar={true}
       />
-      {/* <EditPhotoCondition
+      <EditPhotoCondition
         image={currentImage}
         setImage={(img) => setCurrentImage(img)}
         node={nodestate}
         update={(obj) => {
           dynamicUpdate(obj);
         }}
-      /> */}
+      />
       <EditHistory />
     </div>
   );
