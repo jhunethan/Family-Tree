@@ -373,11 +373,6 @@ export default function LandingPage(props) {
 
   $("ul.header-navigation").addClass("hidden");
 
-  //ping backend and check if database is working
-  Axios.get("https://layfamily.herokuapp.com/testconnection").then((result) => {
-    console.log(result);
-  });
-
   return (
     <div className="wrapper">
       <section className="content-container">

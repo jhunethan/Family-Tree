@@ -165,6 +165,7 @@ export default function Edit(props) {
       setChanged(true);
       changesStack.push("isChild");
     }
+    console.log(changesStack);
     setChanges(changesStack.join(","));
   }
 
@@ -331,6 +332,7 @@ export default function Edit(props) {
         setExtrachanged(true);
       }
     }
+    console.log(arr);
     setExtrachanges(arr.join(","));
   };
 

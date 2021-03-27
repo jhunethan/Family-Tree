@@ -16,6 +16,7 @@ function EditPhotoCondition(props) {
   console.log(
     props.image ? `image src updated : ${props.image}` : "image src empty"
   );
+
   if (props.image)
     return (
       <EditPhoto

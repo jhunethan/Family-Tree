@@ -88,7 +88,7 @@ export default function NodeCard(props) {
       event.target.files[0].type.includes("image/")
     ) {
       setImageToBeSent(event.target.files[0]);
-      $(".image-editor-container").css("display", "block");
+      props.editPhoto(event.target.files[0])
       return true;
     }
     //else err

@@ -111,13 +111,16 @@ export default class EditPhoto extends PureComponent {
     },
   };
 
-  onSelectFile = (e) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const reader = new FileReader();
-      reader.addEventListener("load", () =>
-        this.setState({ src: reader.result })
-      );
-      reader.readAsDataURL(e.target.files[0]);
+  componentDidMount = (e) => {
+    if (this.props.image) {
+      try {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          // logs data as dataurl on finish
+          this.setState({ src: reader.result });
+        };
+        reader.readAsDataURL(this.props.image);
+      } catch (error){console.log(error)}
     }
   };
 
@@ -189,9 +192,6 @@ export default class EditPhoto extends PureComponent {
       <div className="image-editor-container">
         <h1 className="image-editor-title">Image editor</h1>
         <div className="image-editor">
-          <div>
-            <input type="file" accept="image/*" onChange={this.onSelectFile} />
-          </div>
           {src && (
             <ReactCrop
               src={src}
