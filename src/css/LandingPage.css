@@ -30,53 +30,73 @@
   background-color: #fff;
   border-radius: 2px;
   filter: drop-shadow(5px 5px 5px rgba(65, 65, 65, 0.322));
+  transition: 1s ease-out;
 }
 
-.landing-title{
+.landing-title {
   user-select: none;
   margin: 0 20px 40px 20px;
   font-size: 4rem;
 }
 
-.landing-title:hover{
+.landing-title:hover {
   cursor: pointer;
 }
 
-.landing-buttons{
+.landing-buttons {
   display: flex;
   flex-direction: row;
 }
 
-.landing-button{
+.landing-button {
   margin: 0 auto 20px auto !important;
   width: 40% !important;
 }
 
-.landing-guest{
+.landing-guest {
   display: block;
   margin: 0 auto;
   width: 90% !important;
 }
 
-.fake-hyperlink{
-  color: #0056B3;
+.fake-hyperlink {
+  color: #0056b3;
 }
 
-.fake-hyperlink:hover{
+.fake-hyperlink:hover {
   cursor: pointer;
   text-decoration: underline;
 }
 
-.no-margin{
-  margin:0;
+.no-margin {
+  margin: 0;
 }
 
-.hidden{
+.hidden {
   display: none !important;
 }
 
-.reset-container{
+.reset-container {
   display: flex;
   flex-direction: column;
   gap: 15px;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to{
+    opacity: 1;
+  }
+}
+
+#form-login,
+#form-register {
+  height: 100%;
+  overflow: hidden;
+
+  animation-name: fade-in;
+  animation-duration: 1s;
+  transition: 0.5s ease-out;
 }
