@@ -103,6 +103,7 @@ import "../css/EditPhoto.css";
 
 export default class EditPhoto extends PureComponent {
   state = {
+    image: null,
     src: null,
     crop: {
       unit: "%",
@@ -120,7 +121,9 @@ export default class EditPhoto extends PureComponent {
           this.setState({ src: reader.result });
         };
         reader.readAsDataURL(this.props.image);
-      } catch (error){console.log(error)}
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -180,17 +183,43 @@ export default class EditPhoto extends PureComponent {
         blob.name = fileName;
         window.URL.revokeObjectURL(this.fileUrl);
         this.fileUrl = window.URL.createObjectURL(blob);
+        console.log(blob);
+        //set blob as edited image state
+        this.setState({ image: blob });
+        this.props.setImage(blob)
         resolve(this.fileUrl);
       }, "image/jpeg");
     });
   }
 
   render() {
-    const { crop, croppedImageUrl, src } = this.state;
+    const { crop, croppedImageUrl, src, image } = this.state;
 
     return (
       <div className="image-editor-container">
-        <h1 className="image-editor-title">Image editor</h1>
+        <div className="image-editor-top">
+          <h1 className="image-editor-title">Image editor</h1>
+          <button
+            className="image-editor-button"
+            id="image-editor-cancel"
+            onClick={() => this.props.closePopups()}
+          >
+            Cancel
+          </button>
+          <button
+            className="image-editor-button"
+            id="image-editor-save"
+            onClick={() => {
+              if (image) {
+                this.props.closePopups();
+                this.props.saveImage(image);
+              }
+            }}
+          >
+            Save
+          </button>
+        </div>
+
         <div className="image-editor">
           {src && (
             <ReactCrop

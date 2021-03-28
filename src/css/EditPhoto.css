@@ -21,6 +21,28 @@
   place-items: center;
 }
 
+.image-editor-top{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.image-editor-title{
+  width: 100%;
+}
+
+.image-editor-button{
+  width: 100px;
+  margin: 0 auto;
+}
+
+#image-editor-save{
+  margin-left: 10px;
+}
+
+#image-editor-cancel{
+  margin-right: 10px;
+}
+
 .ReactCrop__image {
   max-height: 50vh;
 }

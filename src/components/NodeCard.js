@@ -11,6 +11,28 @@ import {
   AddPhoto,
   MemberPhotos,
 } from "./NodeCardContent";
+import EditPhoto from "./EditPhoto";
+
+function EditPhotoCondition(props) {
+  console.log(
+    props.image ? `image src updated : ${props.image}` : "image src empty"
+  );
+
+  if (props.image)
+    return (
+      <EditPhoto
+        closePopups={() => props.closePopups()}
+        saveImage={() => props.saveImage()}
+        setImage={(img)=>props.setImage(img)}
+        node={props.node}
+        update={(obj) => {
+          props.update(obj);
+        }}
+        image={props.image}
+      />
+    );
+  return null;
+}
 
 export default function NodeCard(props) {
   const [imageToBeSent, setImageToBeSent] = useState(undefined);
@@ -88,7 +110,7 @@ export default function NodeCard(props) {
       event.target.files[0].type.includes("image/")
     ) {
       setImageToBeSent(event.target.files[0]);
-      props.editPhoto(event.target.files[0])
+      props.editPhoto(event.target.files[0]);
       return true;
     }
     //else err
@@ -181,6 +203,15 @@ export default function NodeCard(props) {
           </section>
         </footer>
       </div>
+      <EditPhotoCondition
+        closePopups={() => props.closePopups()}
+        saveImage={() => uploadImage()}
+        setImage={(img) => setImageToBeSent(img)}
+        image={props.image}
+        update={(obj) => {
+          props.update(obj);
+        }}
+      />
     </div>
   );
 }

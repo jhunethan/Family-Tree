@@ -10,26 +10,6 @@ import Modal from "./Modal";
 import Edit from "./Edit";
 import NodeCard from "./NodeCard";
 import EditHistory from "./EditHistory";
-import EditPhoto from "./EditPhoto";
-
-function EditPhotoCondition(props) {
-  console.log(
-    props.image ? `image src updated : ${props.image}` : "image src empty"
-  );
-
-  if (props.image)
-    return (
-      <EditPhoto
-        node={props.node}
-        update={(obj) => {
-          props.update(obj);
-        }}
-        image={props.image}
-        setImage={(img) => props.setImage(img)}
-      />
-    );
-  return null;
-}
 
 export default function Table(props) {
   const [update, setUpdate] = useState(0);
@@ -294,6 +274,7 @@ export default function Table(props) {
     $("#editForm").css("display", "none");
     $("#deleteConfirmMenu").css("display", "none");
     $("div.edit-container").css("display", "none");
+    $(".image-editor-container").css("display", "none");
   };
 
   //set nav on load
@@ -382,19 +363,13 @@ export default function Table(props) {
         editPhoto={(src) => {
           setCurrentImage(src);
         }}
+        image={currentImage}
+        closePopups={() => closePopups()}
       />
       <ToastContainer
         position="bottom-right"
         autoClose={5000}
         hideProgressBar={true}
-      />
-      <EditPhotoCondition
-        image={currentImage}
-        setImage={(img) => setCurrentImage(img)}
-        node={nodestate}
-        update={(obj) => {
-          dynamicUpdate(obj);
-        }}
       />
       <EditHistory />
     </div>
