@@ -1,7 +1,7 @@
 #Modal{
     display: none;
     position: absolute;
-    z-index: 4;
+    z-index: 5;
     margin:0;
     height: 100%;
     width: 100%;

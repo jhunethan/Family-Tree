@@ -22,6 +22,7 @@ function EditPhotoCondition(props) {
   );
 
   if (props.image) {
+    $("#Modal").css("display", "block");
     $(".image-editor-container").css("display", "block");
     return (
       <EditPhoto
@@ -302,7 +303,8 @@ export default function Table(props) {
     $("#editForm").css("display", "none");
     $("#deleteConfirmMenu").css("display", "none");
     $("div.edit-container").css("display", "none");
-    $(".image-editor-container").css("display", "none");
+    $("#Modal").css("display","none")
+    setCurrentImage(null);
   };
 
   //set nav on load
