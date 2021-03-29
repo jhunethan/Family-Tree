@@ -149,7 +149,7 @@ export default class EditPhoto extends PureComponent {
       const croppedImageUrl = await this.getCroppedImg(
         this.imageRef,
         crop,
-        "newFile.jpeg"
+        `${this.props.image.name.split(".")[0]}.jpeg`
       );
       this.setState({ croppedImageUrl });
     }
@@ -187,7 +187,7 @@ export default class EditPhoto extends PureComponent {
         this.fileUrl = window.URL.createObjectURL(blob);
         console.log(blob);
         //set blob as edited image state
-        this.setState({ image: blob});
+        this.setState({ image: blob });
         resolve(this.fileUrl);
       }, "image/jpeg");
     });
@@ -242,7 +242,10 @@ export default class EditPhoto extends PureComponent {
           <button
             className="image-editor-button"
             id="image-editor-cancel"
-            onClick={() => this.props.closePopups()}
+            onClick={() => {
+              this.props.setImage(null);
+              this.props.closePopups();
+            }}
           >
             Cancel
           </button>
@@ -251,6 +254,7 @@ export default class EditPhoto extends PureComponent {
             id="image-editor-save"
             onClick={() => {
               if (image) {
+                this.props.setImage(null);
                 this.props.closePopups();
                 this.uploadImage(image);
               }

@@ -18,10 +18,11 @@ function EditPhotoCondition(props) {
   const [cookies] = useCookies(["author"]);
 
   console.log(
-    props.image ? `image src updated : ${props.image}` : "image src empty"
+    props.image ? `image src updated : ${props.image.name}` : "image src empty"
   );
 
-  if (props.image)
+  if (props.image) {
+    $(".image-editor-container").css("display", "block");
     return (
       <EditPhoto
         closePopups={() => props.closePopups()}
@@ -29,10 +30,12 @@ function EditPhotoCondition(props) {
         update={(obj) => {
           props.update(obj);
         }}
+        setImage={(obj) => props.setImage(obj)}
         image={props.image}
         cookies={cookies}
       />
     );
+  }
   return null;
 }
 
@@ -386,7 +389,6 @@ export default function Table(props) {
           openNode(currentRow);
         }}
         editPhoto={(img) => {
-          console.log(img)
           setCurrentImage(img);
         }}
         image={currentImage}
@@ -401,6 +403,7 @@ export default function Table(props) {
       <EditPhotoCondition
         closePopups={() => closePopups()}
         image={currentImage}
+        setImage={(obj) => setCurrentImage(obj)}
         update={(obj) => {
           dynamicUpdate(obj);
         }}
