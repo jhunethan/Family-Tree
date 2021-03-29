@@ -97,6 +97,8 @@
 
 import React, { PureComponent } from "react";
 import ReactCrop from "react-image-crop";
+import * as $ from "jquery";
+import Axios from "axios";
 import "react-image-crop/dist/ReactCrop.css";
 
 import "../css/EditPhoto.css";
@@ -185,12 +187,50 @@ export default class EditPhoto extends PureComponent {
         this.fileUrl = window.URL.createObjectURL(blob);
         console.log(blob);
         //set blob as edited image state
-        this.setState({ image: blob });
-        this.props.setImage(blob)
+        this.setState({ image: blob});
         resolve(this.fileUrl);
       }, "image/jpeg");
     });
   }
+
+  uploadImage = () => {
+    const formData = new FormData();
+    formData.append("file", this.state.image);
+    formData.append("upload_preset", "oms6f6zi");
+    formData.append("id", this.props.node.id);
+
+    // Axios.post("https://layfamily.herokuapp.com/api/upload", formData);
+
+    Axios.post(
+      "https://api.cloudinary.com/v1_1/dqwu1p8fp/image/upload",
+      formData
+    ).then((Response) => {
+      //save it to extradetails db as filename: `${Response.data.public_id}.${Response.data.format}`
+      let photo_id_string;
+      try {
+        if (this.props.node.extradetails.photo_id) {
+          photo_id_string = `${this.props.node.extradetails.photo_id},${Response.data.public_id}`;
+        } else {
+          photo_id_string = Response.data.public_id;
+        }
+      } catch {
+        photo_id_string = Response.data.public_id;
+      }
+      $("#card-container").css("display", "none");
+
+      let obj = this.props.node;
+      if (!obj.extradetails) obj.extradetails = {};
+      obj.extradetails.photo_id = photo_id_string;
+      this.props.update(obj);
+
+      Axios.put("https://layfamily.herokuapp.com/api/updateextra", {
+        id: Number(this.props.node.id),
+        name: this.props.node.name,
+        photo_id: photo_id_string,
+        author: this.props.cookies.author,
+      });
+    });
+  };
 
   render() {
     const { crop, croppedImageUrl, src, image } = this.state;
@@ -212,7 +252,7 @@ export default class EditPhoto extends PureComponent {
             onClick={() => {
               if (image) {
                 this.props.closePopups();
-                this.props.saveImage(image);
+                this.uploadImage(image);
               }
             }}
           >

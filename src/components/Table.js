@@ -10,6 +10,31 @@ import Modal from "./Modal";
 import Edit from "./Edit";
 import NodeCard from "./NodeCard";
 import EditHistory from "./EditHistory";
+import EditPhoto from "./EditPhoto";
+
+import { useCookies } from "react-cookie";
+
+function EditPhotoCondition(props) {
+  const [cookies] = useCookies(["author"]);
+
+  console.log(
+    props.image ? `image src updated : ${props.image}` : "image src empty"
+  );
+
+  if (props.image)
+    return (
+      <EditPhoto
+        closePopups={() => props.closePopups()}
+        node={props.node}
+        update={(obj) => {
+          props.update(obj);
+        }}
+        image={props.image}
+        cookies={cookies}
+      />
+    );
+  return null;
+}
 
 export default function Table(props) {
   const [update, setUpdate] = useState(0);
@@ -360,8 +385,9 @@ export default function Table(props) {
         edit={() => {
           openNode(currentRow);
         }}
-        editPhoto={(src) => {
-          setCurrentImage(src);
+        editPhoto={(img) => {
+          console.log(img)
+          setCurrentImage(img);
         }}
         image={currentImage}
         closePopups={() => closePopups()}
@@ -372,6 +398,14 @@ export default function Table(props) {
         hideProgressBar={true}
       />
       <EditHistory />
+      <EditPhotoCondition
+        closePopups={() => closePopups()}
+        image={currentImage}
+        update={(obj) => {
+          dynamicUpdate(obj);
+        }}
+        node={nodestate}
+      />
     </div>
   );
 }
