@@ -190,7 +190,7 @@ export default function Edit(props) {
     if (changed && checkParent()) {
       //save
       console.log("id info updated");
-      Axios.post("https://layfamily.herokuapp.com/api/update", {
+      Axios.post("http://localhost:5000/api/update", {
         input: nodeInput,
         name: props.nodedata.name,
         author: cookies.author,
@@ -199,7 +199,7 @@ export default function Edit(props) {
     }
     if (extrachanged) {
       console.log("extra updated");
-      Axios.post("https://layfamily.herokuapp.com/api/updateextra", {
+      Axios.post("http://localhost:5000/api/updateextra", {
         id: props.nodedata.id,
         name: props.nodedata.name,
         input: nodeInput,
@@ -241,7 +241,7 @@ export default function Edit(props) {
     node.method = "delete";
     if (userValidation.val() === "confirm") {
       //delete node
-      Axios.post("https://layfamily.herokuapp.com/api/delete", {
+      Axios.post("http://localhost:5000/api/delete", {
         id: props.nodedata.id,
         name: props.nodedata.name,
         author: cookies.author,

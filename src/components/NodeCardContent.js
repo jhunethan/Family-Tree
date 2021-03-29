@@ -266,7 +266,7 @@ export function MemberPhotos(props) {
   };
 
   const imageDelete = (e) => {
-    Axios.post("https://layfamily.herokuapp.com/api/delete/image", {
+    Axios.post("http://localhost:5000/api/delete/image", {
       id: props.node.id,
       name: props.node.name,
       author: cookies.author,
@@ -340,11 +340,9 @@ export function MemberPhotos(props) {
 }
 
 export function AddPhoto(props) {
-  const [fileName, setFileName] = useState("");
 
   useEffect(() => {
     //reset photo fields
-    $(".file-submit").css("display", "none");
     $(".file-input-button").css("display", "block");
   }, [props.node]);
 
@@ -364,35 +362,12 @@ export function AddPhoto(props) {
         accept="image/*"
         onChange={(event) => {
           if (props.imageChangeHandler(event)) {
-            setFileName(event.target.files[0].name);
             if (event.target.files[0].name) {
               $(".file-input-button").css("display", "none");
-              $(".file-submit").css("display", "block");
             }
           }
         }}
       />
-      {fileName}
-      <input
-        type="submit"
-        className="file-submit"
-        onClick={() => {
-          props.uploadImage();
-          setFileName("");
-        }}
-        value="Submit Photo"
-      />
-      <button
-        className="file-submit"
-        onClick={() => {
-          document.getElementById("file-input").value = "";
-          $(".file-input-button").css("display", "block");
-          $(".file-submit").css("display", "none");
-          setFileName("");
-        }}
-      >
-        Cancel
-      </button>
     </div>
   );
 }

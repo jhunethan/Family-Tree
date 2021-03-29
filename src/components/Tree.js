@@ -73,7 +73,7 @@ export default function Tree(props) {
   };
 
   useEffect(() => {
-    Axios.get("https://layfamily.herokuapp.com/api/get")
+    Axios.get("http://localhost:5000/api/get")
       .then((result) => {
         setTableData(result.data);
       })
@@ -263,7 +263,7 @@ export default function Tree(props) {
     if (!name || name === newData.name) return closePopups();
     if (newData.name === "" && name) {
       newData.name = name;
-      Axios.post("https://layfamily.herokuapp.com/api/insert", {
+      Axios.post("http://localhost:5000/api/insert", {
         input: newData,
         author: cookies.author,
       });
@@ -273,7 +273,7 @@ export default function Tree(props) {
       //save
       newData.name = name;
 
-      Axios.post("https://layfamily.herokuapp.com/api/update", {
+      Axios.post("http://localhost:5000/api/update", {
         input: newData,
         name: newData.name,
         author: cookies.author,
@@ -298,7 +298,7 @@ export default function Tree(props) {
       obj.parent = "";
       obj.partner = "";
       obj.isPartner = 0;
-      Axios.post("https://layfamily.herokuapp.com/api/update", {
+      Axios.post("http://localhost:5000/api/update", {
         input: obj,
         name: obj.name,
         author: cookies.author,
@@ -317,7 +317,7 @@ export default function Tree(props) {
           obj.parent = "";
           obj.partner = parent.name;
           obj.isPartner = 1;
-          Axios.post("https://layfamily.herokuapp.com/api/update", {
+          Axios.post("http://localhost:5000/api/update", {
             input: obj,
             name: obj.name,
             author: cookies.author,
@@ -343,7 +343,7 @@ export default function Tree(props) {
       obj.pid = Number(parent.id);
       obj.parent = parent.name;
 
-      Axios.post("https://layfamily.herokuapp.com/api/update", {
+      Axios.post("http://localhost:5000/api/update", {
         input: obj,
         name: obj.name,
         author: cookies.author,
@@ -690,7 +690,7 @@ export default function Tree(props) {
         // try {
         //   if (d.data.extradetails.photo_id.length > 1) {
         //     console.log((d.data.extradetails.photo_id))
-        //     Axios.get("https://layfamily.herokuapp.com/api/get/photos/user", {
+        //     Axios.get("http://localhost:5000/api/get/photos/user", {
         //       params: { id: d.data.id },
         //     }).then((res) => {
         //       console.log(res)
@@ -801,7 +801,7 @@ export default function Tree(props) {
         // try {
         //   if (d.data.extradetails.photo_id.length > 1) {
         //     console.log((d.data.extradetails.photo_id))
-        //     Axios.get("https://layfamily.herokuapp.com/api/get/photos/user", {
+        //     Axios.get("http://localhost:5000/api/get/photos/user", {
         //       params: { id: d.data.id },
         //     }).then((res) => {
         //       console.log(res)
