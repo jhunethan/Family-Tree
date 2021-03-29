@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import "dateformat";
 import * as $ from "jquery";
 import Axios from "axios";
