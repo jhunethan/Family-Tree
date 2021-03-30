@@ -259,11 +259,6 @@ export function ImmediateFamily(props) {
 
 export function MemberPhotos(props) {
   const [cookies] = useCookies(["author"]);
-  // var id;
-
-  const imageEdit = (e) => {
-    props.editPhoto(e.target.parentNode.previousElementSibling.src)
-  };
 
   const imageDelete = (e) => {
     Axios.post("http://localhost:5000/api/delete/image", {
@@ -312,12 +307,6 @@ export function MemberPhotos(props) {
                   className={"image " + x}
                 />
                 <div className="image-edit-menu">
-                  <div
-                    className="image-expand image-menu"
-                    onClick={(e) => imageEdit(e)}
-                  >
-                    EDIT
-                  </div>
                   <div
                     className="image-delete image-menu"
                     onClick={(e) => imageDelete(e)}
