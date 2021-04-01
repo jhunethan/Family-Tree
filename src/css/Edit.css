@@ -7,12 +7,12 @@
   position: absolute;
   max-height: 80vh;
   min-width: 250px;
-  width: auto;
-  max-width: 350px;
+  width: 500px;
+  max-width: 90vw;
   margin: 0 auto;
 
   top: 50px;
-  left: calc(50vw - 175px);
+  left: calc(50vw - 250px);
   z-index: 1000;
 
   background: #e6e6e6;
@@ -219,4 +219,11 @@ input[type="radio"] {
 
 #parentSearchDataList {
   transform: translateY(625px);
+}
+/* Responsive */
+
+@media screen and (max-width: 576px) {
+  .form{
+    left:5vw;
+  }
 }
