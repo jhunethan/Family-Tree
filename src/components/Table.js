@@ -146,6 +146,8 @@ export default function Table(props) {
       if (node.isPartner) {
         $("#maidenname-input").css("display", "block");
         $("label.maidenname").css("display", "block");
+        $("#marriagedate-input").css("display", "block");
+        $("label.marriagedate").css("display", "block");
         try {
           $("#maidenname-input").val(node.extradetails.maidenname);
         } catch {}
@@ -303,7 +305,7 @@ export default function Table(props) {
     $("#editForm").css("display", "none");
     $("#deleteConfirmMenu").css("display", "none");
     $("div.edit-container").css("display", "none");
-    $("#Modal").css("display","none")
+    $("#Modal").css("display", "none");
     setCurrentImage(null);
   };
 
@@ -315,7 +317,12 @@ export default function Table(props) {
   $(window).on("click", function (event) {
     //Hide the menus if visible
     try {
-      if (event.target !== $("#parentInputC")[0]) $("ul.datalist-ul").html("");
+      if (
+        event.target !== $("#parentInputC")[0] &&
+        event.target !== $("#parentInput")[0]
+      ) {
+        $("ul.datalist-ul").html("");
+      }
     } catch {}
   });
 

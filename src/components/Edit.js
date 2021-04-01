@@ -3,6 +3,7 @@ import "../css/Edit.css";
 import Axios from "axios";
 import * as $ from "jquery";
 import { useCookies } from "react-cookie";
+import { toast } from "react-toastify";
 
 function ListDisplay(props) {
   try {
@@ -61,6 +62,36 @@ export default function Edit(props) {
 
     CheckInput();
     checkExtraChanges();
+
+    //if parent field, populate parent datalist autofill
+    //filter by input
+    let datalistcount = 0,
+      filteredDatalist = [];
+
+    $("#parentSearchDataList").html("");
+
+    if ($.trim($("#parentInput").val())) {
+      for (const x of props.data) {
+        if (x.name && datalistcount < 5) {
+          filteredDatalist.push(`${x.generation} ${x.name}`);
+        }
+      }
+
+      let parsed = $.trim($("#parentInput").val().toLowerCase()).split(" ");
+      filteredDatalist = filteredDatalist.filter((x) => {
+        for (const word of parsed) {
+          if (!x.toLowerCase().includes(word)) return false;
+        }
+        return true;
+      });
+
+      for (const n of filteredDatalist) {
+        if (datalistcount < 5) {
+          $("#parentSearchDataList").append(`<li>${n}</li>`);
+          datalistcount += 1;
+        }
+      }
+    }
 
     if ($("#isDeceased")[0].checked) deathdate = $("#deathdate-input").val();
 
@@ -165,7 +196,6 @@ export default function Edit(props) {
       setChanged(true);
       changesStack.push("isChild");
     }
-    console.log(changesStack);
     setChanges(changesStack.join(","));
   }
 
@@ -180,13 +210,12 @@ export default function Edit(props) {
     element.css("border-bottom", "2px solid red");
     element.val("");
     element.attr("placeholder", "invalid parent: click from list");
+    toast.error("Parent not found: please re-enter");
     return false;
   }
 
   function saveEdit() {
     console.log(nodeInput);
-    console.log(changed);
-    console.log(checkParent());
     if (changed && checkParent()) {
       //save
       console.log("id info updated");
@@ -196,6 +225,7 @@ export default function Edit(props) {
         author: cookies.author,
         changes: changes,
       });
+      closeEditMenu();
     }
     if (extrachanged) {
       console.log("extra updated");
@@ -206,9 +236,9 @@ export default function Edit(props) {
         author: cookies.author,
         changes: extrachanges,
       });
+      closeEditMenu();
     }
 
-    if (extrachanged || (changed === true && checkParent())) closeEditMenu();
     setChanged(false);
     setExtrachanged(false);
   }
@@ -332,7 +362,6 @@ export default function Edit(props) {
         setExtrachanged(true);
       }
     }
-    console.log(arr);
     setExtrachanges(arr.join(","));
   };
 
@@ -507,6 +536,7 @@ export default function Edit(props) {
             className="extra-details-input"
             placeholder="Name of Parent/ Partner"
             list="parentSearchDataList"
+            onClick={inputChangedHandler}
             onChange={inputChangedHandler}
             onKeyUp={(event) => {
               if (event.key === "Enter") {
@@ -523,7 +553,8 @@ export default function Edit(props) {
           id="parentSearchDataList"
           onClick={(e) => {
             try {
-              console.log(e.target.closest("li").textContent);
+              $("#parentInput").val(e.target.closest("li").textContent);
+              inputChangedHandler();
             } catch {}
           }}
         ></ul>
@@ -554,7 +585,7 @@ export default function Edit(props) {
         </div>
         <label
           htmlFor="maidenname-input"
-          className="extra-details-label maidenname"
+          className="extra-details-label spouse-info"
         >
           Maiden name
         </label>
@@ -563,7 +594,29 @@ export default function Edit(props) {
           type="text"
           name="maidenname-input"
           id="maidenname-input"
-          className="extra-details-input"
+          className="extra-details-input spouse-info"
+          onChange={inputChangedHandler}
+          onKeyUp={(event) => {
+            if (event.key === "Enter") {
+              // Cancel the default action, if needed
+              event.preventDefault();
+              // Focus on next element
+              document.getElementById("birthplace-input").focus();
+            }
+          }}
+        />
+        <label
+          htmlFor="marriagedate-input"
+          className="extra-details-label spouse-info"
+        >
+          Marriage Date
+        </label>
+        <input
+          autoComplete="off"
+          type="date"
+          name="marriagedate-input"
+          id="marriagedate-input"
+          className="extra-details-input spouse-info"
           onChange={inputChangedHandler}
           onKeyUp={(event) => {
             if (event.key === "Enter") {

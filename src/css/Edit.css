@@ -56,7 +56,7 @@
   margin: 10px;
   float: left;
   border: rgb(255, 100, 100) 2px double;
-  background-color:rgb(255, 130, 130);
+  background-color: rgb(255, 130, 130);
 }
 
 #deleteNode {
@@ -176,7 +176,7 @@ input[type="radio"] {
   flex-grow: 1.5;
 }
 
-.maidenname-input {
+.spouse-info {
   display: none;
 }
 
@@ -186,8 +186,8 @@ input[type="radio"] {
   transition: all 0.3s;
 }
 
-.edit-button-container{
-  height:50px;
+.edit-button-container {
+  height: 50px;
 }
 
 .extranames-container {
@@ -217,4 +217,6 @@ input[type="radio"] {
   transition: all 0.3s;
 }
 
-
+#parentSearchDataList {
+  transform: translateY(625px);
+}
