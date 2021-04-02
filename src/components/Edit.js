@@ -58,7 +58,13 @@ export default function Edit(props) {
       parent,
       pid,
       deathdate = null,
-      extraopStack = ["birthplace", "location", "fblink", "profession"];
+      extraopStack = [
+        "birthplace",
+        "location",
+        "fblink",
+        "profession",
+        "marriagedate",
+      ];
 
     CheckInput();
     checkExtraChanges();
@@ -95,13 +101,11 @@ export default function Edit(props) {
 
     if ($("#isDeceased")[0].checked) deathdate = $("#deathdate-input").val();
 
-    getRadioVal("option-1", "option-2") === "partner"
-      ? (isPartner = 1)
-      : (isPartner = 0);
-
-    if (isPartner === 1) {
+    if (getRadioVal("option-1", "option-2") === "partner") {
+      isPartner = 1;
       partner = $("#parentInput").val();
     } else {
+      isPartner = 0;
       parent = $("#parentInput").val();
     }
 
@@ -127,6 +131,11 @@ export default function Edit(props) {
     } catch {}
     tempnode.description = $.trim($("textarea.description-input").val());
 
+    if (isPartner === 0) {
+      tempnode.marriagedate = null;
+      tempnode.maidenname = null;
+    }
+
     setNodeInput({
       id: props.nodedata.id,
       generation: $("#generation-input").val(),
@@ -139,6 +148,7 @@ export default function Edit(props) {
       partner: partner,
       extradetails: tempnode,
     });
+    console.log(nodeInput);
   };
 
   function getRadioVal(radio1, radio2) {
@@ -316,10 +326,12 @@ export default function Edit(props) {
     if (getRadioVal("option-1", "option-2") === "partner") {
       opStack.push("maidenname");
       $("#maidenname-input").css("display", "block");
-      $("label.maidenname").css("display", "block");
+      $("#marriagedate-input").css("display", "block");
+      $("label.spouse-info").css("display", "block");
     } else {
       $("#maidenname-input").css("display", "none");
-      $("label.maidenname").css("display", "none");
+      $("#marriagedate-input").css("display", "none");
+      $("label.spouse-info").css("display", "none");
     }
 
     try {
