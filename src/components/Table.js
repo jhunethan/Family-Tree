@@ -145,15 +145,16 @@ export default function Table(props) {
     try {
       if (node.isPartner) {
         $("#maidenname-input").css("display", "block");
-        $("label.maidenname").css("display", "block");
+        $("label.spouse-info").css("display", "block");
         $("#marriagedate-input").css("display", "block");
-        $("label.marriagedate").css("display", "block");
         try {
           $("#maidenname-input").val(node.extradetails.maidenname);
+          $("#marriagedate-input").val(node.extradetails.marriagedate);
         } catch {}
       } else {
         $("#maidenname-input").css("display", "none").val("");
-        $("label.maidenname").css("display", "none");
+        $("#marriagedate-input").css("display", "none").val("");
+        $("label.spouse-info").css("display", "none");
       }
 
       for (const x of opStack) {
