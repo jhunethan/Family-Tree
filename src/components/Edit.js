@@ -79,7 +79,9 @@ export default function Edit(props) {
     if ($.trim($("#parentInput").val())) {
       for (const x of props.data) {
         if (x.name && datalistcount < 5) {
-          filteredDatalist.push(`${x.generation} ${x.name}`);
+          filteredDatalist.push(
+            x.generation ? `${x.generation} ${x.name}` : x.name
+          );
         }
       }
 
@@ -90,13 +92,18 @@ export default function Edit(props) {
         }
         return true;
       });
-
-      for (const n of filteredDatalist) {
-        if (datalistcount < 5) {
-          $("#parentSearchDataList").append(`<li>${n}</li>`);
-          datalistcount += 1;
+      console.log(
+        `${$.trim($("#parentInput").val())} === ${filteredDatalist[0]}`
+      );
+      //checks if input !== first entry in searched datalist
+      if ($.trim($("#parentInput").val()) !== filteredDatalist[0])
+        for (const n of filteredDatalist) {
+          //adds up to five matching names from data to datalist
+          if (datalistcount < 5) {
+            $("#parentSearchDataList").append(`<li>${n}</li>`);
+            datalistcount += 1;
+          }
         }
-      }
     }
 
     if ($("#isDeceased")[0].checked) deathdate = $("#deathdate-input").val();
@@ -565,7 +572,7 @@ export default function Edit(props) {
           id="parentSearchDataList"
           onClick={(e) => {
             try {
-              $("#parentInput").val(e.target.closest("li").textContent);
+              $("#parentInput").val($.trim(e.target.closest("li").textContent));
               inputChangedHandler();
             } catch {}
           }}

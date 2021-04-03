@@ -218,7 +218,8 @@ input[type="radio"] {
 }
 
 #parentSearchDataList {
-  transform: translateY(625px);
+  transform: translate(-10px,625px);
+  width: 100%;
 }
 /* Responsive */
 
