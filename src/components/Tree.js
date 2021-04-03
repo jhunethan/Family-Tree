@@ -999,22 +999,13 @@ export default function Tree(props) {
 
   const populateEditFields = (inputNode) => {
     let node = getNode(inputNode.id),
-      opStack = [
-        "birthplace",
-        "location",
-        "extranames",
-        "fblink",
-        "profession",
-        "languages",
-      ];
+      opStack = ["birthplace", "location", "fblink", "profession"];
 
     $("#generation-input").val(node.generation);
     $("#name-input").val(node.name);
     $("#birthdate-input").val(node.birthdate);
 
-    node.deathdate
-      ? $("#isDeceased").attr("checked", true)
-      : $("#isDeceased").attr("checked", false);
+    $("#isDeceased").attr("checked", node.deathdate ? true : false);
 
     $("#deathdate-input")
       .css("display", node.deathdate ? "block" : "none")
@@ -1025,13 +1016,16 @@ export default function Tree(props) {
     try {
       if (node.isPartner) {
         $("#maidenname-input").css("display", "block");
-        $("label.maidenname").css("display", "block");
+        $("label.spouse-info").css("display", "block");
+        $("#marriagedate-input").css("display", "block");
         try {
           $("#maidenname-input").val(node.extradetails.maidenname);
+          $("#marriagedate-input").val(node.extradetails.marriagedate);
         } catch {}
       } else {
         $("#maidenname-input").css("display", "none").val("");
-        $("label.maidenname").css("display", "none");
+        $("#marriagedate-input").css("display", "none").val("");
+        $("label.spouse-info").css("display", "none");
       }
 
       for (const x of opStack) {

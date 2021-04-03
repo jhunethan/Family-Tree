@@ -132,9 +132,7 @@ export default function Table(props) {
     $("#name-input").val(node.name);
     $("#birthdate-input").val(node.birthdate);
 
-    node.deathdate
-      ? $("#isDeceased").attr("checked", true)
-      : $("#isDeceased").attr("checked", false);
+    $("#isDeceased").attr("checked", node.deathdate ? true : false);
 
     $("#deathdate-input")
       .css("display", node.deathdate ? "block" : "none")
