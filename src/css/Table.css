@@ -133,3 +133,7 @@ table th:hover {
   background-color: rgb(168, 168, 168);
   transition: all 0.4s;
 }
+
+td:first-child{
+  color:rgba(255, 255, 255, 0);
+}
