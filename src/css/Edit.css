@@ -9,14 +9,13 @@
   min-width: 250px;
   width: 500px;
   max-width: 90vw;
-  margin: 0 auto;
 
   top: 50px;
   left: calc(50vw - 250px);
   z-index: 1000;
 
   background: #e6e6e6;
-  border-radius: 8px;
+  border-radius: 3px;
   box-shadow: 0 0 40px -10px #000;
   padding: 25px;
 }
@@ -56,7 +55,7 @@
   margin: 10px;
   float: left;
   border: rgb(255, 100, 100) 2px double;
-  background-color: rgb(255, 130, 130);
+  background-color:rgb(255, 130, 130);
 }
 
 #deleteNode {
@@ -176,7 +175,7 @@ input[type="radio"] {
   flex-grow: 1.5;
 }
 
-.spouse-info {
+.maidenname-input {
   display: none;
 }
 
@@ -186,8 +185,8 @@ input[type="radio"] {
   transition: all 0.3s;
 }
 
-.edit-button-container {
-  height: 50px;
+.edit-button-container{
+  height:50px;
 }
 
 .extranames-container {
@@ -217,10 +216,6 @@ input[type="radio"] {
   transition: all 0.3s;
 }
 
-#parentSearchDataList {
-  transform: translate(-10px,625px);
-  width: 100%;
-}
 /* Responsive */
 
 @media screen and (max-width: 576px) {

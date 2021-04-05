@@ -22,12 +22,19 @@ var datalistarr,
   treeData = [];
 
 export default function Tree(props) {
+  //stores users name
   const [cookies] = useCookies(["author"]);
+  //triggers server data fetch and page rerender
   const [update, setUpdate] = useState(false);
+  //datalist for search autocomplete
   const [datalist, setDatalist] = useState([]);
+  //holds all data with all family members in JSON form
   const [tableData, setTableData] = useState([]);
-  var [radiochecked, setRadiochecked] = useState(true);
+  //partner/parent toggle
+  const [radiochecked, setRadiochecked] = useState(true);
+  //read/edit mode toggle
   const [editview, seteditView] = useState(false);
+  //holds info about selected user
   const [InfoCard, setInfoCard] = useState({
     id: "",
     name: "",
