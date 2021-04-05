@@ -32,7 +32,7 @@ svg {
   transition: all 0.3s;
 }
 
-.node>*{
+.node>*,.partnernode>*{
   user-select: none;
   pointer-events: none;
 }

@@ -298,7 +298,10 @@ export default function Tree(props) {
     }
 
     if (partner) {
-      if (parent.id !== child.__data__.data.id) {
+      //make sure parent is valid
+      let arr = filterChildren(Number(child.__data__.data.id), tableData);
+
+      if (arr.includes(parent)) {
         if (child.__data__.data.name) {
           let obj = child.__data__.data;
 
@@ -477,6 +480,7 @@ export default function Tree(props) {
           $(window).on("click", function (event) {
             let classes = event.target.classList;
             if (classes[0] !== "edit-menu-button") {
+              console.log(event.target.classList);
               if (event.target.classList[0] === "node") {
                 let parent =
                   el.classList[0] === "partnernode"
@@ -484,7 +488,9 @@ export default function Tree(props) {
                     : event.target.__data__.data;
                 addParent(el, parent, true);
               } else {
-                toast.error("No partner selected.");
+                if (event.target.classList[0] === "partnernode") {
+                  toast.error("Invalid partner selected.");
+                } else toast.error("No partner selected.");
                 nodeClick(el);
               }
               toast.dismiss("selectError");
