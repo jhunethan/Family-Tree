@@ -112,7 +112,7 @@ export default function Edit(props) {
         return true;
       });
       //checks if input !== first entry in searched datalist
-      if ($.trim($("#parentInput").val()) !== filteredDatalist[0])
+      if ($.trim($("#parentInput").val()) !== filteredDatalist[0]) {
         for (const n of filteredDatalist) {
           //adds up to five matching names from data to datalist
           if (datalistcount < 5) {
@@ -120,6 +120,11 @@ export default function Edit(props) {
             datalistcount += 1;
           }
         }
+        if (datalistcount === 0)
+          $("#parentSearchDataList").append(
+            `<li style="pointer-events:none;">No valid results</li>`
+          );
+      }
     }
 
     if ($("#isDeceased")[0].checked) deathdate = $("#deathdate-input").val();
@@ -576,9 +581,14 @@ export default function Edit(props) {
                 // Cancel the default action, if needed
                 event.preventDefault();
                 try {
-                  $("#parentInput").val(
-                    $.trim($("#parentSearchDataList").children()[0].textContent)
+                  let parentSuggestion = $.trim(
+                    $("#parentSearchDataList").children()[0].textContent
                   );
+                  if (parentSuggestion === "No valid results") {
+                    $("#parentInput").val("");
+                  } else {
+                    $("#parentInput").val($.trim(parentSuggestion));
+                  }
                   inputChangedHandler();
                 } catch {}
                 // Focus on next element
