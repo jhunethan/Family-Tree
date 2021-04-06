@@ -480,7 +480,6 @@ export default function Tree(props) {
           $(window).on("click", function (event) {
             let classes = event.target.classList;
             if (classes[0] !== "edit-menu-button") {
-              console.log(event.target.classList);
               if (event.target.classList[0] === "node") {
                 let parent =
                   el.classList[0] === "partnernode"

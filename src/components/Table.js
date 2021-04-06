@@ -17,10 +17,6 @@ import { useCookies } from "react-cookie";
 function EditPhotoCondition(props) {
   const [cookies] = useCookies(["author"]);
 
-  console.log(
-    props.image ? `image src updated : ${props.image.name}` : "image src empty"
-  );
-
   if (props.image) {
     $("#Modal").css("display", "block");
     $(".image-editor-container").css("display", "block");

@@ -92,9 +92,6 @@ export default function Edit(props) {
         }
         return true;
       });
-      console.log(
-        `${$.trim($("#parentInput").val())} === ${filteredDatalist[0]}`
-      );
       //checks if input !== first entry in searched datalist
       if ($.trim($("#parentInput").val()) !== filteredDatalist[0])
         for (const n of filteredDatalist) {
@@ -155,7 +152,6 @@ export default function Edit(props) {
       partner: partner,
       extradetails: tempnode,
     });
-    console.log(nodeInput);
   };
 
   function getRadioVal(radio1, radio2) {
@@ -554,13 +550,18 @@ export default function Edit(props) {
             id="parentInput"
             className="extra-details-input"
             placeholder="Name of Parent/ Partner"
-            list="parentSearchDataList"
             onClick={inputChangedHandler}
             onChange={inputChangedHandler}
             onKeyUp={(event) => {
               if (event.key === "Enter") {
                 // Cancel the default action, if needed
                 event.preventDefault();
+                try {
+                  $("#parentInput").val(
+                    $.trim($("#parentSearchDataList").children()[0].textContent)
+                  );
+                  inputChangedHandler();
+                } catch {}
                 // Focus on next element
                 document.getElementById("birthplace-input").focus();
               }
