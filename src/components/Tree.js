@@ -647,6 +647,22 @@ export default function Tree(props) {
       .attr("fill", "#ffeece")
       .attr("rx", 5)
       .attr("ry", 5);
+    partnerShapes
+      .enter()
+      .append("html:div")
+      .attr("font-size", "50")
+      .attr("x", function (d) {
+        return d.x - 50;
+      })
+      .attr("y", function (d) {
+        return d.y - 550;
+      })
+      .html(function (d) {
+        try {
+          if (d.data.partnerinfo.marriagedate)
+            return `Married: ${d.data.partnerinfo.marriagedate}`;
+        } catch {}
+      });
 
     let partnerContainer = partnerShapes
       .enter()
