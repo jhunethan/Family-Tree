@@ -92,7 +92,6 @@ export default function Edit(props) {
     let datalistcount = 0,
       filteredDatalist = [],
       dataset = filterChildren(props.nodedata.id, props.data);
-    console.log({ originaldata: props.data, filtereddata: dataset });
 
     $("#parentSearchDataList").html("");
 
