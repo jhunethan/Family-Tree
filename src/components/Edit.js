@@ -355,14 +355,22 @@ export default function Edit(props) {
     setExtrachanged(false);
 
     if (getRadioVal("option-1", "option-2") === "partner") {
-      opStack.push("maidenname");
-      $("#maidenname-input").css("display", "block");
-      $("#marriagedate-input").css("display", "block");
-      $("label.spouse-info").css("display", "block");
+      opStack = [...opStack, "maidenname", "marriagedate"];
+      for (const n of [
+        "#maidenname-input",
+        "#marriagedate-input",
+        "label.spouse-info",
+      ]) {
+        $(`${n}`).css("display", "block");
+      }
     } else {
-      $("#maidenname-input").css("display", "none");
-      $("#marriagedate-input").css("display", "none");
-      $("label.spouse-info").css("display", "none");
+      for (const n of [
+        "#maidenname-input",
+        "#marriagedate-input",
+        "label.spouse-info",
+      ]) {
+        $(`${n}`).css("display", "none");
+      }
     }
 
     try {
