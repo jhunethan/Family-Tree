@@ -52,6 +52,24 @@ export default function Edit(props) {
     setNodeInput(props.nodedata);
   }, [props.nodedata]);
 
+  const filterChildren = (id, arr) => {
+    let children = arr.filter((x) => {
+      return x.pid === Number(id);
+    });
+    arr = arr.filter((x) => {
+      return x.pid !== Number(id);
+    });
+    arr = arr.filter((x) => x.id !== id);
+    try {
+      if (children.length > 0) {
+        for (let i = 0; i < children.length; i++) {
+          arr = filterChildren(children[i].id, arr);
+        }
+      }
+    } catch {}
+    return arr;
+  };
+
   var inputChangedHandler = () => {
     let isPartner = false,
       partner,
@@ -72,12 +90,14 @@ export default function Edit(props) {
     //if parent field, populate parent datalist autofill
     //filter by input
     let datalistcount = 0,
-      filteredDatalist = [];
+      filteredDatalist = [],
+      dataset = filterChildren(props.nodedata.id, props.data);
+    console.log({ originaldata: props.data, filtereddata: dataset });
 
     $("#parentSearchDataList").html("");
 
     if ($.trim($("#parentInput").val())) {
-      for (const x of props.data) {
+      for (const x of dataset) {
         if (x.name && datalistcount < 5) {
           filteredDatalist.push(
             x.generation ? `${x.generation} ${x.name}` : x.name
