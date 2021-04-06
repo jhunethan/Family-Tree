@@ -281,10 +281,14 @@ export default function Edit(props) {
   }
 
   const closeEditMenu = (param) => {
-    $("#editForm").css("display", "none");
-    $("#Modal").css("display", "none");
-    $("div.edit-container").css("display", "none");
-    $("#card-container").css("display", "none");
+    for (const x of [
+      "#editForm",
+      "#Modal",
+      "div.edit-container",
+      "#card-container",
+    ]) {
+      $(`${x}`).css("display", "none");
+    }
     //send new node update
     if (param === "unsave") return;
     let node;

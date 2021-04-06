@@ -190,10 +190,15 @@ export default function Tree(props) {
   }
 
   const closePopups = () => {
-    $("div.Create").css("display", "none");
-    $("#editForm").css("display", "none");
-    $("#deleteConfirmMenu").css("display", "none");
-    $("div.edit-container").css("display", "none");
+    for (const element of [
+      "div.Create",
+      "#editForm",
+      "#deleteConfirmMenu",
+      "div.edit-container",
+      "#Modal",
+    ]) {
+      $(`${element}`).css("display", "none");
+    }
     $("foreignObject.edit-menu-container").remove();
   };
 

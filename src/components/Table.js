@@ -296,11 +296,15 @@ export default function Table(props) {
   };
 
   const closePopups = () => {
-    $("div.Create").css("display", "none");
-    $("#editForm").css("display", "none");
-    $("#deleteConfirmMenu").css("display", "none");
-    $("div.edit-container").css("display", "none");
-    $("#Modal").css("display", "none");
+    for (const element of [
+      "div.Create",
+      "#editForm",
+      "#deleteConfirmMenu",
+      "div.edit-container",
+      "#Modal",
+    ]) {
+      $(`${element}`).css("display", "none");
+    }
     setCurrentImage(null);
   };
 
