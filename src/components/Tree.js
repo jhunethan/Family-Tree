@@ -649,20 +649,18 @@ export default function Tree(props) {
       .attr("ry", 5);
     partnerShapes
       .enter()
-      .append("text")
+      .append("html:div")
       .attr("font-size", "50")
       .attr("x", function (d) {
-        return d.x - 200;
+        return d.x - 50;
       })
       .attr("y", function (d) {
         return d.y - 550;
       })
-      .text(function (d) {
+      .html(function (d) {
         try {
-          let marriagedate = d.data.partnerinfo.extradetails.marriagedate;
-          if (marriagedate) {
-            return `Married: ${dateFormat(marriagedate, "dS mmmm yyyy")}`;
-          }
+          if (d.data.partnerinfo.marriagedate)
+            return `Married: ${d.data.partnerinfo.marriagedate}`;
         } catch {}
       });
 
