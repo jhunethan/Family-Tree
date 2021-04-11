@@ -630,7 +630,9 @@ export default function Edit(props) {
             checked={props.radiochecked}
             value="child"
           />
-          <label htmlFor="option-1">Parent</label>
+          <label htmlFor="option-1" className="partner-radio-label">
+            Parent
+          </label>
           <input
             autoComplete="off"
             onClick={(event) => props.switchRadio(event.target)}
@@ -641,7 +643,9 @@ export default function Edit(props) {
             checked={!props.radiochecked}
             value="partner"
           />
-          <label htmlFor="option-2">Partner</label>
+          <label htmlFor="option-2" className="partner-radio-label">
+            Partner
+          </label>
           <div className="slide-item"></div>
         </div>
         <label

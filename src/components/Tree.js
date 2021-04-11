@@ -8,7 +8,6 @@ import { useCookies } from "react-cookie";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import pattern from "../css/pattern.jpg";
 import profile from "../css/person-placeholder.jpg";
 
 import NodeCard from "./NodeCard";
@@ -655,7 +654,7 @@ export default function Tree(props) {
         return d.x - 525;
       })
       .attr("y", function (d) {
-        return d.y - 550;
+        return d.y - 400;
       })
       .attr("fill", "#ffeece")
       .attr("rx", 5)
@@ -688,7 +687,7 @@ export default function Tree(props) {
         return d.x + 50;
       })
       .attr("y", function (d) {
-        return d.y - 500;
+        return d.y - 400;
       })
       .attr("width", 700)
       .attr("height", 500)
@@ -705,14 +704,18 @@ export default function Tree(props) {
       })
       .on("click", (d) => nodeClick(d.target, "partner"));
 
-    partnerContainer
-      .append("xhtml:img")
-      .attr("src", pattern)
+    let partnerBody = partnerContainer
+      .append("xhtml:div")
       .attr("class", function (d) {
-        return "pattern level-" + d.depth;
-      });
+        return "partnernode tree-card level-" + d.depth;
+      })
+      .on("click", (d) => nodeClick(d.target, ""));
 
-    partnerContainer
+    let partnerLeft = partnerBody
+      .append("xhtml:div")
+      .attr("class", "tree-card-section left");
+
+    partnerLeft
       .append("xhtml:img")
       .attr("src", function (d) {
         // try {
@@ -728,63 +731,46 @@ export default function Tree(props) {
         // } catch {}
         return profile;
       })
-      .classed("profile-picture", true);
+      .attr("class", "tree-card-profile");
 
-    let partnerTreeCardMain = partnerContainer
-      .append("xhtml:section")
-      .attr("class", "tree-card-main");
+    let partnerRight = partnerBody
+      .append("xhtml:div")
+      .attr("class", "tree-card-section right");
 
-    partnerTreeCardMain
-      .append("xhtml:div")
-      .attr("class", "tree-card-birth")
-      .html(function (d) {
-        if (d.data.partnerinfo.birthdate)
-          return dateFormat(d.data.partnerinfo.birthdate, "dS mmmm yyyy");
-        return "";
-      });
-    partnerTreeCardMain
-      .append("xhtml:div")
-      .attr("class", "tree-card-birth tree-card-age")
-      .html(function (d) {
-        if (d.data.partnerinfo.deathdate) {
-          return dateFormat(d.data.partnerinfo.deathdate, "dS mmmm yyyy");
-        }
-        if (d.data.partnerinfo.birthdate) {
-          let firstDate = new Date(d.data.partnerinfo.birthdate),
-            now = new Date(),
-            timeDifference = Math.floor(
-              Math.abs((now.getTime() - firstDate.getTime()) / 31449600000)
-            );
-          return `${timeDifference} years old`;
-        }
-        return "";
-      });
-    let partnerName = partnerTreeCardMain
-      .append("xhtml:div")
-      .attr("class", "tree-card-name");
-
-    partnerName
+    partnerRight
       .append("p")
-      .html("Hau")
-      .attr("class", "tree-card-generation")
+      .attr("class", "tree-card-gen")
       .text(function (d) {
         return d.data.partnerinfo.generation;
       });
-    partnerName.append("p").text(function (d) {
-      return d.data.partnerinfo.name;
-    });
-    partnerTreeCardMain
-      .append("xhtml:p")
-      .text(function (d) {
-        try {
-          return d.data.partnerinfo.extradetails.profession;
-        } catch {
-          return "";
-        }
-      })
-      .attr("class", "tree-card-footer");
 
-    // Nodes
+    partnerRight
+      .append("p")
+      .text(function (d) {
+        return d.data.partnerinfo.name;
+      })
+      .attr("class", "tree-card-name");
+
+    partnerRight
+      .append("xhtml:p")
+      .attr("class", "tree-card-birthdate")
+      .html(function (d) {
+        let enddate,
+          startdate = d.data.partnerinfo.birthdate
+            ? dateFormat(d.data.partnerinfo.birthdate, "yyyy")
+            : "????";
+
+        try {
+          let deathdate = d.data.partnerinfo.deathdate;
+          enddate = deathdate ? dateFormat(deathdate, "yyyy") : "Present";
+        } catch {
+          enddate = "Present";
+        }
+        if (d.data.partnerinfo.birthdate) return `${startdate} - ${enddate}`;
+        return "???? - ????";
+      });
+
+    // normally placed nodes
     var shapes = d3
       .select("svg g.nodes")
       .selectAll("foreignObject .node")
@@ -808,7 +794,7 @@ export default function Tree(props) {
         }
       })
       .attr("y", function (d) {
-        return d.y - 500;
+        return d.y - 400;
       });
 
     let body = container
@@ -838,17 +824,6 @@ export default function Tree(props) {
       })
       .attr("class", "tree-card-profile");
 
-    left
-      .append("xhtml:p")
-      .text(function (d) {
-        try {
-          return d.data.extradetails.profession;
-        } catch {
-          return "";
-        }
-      })
-      .attr("class", "tree-card-profession");
-
     let right = body
       .append("xhtml:div")
       .attr("class", "tree-card-section right");
@@ -875,7 +850,6 @@ export default function Tree(props) {
           startdate = d.data.birthdate
             ? dateFormat(d.data.birthdate, "yyyy")
             : "????";
-
         try {
           let deathdate = d.data.deathdate;
           enddate = deathdate ? dateFormat(deathdate, "yyyy") : "Present";
@@ -885,7 +859,6 @@ export default function Tree(props) {
         if (d.data.birthdate) return `${startdate} - ${enddate}`;
         return "???? - ????";
       });
-
     // let treeCardMain = container
     //   .append("xhtml:section")
     //   .attr("class", "tree-card-main");
