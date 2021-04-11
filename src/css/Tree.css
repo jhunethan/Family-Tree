@@ -22,37 +22,6 @@ svg {
 
 /* Tree card display */
 
-.node,
-.partnernode {
-  width: 600px;
-  height: 400px;
-
-  filter: drop-shadow(15px 15px 10px rgba(141, 141, 141, 0.322));
-  background-color: rgb(255, 255, 255);
-  transition: all 0.3s;
-}
-
-.node>*,.partnernode>*{
-  user-select: none;
-  pointer-events: none;
-}
-
-.node:hover,
-.partnernode:hover {
-  background-color: #eeeeee;
-
-  transition: all 0.3s;
-  cursor: pointer;
-}
-
-.partner {
-  width: 600px;
-  height: 180px;
-  padding: 8px 12px;
-  fill: white;
-  transition: all 0.3s;
-}
-
 .partner-container {
   fill: #ffdfa4;
   width: 800px;
@@ -61,66 +30,68 @@ svg {
   transition: all 0.3s;
 }
 
-.pattern {
-  display: block;
-  height: 100px;
+
+.tree-card>*{
+  user-select: none;
   pointer-events: none;
-  stroke: none;
 }
 
-.profile-picture {
-  border-radius: 150px;
-  height: 150px;
-  position: absolute;
-  transform: translate(225px, -75px);
-}
 
-.tree-card-main {
-  height: 300px;
+.tree-card{
   display: flex;
-  flex-wrap: wrap;
-}
+  flex-direction: row;
 
-.tree-card-birth {
-  height: 75px;
-  width: 300px;
-  padding-right: 75px;
-  text-align: center;
-
-  font-size: 32px;
-}
-
-.tree-card-age {
-  padding: 0 0 0 100px;
-}
-
-.tree-card-name {
-  height: 175px;
+  padding-left: 25px;
   width: 600px;
-  padding: 20px 50px;
-  line-height: 50px;
-  margin-top: 5px;
+  height: 400px;
+  border-radius: 25px;
+  overflow: hidden;
 
-  font-size: 52px;
+  filter: drop-shadow(15px 15px 10px rgba(141, 141, 141, 0.122));
+  background-color: rgb(247, 247, 247);
+  transition: all 0.3s;
 }
 
-.tree-card-generation {
-  font-size: 42px;
+.tree-card:hover{
+  background-color: #FF756E;
+  color: white;
+  cursor: pointer;
 }
 
-.tree-card-name > p {
-  height: 50px;
-  margin: 0;
+.tree-card-section{
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+.tree-card-profile{
+  margin: 75px auto 25px auto ;
+
+  border-radius: 5px;
+  width: 200px;
+  height: 200px;
+}
+
+.tree-card-profession{
+  font-size: 20px;
+}
+
+.tree-card-section> p{
   text-align: center;
 }
 
-.tree-card-footer {
-  height: 50px;
-  width: 600px;
+.tree-card-gen{
+  font-size: 26px;
+  margin: 85px 0 0 0;
+}
+
+.tree-card-name{
+  font-size: 34px;
+}
+
+.tree-card-birthdate{
   font-size: 30px;
-
-  margin-right: 10px;
-  text-align: right;
 }
 
 .level-0 {

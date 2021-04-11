@@ -16,6 +16,19 @@ import Modal from "./Modal";
 import Edit from "./Edit";
 import Create from "./Create";
 
+//card blueprint
+// <div className="tree-card">
+// <div className="tree-card-section">
+//   <img className="tree-card-profile" src={"placeholder"} alt="placeholder" />
+//   <p className="tree-card-profession">Carpenter</p>
+// </div>
+// <div className="tree-card-section">
+//   <p className="tree-card-gen">Hau</p>
+//   <p className="tree-card-name">Jhun Ethan Lay</p>
+//   <p className="tree-card-birthdate">2001 - Present</p>
+// </div>
+// </div>
+
 var height;
 var width;
 var datalistarr,
@@ -796,21 +809,18 @@ export default function Tree(props) {
       })
       .attr("y", function (d) {
         return d.y - 500;
-      })
+      });
+
+    let body = container
       .append("xhtml:div")
       .attr("class", function (d) {
-        return "node level-" + d.depth;
+        return "node tree-card level-" + d.depth;
       })
       .on("click", (d) => nodeClick(d.target, ""));
 
-    container
-      .append("xhtml:img")
-      .attr("src", pattern)
-      .attr("class", function (d) {
-        return "pattern level-" + d.depth;
-      });
+    let left = body.append("xhtml:div").attr("class", "tree-card-section left");
 
-    container
+    left
       .append("xhtml:img")
       .attr("src", function (d) {
         // try {
@@ -826,50 +836,9 @@ export default function Tree(props) {
         // } catch {}
         return profile;
       })
-      .classed("profile-picture", true);
+      .attr("class", "tree-card-profile");
 
-    let treeCardMain = container
-      .append("xhtml:section")
-      .attr("class", "tree-card-main");
-
-    treeCardMain
-      .append("xhtml:div")
-      .attr("class", "tree-card-birth")
-      .html(function (d) {
-        if (d.data.birthdate)
-          return dateFormat(d.data.birthdate, "dS mmmm yyyy");
-        return "";
-      });
-    treeCardMain
-      .append("xhtml:div")
-      .attr("class", "tree-card-birth tree-card-age")
-      .html(function (d) {
-        if (d.data.deathdate) {
-          return dateFormat(d.data.deathdate, "dS mmmm yyyy");
-        }
-        if (d.data.birthdate) {
-          let firstDate = new Date(d.data.birthdate),
-            now = new Date(),
-            timeDifference = Math.floor(
-              Math.abs((now.getTime() - firstDate.getTime()) / 31449600000)
-            );
-          return `${timeDifference} years old`;
-        }
-        return "";
-      });
-    let name = treeCardMain.append("xhtml:div").attr("class", "tree-card-name");
-
-    name
-      .append("p")
-      .html("Hau")
-      .attr("class", "tree-card-generation")
-      .text(function (d) {
-        return d.data.generation;
-      });
-    name.append("p").text(function (d) {
-      return d.data.name;
-    });
-    treeCardMain
+    left
       .append("xhtml:p")
       .text(function (d) {
         try {
@@ -878,7 +847,89 @@ export default function Tree(props) {
           return "";
         }
       })
-      .attr("class", "tree-card-footer");
+      .attr("class", "tree-card-profession");
+
+    let right = body
+      .append("xhtml:div")
+      .attr("class", "tree-card-section right");
+
+    right
+      .append("p")
+      .attr("class", "tree-card-gen")
+      .text(function (d) {
+        return d.data.generation;
+      });
+
+    right
+      .append("p")
+      .text(function (d) {
+        return d.data.name;
+      })
+      .attr("class", "tree-card-name");
+
+    right
+      .append("xhtml:p")
+      .attr("class", "tree-card-birthdate")
+      .html(function (d) {
+        let enddate,
+          startdate = d.data.birthdate
+            ? dateFormat(d.data.birthdate, "yyyy")
+            : "????";
+
+        try {
+          let deathdate = d.data.deathdate;
+          enddate = deathdate ? dateFormat(deathdate, "yyyy") : "Present";
+        } catch {
+          enddate = "Present";
+        }
+        if (d.data.birthdate) return `${startdate} - ${enddate}`;
+        return "???? - ????";
+      });
+
+    // let treeCardMain = container
+    //   .append("xhtml:section")
+    //   .attr("class", "tree-card-main");
+
+    // treeCardMain
+    //   .append("xhtml:div")
+    //   .attr("class", "tree-card-birth")
+    //   .html(function (d) {
+    //     if (d.data.birthdate)
+    //       return dateFormat(d.data.birthdate, "dS mmmm yyyy");
+    //     return "";
+    //   });
+    // treeCardMain
+    //   .append("xhtml:div")
+    //   .attr("class", "tree-card-birth tree-card-age")
+    //   .html(function (d) {
+    //     if (d.data.deathdate) {
+    //       return dateFormat(d.data.deathdate, "dS mmmm yyyy");
+    //     }
+    //     if (d.data.birthdate) {
+    //       let firstDate = new Date(d.data.birthdate),
+    //         now = new Date(),
+    //         timeDifference = Math.floor(
+    //           Math.abs((now.getTime() - firstDate.getTime()) / 31449600000)
+    //         );
+    //       return `${timeDifference} years old`;
+    //     }
+    //     return "";
+    //   });
+    // let name = treeCardMain.append("xhtml:div").attr("class", "tree-card-name");
+
+    // name.append("p").text(function (d) {
+    //   return d.data.name;
+    // });
+    // treeCardMain
+    //   .append("xhtml:p")
+    //   .text(function (d) {
+    //     try {
+    //       return d.data.extradetails.profession;
+    //     } catch {
+    //       return "";
+    //     }
+    //   })
+    //   .attr("class", "tree-card-footer");
 
     links = d3.select("svg g.links").selectAll("path").data(linksData);
     links

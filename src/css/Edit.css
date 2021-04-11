@@ -41,7 +41,6 @@
   outline: none;
   resize: none;
   border: 0;
-  font-family: "Montserrat", sans-serif;
   transition: all 0.3s;
   border-bottom: 2px solid #bebed2;
 }
@@ -68,7 +67,6 @@
   float: right;
   padding: 8px 12px;
   margin: 8px 0 0;
-  font-family: "Montserrat", sans-serif;
   border: 2px solid#ff4242;
   background: 0;
   color: #ec5757;
@@ -97,7 +95,6 @@
 
 #deleteConfirmMenu {
   align-content: center;
-  font-family: "Montserrat", sans-serif;
   font-size: 24px;
 }
 #deleteConfirmMenu > * {
