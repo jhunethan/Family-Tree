@@ -593,15 +593,15 @@ export default function Tree(props) {
     let data =
       type === "partner" ? el.__data__.data.partnerinfo : el.__data__.data;
 
-    zoom.scaleTo(svg.transition().duration(500), 0.25);
+    zoom.scaleTo(svg.transition().duration(500), 0.5);
     setInfoCard(data);
     zoom.translateTo(
       svg.transition().duration(500),
-      el.__data__.x,
+      el.__data__.x + 250,
       el.__data__.y
     );
     setTimeout(() => {
-      zoom.scaleTo(svg.transition().duration(750), 0.25);
+      zoom.scaleTo(svg.transition().duration(750), 0.5);
     }, 500);
   }
 
@@ -1020,7 +1020,7 @@ export default function Tree(props) {
       if (nodeRect)
         for (const x of nodeRect) {
           if (x.__data__.data.id === node.id) {
-            dimensions[0] = x.__data__.x;
+            dimensions[0] = x.__data__.x + 250;
             dimensions[1] = x.__data__.y;
             if ($("button.changeview-button")[0].textContent === "Edit Mode") {
               nodeClick(x, "");
@@ -1028,7 +1028,7 @@ export default function Tree(props) {
           } else {
             try {
               if (x.__data__.data.partnerinfo.id === node.id) {
-                dimensions[0] = x.__data__.x;
+                dimensions[0] = x.__data__.x + 250;
                 dimensions[1] = x.__data__.y;
               }
             } catch {}
@@ -1036,7 +1036,7 @@ export default function Tree(props) {
         }
       try {
         setInfoCard(node);
-        zoom.scaleTo(svg.transition().duration(1000), 0.25);
+        zoom.scaleTo(svg.transition().duration(1000), 0.5);
         $("ul.datalist-ul").html("");
         zoom.translateTo(
           svg.transition().duration(1000),
@@ -1044,7 +1044,7 @@ export default function Tree(props) {
           dimensions[1]
         );
         setTimeout(() => {
-          zoom.scaleTo(svg.transition().duration(1000), 0.25);
+          zoom.scaleTo(svg.transition().duration(1000), 0.5);
         }, 1000);
       } catch {}
       return true;
@@ -1269,6 +1269,7 @@ function TreeWelcome(props) {
           filter={() => props.filter()}
           search={(val, method) => props.search(val, method)}
         />
+        <div className="tree-welcome-search-container" />
         <p>or</p>
         <button id="datalistbutton" onClick={() => randomSearch()}>
           Random family member

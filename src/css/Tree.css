@@ -229,7 +229,7 @@ svg {
 /*                 */
 
 .datalist {
-  position: relative;
+  position: absolute;
   display: flex;
 
   margin: 10px;
@@ -326,7 +326,11 @@ svg {
   text-align: center;
 }
 
-.tree-welcome-modal{
+.tree-welcome-search-container{
+  height: 75px;
+}
+
+.tree-welcome-modal {
   position: absolute;
   z-index: -3;
   top: -20vh;
