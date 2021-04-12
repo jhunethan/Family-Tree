@@ -270,6 +270,8 @@ svg {
   letter-spacing: 0.05rem;
   color: white;
   background-color: #23272b;
+  border: rgba(0, 0, 0, 0) 1px solid;
+  
   cursor: pointer;
   padding: 5px 10px;
 
@@ -277,29 +279,29 @@ svg {
 }
 
 #datalistbutton:hover {
-  background-color: #ff756e;
+  background-color: #000000;
   border-color: rgba(0, 0, 0, 0);
   transition: all 0.3s;
 }
 
 .tree-create-button {
   position: absolute;
-  top: 90px;
+  top: 15px;
   right: 10px;
-  z-index: 2;
-  border-radius: 25px;
+  z-index: 3;
 
+  border: rgba(0, 0, 0, 0) 1px solid;
   padding: 10px;
 }
 
 .changeview-button {
   position: absolute;
-  top: 90px;
+  top: 15px;
   right: 70px;
-  z-index: 2;
+  z-index: 3;
   width: 150px;
 
-  border-radius: 25px;
+  border: rgba(0, 0, 0, 0) 1px solid;
   padding: 10px 20px;
 
   cursor: pointer;
@@ -326,7 +328,7 @@ svg {
   text-align: center;
 }
 
-.tree-welcome-search-container{
+.tree-welcome-search-container {
   height: 75px;
 }
 

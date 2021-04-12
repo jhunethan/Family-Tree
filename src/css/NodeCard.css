@@ -12,6 +12,7 @@
 
 .card-main {
   position: relative;
+  height: 95vh;
   overflow-y: auto;
   overflow-x: hidden;
   background-color: #fff;
@@ -133,6 +134,10 @@
 
 .image-delete {
   transform: translate(10vh, 0);
+  padding: 5px;
+  width: 100px;
+  height: auto;
+  background-color: white;
 }
 
 .image:hover {
