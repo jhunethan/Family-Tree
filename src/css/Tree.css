@@ -6,6 +6,15 @@
   }
 }
 
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 /* main svg container */
 
 #Tree {
@@ -30,14 +39,12 @@ svg {
   transition: all 0.3s;
 }
 
-
-.tree-card>*{
+.tree-card > * {
   user-select: none;
   pointer-events: none;
 }
 
-
-.tree-card{
+.tree-card {
   display: flex;
   flex-direction: row;
 
@@ -52,47 +59,47 @@ svg {
   transition: all 0.3s;
 }
 
-.tree-card:hover{
-  background-color: #FF756E;
+.tree-card:hover {
+  background-color: #ff756e;
   color: white;
   cursor: pointer;
 }
 
-.tree-card-section{
+.tree-card-section {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   padding: 0;
 }
 
-.tree-card-profile{
-  margin: 45px auto 25px auto ;
+.tree-card-profile {
+  margin: 45px auto 25px auto;
 
   border-radius: 5px;
   width: 200px;
   height: 200px;
 }
 
-.tree-card-profession{
+.tree-card-profession {
   font-size: 20px;
 }
 
-.tree-card-section> p{
+.tree-card-section > p {
   text-align: center;
 }
 
-.tree-card-gen{
+.tree-card-gen {
   font-size: 28px;
   padding-top: 75px;
   height: 120px;
   margin: 0;
 }
 
-.tree-card-name{
+.tree-card-name {
   font-size: 36px;
 }
 
-.tree-card-birthdate{
+.tree-card-birthdate {
   font-size: 32px;
 }
 
@@ -222,32 +229,32 @@ svg {
 /*                 */
 
 .datalist {
-  position: absolute;
+  position: relative;
   display: flex;
-  right: 10px;
-  top: 20px;
+
+  margin: 10px;
+
   z-index: 3;
   transition: all 0.5s;
 }
 .input {
   padding: 10px;
-  width: 225px;
+  width: 275px;
 }
 .datalist-ul {
   position: absolute;
-  right: 10px;
-  top:65px;
+  transform: translate(-40px, 50px);
   z-index: 3;
 
   overflow-x: auto;
   font-size: 20px;
   list-style: none;
-  width: 348px;
+  width: 332.5px;
   max-height: 300px;
 }
 
 .datalist-ul > li {
-  border:1px solid black;
+  border: 1px solid rgb(192, 190, 190);
   background-color: white;
   border-bottom: 0.25px solid grey;
   padding: 2.5px 5px;
@@ -260,18 +267,18 @@ svg {
 }
 
 #datalistbutton {
-  letter-spacing: 0.15rem;
+  letter-spacing: 0.05rem;
   color: white;
-  background-color: #23272B;
+  background-color: #23272b;
   cursor: pointer;
-  filter: none;
+  padding: 5px 10px;
 
   transition: all 0.3s;
 }
 
 #datalistbutton:hover {
-  background-color: black;
-  color: #fff200;
+  background-color: #ff756e;
+  border-color: rgba(0, 0, 0, 0);
   transition: all 0.3s;
 }
 
@@ -282,7 +289,7 @@ svg {
   z-index: 2;
   border-radius: 25px;
 
-  padding: 10px   ;
+  padding: 10px;
 }
 
 .changeview-button {
@@ -297,4 +304,34 @@ svg {
 
   cursor: pointer;
   transition: all 0.3s;
+}
+
+.tree-welcome {
+  position: absolute;
+  width: 500px;
+  max-width: 90vw;
+  top: 20vh;
+  left: calc(50vw - 250px);
+  z-index: 1000;
+  background: #e6e6e6;
+  border-radius: 3px;
+  filter: drop-shadow(5px 5px 5px rgba(119, 118, 118, 0.473));
+  padding: 25px;
+
+  animation-name: fade-in;
+  animation-duration: 1s;
+}
+
+.tree-welcome-title {
+  text-align: center;
+}
+
+.tree-welcome-modal{
+  position: absolute;
+  z-index: -3;
+  top: -20vh;
+  left: -50vw;
+  width: 200vw;
+  height: 200vh;
+  background-color: rgba(206, 198, 198, 0.267);
 }

@@ -14,6 +14,7 @@ import NodeCard from "./NodeCard";
 import Modal from "./Modal";
 import Edit from "./Edit";
 import Create from "./Create";
+import TreeSearch from "./TreeSearch";
 
 //card blueprint
 // <div className="tree-card">
@@ -1035,16 +1036,16 @@ export default function Tree(props) {
         }
       try {
         setInfoCard(node);
-        zoom.scaleTo(svg.transition().duration(500), 0.25);
+        zoom.scaleTo(svg.transition().duration(1000), 0.25);
         $("ul.datalist-ul").html("");
         zoom.translateTo(
-          svg.transition().duration(500),
+          svg.transition().duration(1000),
           dimensions[0],
           dimensions[1]
         );
         setTimeout(() => {
-          zoom.scaleTo(svg.transition().duration(750), 0.25);
-        }, 500);
+          zoom.scaleTo(svg.transition().duration(1000), 0.25);
+        }, 1000);
       } catch {}
       return true;
     } else {
@@ -1177,48 +1178,12 @@ export default function Tree(props) {
 
   return (
     <div>
-      <div className="datalist">
-        <input
-          id="datalist-input"
-          className="input"
-          type="text"
-          name="searchtree"
-          placeholder="Search by Name or Birthdate"
-          list="datalist-ul"
-          onChange={() => {
-            populateDatalist();
-          }}
-          onClick={() => {
-            populateDatalist();
-          }}
-          onKeyUp={(event) => {
-            if (event.key === "Enter") {
-              // Cancel the default action, if needed
-              event.preventDefault();
-              // Focus on next element if successful
-              let val = $("#datalist-input").val();
-              if (search(val, "first")) event.target.blur();
-            }
-          }}
-        />
-        <button
-          id="datalistbutton"
-          onClick={(event) => {
-            if (!search($("#datalist-input").val(), "first"))
-              return document.getElementById("datalist-input").focus();
-          }}
-        >
-          Search
-        </button>
-      </div>
-      <ul
-        className="datalist-ul"
-        onClick={(e) => {
-          try {
-            search(e.target.closest("li").textContent);
-          } catch {}
-        }}
-      ></ul>
+      <TreeWelcome
+        filter={() => populateDatalist()}
+        search={(val, method) => search(val, method)}
+        node={InfoCard}
+        data={tableData}
+      />
       <button
         className="tree-create-button"
         onClick={() => resetCreateFields()}
@@ -1269,5 +1234,58 @@ export default function Tree(props) {
         limit={5}
       />
     </div>
+  );
+}
+
+function TreeWelcome(props) {
+  let personSelected = false;
+
+  const randomSearch = () => {
+    try {
+      let arr = [],
+        data = props.data;
+      data.map((person) => {
+        if (person.id === 0) return null;
+        return arr.push(`${person.id}`);
+      });
+
+      let randomID = arr[Math.floor(Math.random() * arr.length)];
+
+      props.search(randomID, "");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  try {
+    if (props.node.name) personSelected = true;
+  } catch {}
+  if (!personSelected)
+    return (
+      <div className="tree-welcome">
+        <h1 className="tree-welcome-title">Lay Family Tree</h1>
+        <p>Search for a family member to continue</p>
+        <TreeSearch
+          filter={() => props.filter()}
+          search={(val, method) => props.search(val, method)}
+        />
+        <p>or</p>
+        <button id="datalistbutton" onClick={() => randomSearch()}>
+          Random family member
+        </button>
+      </div>
+    );
+
+  //fade out
+
+  //wait a second
+
+  //continue
+
+  return (
+    <TreeSearch
+      filter={() => props.filter()}
+      search={(val, method) => props.search(val, method)}
+    />
   );
 }

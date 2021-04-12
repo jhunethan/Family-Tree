@@ -1,42 +1,43 @@
 #card-container {
   position: absolute;
   display: none;
-  margin: 10px 0 0 10px;
+  z-index: 3;
+  top:10px;
+  right: 10px;
+  width: 350px;
   transition: all 0.5s;
   overflow-x: hidden;
+  filter: drop-shadow(5px -5px 5px rgba(65, 65, 65, 0.322));
 }
 
 .card-main {
   position: relative;
-  height: 90vh;
-  width: 350px;
   overflow-y: auto;
   overflow-x: hidden;
   background-color: #fff;
   line-height: 22px;
   color: #000;
   border-radius: 15px 0 0 0;
-  filter: drop-shadow(5px 5px 5px rgba(65, 65, 65, 0.322));
 
-  z-index: 3;
+  z-index: 4;
   margin: 10px auto;
   transition: all 0.5s;
 }
 
 .card-nav {
-  position: absolute;
+  position: fixed;
   margin: 0 0 0 0;
-  z-index: 4;
+  z-index: 5;
   width: 100%;
   display: flex;
   flex-direction: row;
   border-radius: 15px 0 0 0;
 
-  background-color: #FF221F;
+  background-color: #ff3228;
 }
 
 .card-nav > * {
-  background-color: #FF221F;
+  background-color: #ff2d22;
   border: none;
   outline: none;
   color: white;
@@ -46,7 +47,7 @@
 }
 
 .card-nav > *:hover {
-  background-color: #8d0200;
+  background-color: #ff756e;
 }
 
 #card-expand {
