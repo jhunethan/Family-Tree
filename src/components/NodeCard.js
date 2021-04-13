@@ -27,7 +27,7 @@ export default function NodeCard(props) {
       cardexpanded = true;
       return;
     }
-    $("#card-container").css("width", 350)
+    $("#card-container").css("width", 345)
     $("#card-expand").html("<>");
     cardexpanded = false;
   };

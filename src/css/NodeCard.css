@@ -4,9 +4,9 @@
   z-index: 3;
   top:10px;
   right: 10px;
-  width: 350px;
+  width: 345px;
   transition: all 0.5s;
-  overflow-x: hidden;
+  overflow: hidden;
   filter: drop-shadow(5px -5px 5px rgba(65, 65, 65, 0.322));
 }
 
@@ -133,7 +133,7 @@
 }
 
 .image-delete {
-  transform: translate(10vh, 0);
+  transform: translateX(75px);
   padding: 5px;
   width: 100px;
   height: auto;
