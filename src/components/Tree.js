@@ -593,7 +593,7 @@ export default function Tree(props) {
     let data =
       type === "partner" ? el.__data__.data.partnerinfo : el.__data__.data;
 
-    zoom.scaleTo(svg.transition().duration(500), 0.5);
+    zoom.scaleTo(svg.transition().duration(500), 0.35);
     setInfoCard(data);
     zoom.translateTo(
       svg.transition().duration(500),
@@ -601,7 +601,7 @@ export default function Tree(props) {
       el.__data__.y
     );
     setTimeout(() => {
-      zoom.scaleTo(svg.transition().duration(750), 0.5);
+      zoom.scaleTo(svg.transition().duration(750), 0.35);
     }, 500);
   }
 
@@ -1036,7 +1036,7 @@ export default function Tree(props) {
         }
       try {
         setInfoCard(node);
-        zoom.scaleTo(svg.transition().duration(1000), 0.5);
+        zoom.scaleTo(svg.transition().duration(1000), 0.35);
         $("ul.datalist-ul").html("");
         zoom.translateTo(
           svg.transition().duration(1000),
@@ -1044,7 +1044,7 @@ export default function Tree(props) {
           dimensions[1]
         );
         setTimeout(() => {
-          zoom.scaleTo(svg.transition().duration(1000), 0.5);
+          zoom.scaleTo(svg.transition().duration(1000), 0.35);
         }, 1000);
       } catch {}
       return true;
