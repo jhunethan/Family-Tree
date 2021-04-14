@@ -75,17 +75,20 @@ export default function Tree(props) {
   };
 
   useEffect(() => {
+    var start = Date.now();
+
     Axios.get("http://localhost:5000/api/get")
       .then((result) => {
         setTableData(result.data);
       })
-      .then(() =>
-        toast.success("Tree loaded!\n Try zooming out or use the search bar", {
+      .then(() => {
+        let loadTime = (Date.now() - start) / 1000;
+        toast.success(`Tree loaded in ${loadTime} s`, {
           position: "top-center",
-          autoClose: 10000,
+          autoClose: 2500,
           toastId: "TreeLoaded",
-        })
-      );
+        });
+      });
   }, [update]);
 
   //update tree on tableData mutation
