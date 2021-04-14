@@ -271,7 +271,7 @@ svg {
   color: white;
   background-color: #23272b;
   border: rgba(0, 0, 0, 0) 1px solid;
-  
+
   cursor: pointer;
   padding: 5px 10px;
 
@@ -315,10 +315,10 @@ svg {
   top: 20vh;
   left: calc(50vw - 250px);
   z-index: 1000;
-  background: #e6e6e6;
+  background: #fff;
   border-radius: 3px;
   filter: drop-shadow(5px 5px 5px rgba(119, 118, 118, 0.473));
-  padding: 25px;
+  padding: 35px;
 
   animation-name: fade-in;
   animation-duration: 1s;
@@ -339,5 +339,15 @@ svg {
   left: -50vw;
   width: 200vw;
   height: 200vh;
-  background-color: rgba(206, 198, 198, 0.267);
+  background-color: rgba(255, 255, 255, 0.267);
+}
+
+@media screen and (max-width: 576px) {
+  .tree-welcome {
+    left: 20px;
+    max-width: calc(100vw - 40px);
+  }
+  .input{
+    width: 100%;
+  }
 }
