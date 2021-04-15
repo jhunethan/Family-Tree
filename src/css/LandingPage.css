@@ -11,27 +11,31 @@
 }
 
 .content-container {
-  margin-top: 15vh;
-
+  height: 150vh;
   width: 100%;
+  max-width: 550px;
+
+  background-color: #fff;
+  filter: drop-shadow(5px 5px 5px rgba(65, 65, 65, 0.322));
+
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   z-index: 2;
 }
 
 .header {
+  text-align: center;
   padding: 30px;
-  margin: 0 auto;
+  margin: 20vh auto 0 auto;
   background-color: #fff;
   border-radius: 2px;
-  filter: drop-shadow(5px 5px 5px rgba(65, 65, 65, 0.322));
   transition: 1s ease-out;
 }
 
 .landing-title {
   user-select: none;
   margin: 0 20px 40px 20px;
-  font-size: 4rem;
 }
 
 .landing-title:hover {

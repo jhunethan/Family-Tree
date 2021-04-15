@@ -219,9 +219,8 @@ footer {
 }
 
 .card-description {
-  width: 350px;
-  max-width: 160vh;
-  flex-grow: 1;
+  width: 82ch;
+  margin: 0 auto;
 }
 
 .related-container {
