@@ -4,7 +4,6 @@ import * as $ from "jquery";
 export default function TreeSearch(props) {
   return (
     <div>
-      <div className="tree-welcome-modal" />
       <div className="datalist">
         <input
           id="datalist-input"

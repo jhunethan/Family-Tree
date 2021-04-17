@@ -1267,6 +1267,7 @@ function TreeWelcome(props) {
       <div className="tree-welcome">
         <h1 className="tree-welcome-title">Lay Family Tree</h1>
         <p>Search for a family member to continue</p>
+        <div className="tree-welcome-modal" />
         <TreeSearch
           filter={() => props.filter()}
           search={(val, method) => props.search(val, method)}
@@ -1280,7 +1281,10 @@ function TreeWelcome(props) {
     );
 
   //fade out
-
+  $(".tree-welcome-modal").css(
+    "background-color",
+    "rgba(255, 255, 255, 0)"
+  );
   //wait a second
 
   //continue

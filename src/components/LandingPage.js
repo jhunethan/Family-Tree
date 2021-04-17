@@ -364,23 +364,14 @@ export default function LandingPage(props) {
   const [view, setView] = useState("");
   var history = useHistory();
 
-  // const resetName = () => {
-  //   $("div.author-input").removeClass("hidden");
-  //   $("div.landing-navigation").addClass("hidden");
-  //   $("input.author-input").val("");
-  //   $("ul.header-navigation").addClass("hidden");
-  // };
-
   $("ul.header-navigation").addClass("hidden");
 
   return (
     <div className="wrapper">
-      <section className="content-container">
         <div className="header">
           <h1 className="landing-title" onClick={() => setView("")}>
             Lay Family Tree
           </h1>
-          {/* <LandingNavigation resetName={resetName} /> */}
           <LoginControl
             view={view}
             ResetPassword={() => {
@@ -398,7 +389,6 @@ export default function LandingPage(props) {
             }}
           />
         </div>
-      </section>
       <ToastContainer position="bottom-right" autoClose={5000} limit={5} />
     </div>
   );

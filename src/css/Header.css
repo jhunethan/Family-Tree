@@ -9,7 +9,7 @@
 nav {
   height: 3rem;
   display: flex;
-  background-color: #FF221F;
+  background-color: #D64550;
   height: 80px;
   width: 100%;
   position: relative;
@@ -32,10 +32,10 @@ nav {
   font-size: 24px;
   font-weight: 600;
   letter-spacing: 0.1rem;
-  border-bottom: 2px solid #FF221F;
+  border-bottom: 2px solid #D64550;
   margin: 0 50px;
 
-  color: white;
+  color: #EEF4D4;
   transition: all 0.5s;
 }
 
@@ -50,11 +50,10 @@ nav {
 
 .nav-logo {
   text-decoration: none;
-  color: white;
+  color: #EEF4D4;
   font-size: 2.5rem;
   font-weight: 600;
   letter-spacing: 0.7rem;
-  color: white;
   margin: 10px;
 }
 

@@ -1,11 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&family=Poppins&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400&display=swap");
 
 .App {
   text-align: center;
   height: fit-content;
   overflow: hidden;
-  width: 100vw;
-  height: 100vh;
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
@@ -17,7 +15,7 @@ body,
 }
 
 *{
-  font-family: "Poppins", sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
 a:hover {
