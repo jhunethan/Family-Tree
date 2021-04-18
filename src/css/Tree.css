@@ -55,13 +55,14 @@ svg {
 
   filter: drop-shadow(15px 15px 10px rgba(0, 0, 0, 0.219));
   background-color: #fff;
-  transition: all 0.3s;
+  transition: all 0.5s;
 }
 
 .tree-card:hover {
   background-color: #ff756e;
   color: white;
   cursor: pointer;
+  transition: 0.3s;
 }
 
 .tree-card-section {
