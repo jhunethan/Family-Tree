@@ -20,39 +20,22 @@ function Create(props) {
 
   const [sendNode, setsendNode] = useState(node);
 
-  const inputChangedHandler = () => {
-    //set unique insert ID
-    let idArray = [],
-      id = 1;
-
-    for (let i = 0; i < props.data.length; i++) {
-      idArray.push(props.data[i].id);
-    }
-    while (idArray.includes(id)) {
-      id += 1;
-    }
-
-    //if parent field is populated, show relationship
-
-    $(".create-form-relationship").css(
-      "display",
-      $.trim($("#parentInputC").val()) ? "flex" : "none"
-    );
-
-    //if parent field, populate create-datalist
+  const populateDatalist = () => {
     //filter by input
     let list = $("#create-datalist").html(""),
       datalistcount = 0,
       filteredDatalist = [];
 
-    if ($.trim($("#parentInputC").val())) {
+    if ($.trim($("#create-parent-input").val())) {
       for (const x of props.data) {
         if (x.name && datalistcount < 5) {
           filteredDatalist.push(`${x.generation} ${x.name}`);
         }
       }
 
-      let parsed = $.trim($("#parentInputC").val().toLowerCase()).split(" ");
+      let parsed = $.trim($("#create-parent-input").val().toLowerCase()).split(
+        " "
+      );
       filteredDatalist = filteredDatalist.filter((x) => {
         for (const word of parsed) {
           if (!x.toLowerCase().includes(word)) return false;
@@ -67,21 +50,52 @@ function Create(props) {
         }
       }
     }
+  };
 
-    node.parentNode = $("#parentInputC").val();
-    let pid = document.getElementById("toggle-slide").checked,
+  const getUniqueID = (data) => {
+    //set unique insert ID
+    let idArray = [],
+      id = 1;
+
+    for (let i = 0; i < data.length; i++) {
+      idArray.push(data[i].id);
+    }
+    while (idArray.includes(id)) {
+      id += 1;
+    }
+    return id;
+  };
+
+  const inputChangedHandler = () => {
+    let parentInput = $("#create-parent-input").val();
+    let id = getUniqueID(props.data);
+    let isPartner = document.getElementById("toggle-slide").checked;
+    let pid = null;
+
+    if (!parentInput) isPartner = false;
+
+    if (!isPartner) {
+      node.parent = parentInput;
       isPartner = 0;
-    if (pid === false) {
-      node.parent = node.parentNode;
     } else {
-      node.partner = node.parentNode;
+      node.partner = parentInput;
       isPartner = 1;
     }
+
     try {
-      pid = props.getPID(node.parentNode);
+      pid = props.getPID(parentInput);
     } catch {
       pid = 0;
     }
+
+    //if parent field is populated, show relationship
+
+    $(".create-form-relationship").css(
+      "display",
+      $.trim($("#create-parent-input").val()) ? "flex" : "none"
+    );
+
+    populateDatalist();
 
     setsendNode({
       id: id,
@@ -113,19 +127,15 @@ function Create(props) {
 
   const validation = () => {
     let nameinput = $("#nameInputC");
-    let parentInputC = $("#parentInputC");
+    let parentInput = $("#create-parent-input");
     let check = true;
 
     //check child or partner
     if (document.getElementById("toggle-slide").checked) node.isPartner = 1;
 
-    if (node.isPartner === 1 && whitespace(parentInputC.val()).length < 1) {
-      check = false;
-      parentInputC.css("border-bottom", "2px solid red");
-      parentInputC.attr(
-        "placeholder",
-        "This field cant be empty when partner is chosen"
-      );
+    if (node.isPartner && !whitespace(parentInput.val()).length) {
+      document.getElementById("toggle-slide").checked = false;
+      node.isPartner = 0;
     }
     if (!whitespace(nameinput.val())) {
       //empty, apply error styles
@@ -140,7 +150,7 @@ function Create(props) {
   };
 
   function checkParent() {
-    let element = $("#parentInputC");
+    let element = $("#create-parent-input");
     for (const x of props.data) {
       let namecheck = x.generation + " " + x.name;
       if (element.val() === namecheck) return true;
@@ -155,9 +165,6 @@ function Create(props) {
 
   const submit = () => {
     inputChangedHandler();
-    if (node.isPartner === 0) {
-      node.parent = node.parentNode;
-    }
     if (validation()) {
       Axios.post("https://layfamily.herokuapp.com/api/insert", {
         input: sendNode,
@@ -214,7 +221,7 @@ function Create(props) {
               // Cancel the default action, if needed
               event.preventDefault();
               // Focus on next element
-              document.getElementById("parentInputC").focus();
+              document.getElementById("create-parent-input").focus();
             }
           }}
         />
@@ -225,7 +232,7 @@ function Create(props) {
       <p type="Parent/Partner" className="create-form-section">
         <input
           autoComplete="off"
-          id="parentInputC"
+          id="create-parent-input"
           className="create-form-input"
           placeholder="Name of Parent/ Partner"
           onChange={inputChangedHandler}
@@ -245,7 +252,9 @@ function Create(props) {
         id="create-datalist"
         onClick={(e) => {
           try {
-            $("#parentInputC").val($.trim(e.target.closest("li").textContent));
+            $("#create-parent-input").val(
+              $.trim(e.target.closest("li").textContent)
+            );
           } catch {}
         }}
       ></ul>
