@@ -185,7 +185,7 @@ export default function Table(props) {
       $(".radio-togglesC").css("display", "none");
       $("#parentSearchDataList").html("");
       $("#toggle-slide").checked = false;
-      $("div.Create").css("display", "block");
+      $("div.create-form").css("display", "block");
       $("#Modal").css("display", "block");
       $("#nameInputC")
         .attr("placeholder", "")
@@ -297,7 +297,7 @@ export default function Table(props) {
 
   const closePopups = () => {
     for (const element of [
-      "div.Create",
+      "div.create-form",
       "#editForm",
       "#deleteConfirmMenu",
       "div.edit-container",

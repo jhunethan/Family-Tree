@@ -34,14 +34,14 @@ function Create(props) {
 
     //if parent field is populated, show relationship
 
-    $(".radio-togglesC").css(
+    $(".create-form-relationship").css(
       "display",
       $.trim($("#parentInputC").val()) ? "flex" : "none"
     );
 
-    //if parent field, populate Create-Datalist
+    //if parent field, populate create-datalist
     //filter by input
-    let list = $("#Create-Datalist").html(""),
+    let list = $("#create-datalist").html(""),
       datalistcount = 0,
       filteredDatalist = [];
 
@@ -102,7 +102,7 @@ function Create(props) {
 
   const successAdd = () => {
     try {
-      $("div.Create").css("display", "none");
+      $("div.create-form").css("display", "none");
       $("#Modal").css("display", "none");
     } catch {}
 
@@ -167,12 +167,13 @@ function Create(props) {
   };
 
   return (
-    <div className="Create">
-      <h2>Add New</h2>
-      <p type="Generation">
+    <div className="create-form">
+      <h2 className="create-form-title">Add New</h2>
+      <p type="Generation" className="create-form-section">
         <input
           autoComplete="off"
           id="genInputC"
+          className="create-form-input"
           onChange={inputChangedHandler}
           onKeyUp={(event) => {
             if (event.key === "Enter") {
@@ -184,10 +185,11 @@ function Create(props) {
           }}
         />
       </p>
-      <p type="Name:">
+      <p type="Name:" className="create-form-section">
         <input
           autoComplete="off"
           id="nameInputC"
+          className="create-form-input"
           onChange={inputChangedHandler}
           onKeyUp={(event) => {
             if (event.key === "Enter") {
@@ -199,11 +201,12 @@ function Create(props) {
           }}
         />
       </p>
-      <p type="Date of Birth">
+      <p type="Date of Birth" className="create-form-section">
         <input
           autoComplete="off"
           type="date"
           id="birthdateInputC"
+          className="create-form-input"
           onChange={inputChangedHandler}
           placeholder="YYYY-MM-DD"
           onKeyUp={(event) => {
@@ -219,10 +222,11 @@ function Create(props) {
 
       {/* Search for parent autocomplete */}
 
-      <p type="Parent/Partner">
+      <p type="Parent/Partner" className="create-form-section">
         <input
           autoComplete="off"
           id="parentInputC"
+          className="create-form-input"
           placeholder="Name of Parent/ Partner"
           onChange={inputChangedHandler}
           onClick={inputChangedHandler}
@@ -238,30 +242,30 @@ function Create(props) {
       </p>
       <ul
         className="datalist-ul"
-        id="Create-Datalist"
+        id="create-datalist"
         onClick={(e) => {
           try {
             $("#parentInputC").val($.trim(e.target.closest("li").textContent));
           } catch {}
         }}
       ></ul>
-      <div className="radio-togglesC">
-        <p className="create-radio-option">Parent</p>
+      <div className="create-form-relationship">
+        <p className="create-form-radio-option">Parent</p>
         <input
           type="checkbox"
-          className="create-checkbox"
+          className="create-form-checkbox"
           id="toggle-slide"
           onChange={() => {
             inputChangedHandler();
           }}
           name="radio-optionsC"
         />
-        <p className="create-radio-option">Partner</p>
+        <p className="create-form-radio-option">Partner</p>
       </div>
       <button
         type="button"
         id="save"
-        className="create-button"
+        className="create-form-button"
         onClick={submit}
       >
         Save Changes
@@ -269,7 +273,7 @@ function Create(props) {
       <button
         type="button"
         id="cancel"
-        className="create-button"
+        className="create-form-button"
         onClick={() => {
           try {
             document.getElementsByClassName("Create")[0].style.display = "none";
