@@ -21,14 +21,14 @@ function SignUp(props) {
         })
         .join(" ");
     } catch {
-      return str;
+      return "invalid input";
     }
   }
 
-  function validateEmail() {
+  function validateEmail(str) {
     if (
       /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
-        user["email"]
+        str
       )
     ) {
       return true;
@@ -38,16 +38,30 @@ function SignUp(props) {
 
   const checkChanges = (method) => {
     let tempUser = user;
-    tempUser[method] =
-      method === "name"
-        ? $.trim(capitalize($(`#signup-${method}`).val()))
-        : $.trim($(`#signup-${method}`).val());
+    let val = $.trim($(`#signup-${method}`).val());
+    if (method === "name") val = capitalize(val);
+    tempUser[method] = val;
     setUser(tempUser);
+  };
+
+  const passwordValidation = () => {
+    let Min_Password_Length = 5,
+      password_Input = $("#signup-password").val(),
+      password_Input_Repeat = $("#signup-password-repeat").val();
+
+    if (password_Input.length < Min_Password_Length) {
+      toast.error("Password must be longer than 5 characters");
+      return false;
+    }
+    if (password_Input !== password_Input_Repeat) {
+      toast.error("Passwords dont match, please re-enter");
+      return false;
+    }
   };
 
   const submit = () => {
     let valid = true;
-    //check for empty fields
+
     for (const x of ["name", "email", "password"]) {
       if (!user[x]) {
         valid = false;
@@ -55,23 +69,10 @@ function SignUp(props) {
       }
     }
 
-    if (!validateEmail() && valid) {
+    if (!validateEmail(user["email"]) && valid) {
       valid = false;
       toast.error("invalid email", { toastId: "invalidEmail" });
     }
-
-    const passwordValidation = () => {
-      let check = true;
-      if ($("#signup-password").val() !== $("#signup-password-repeat").val()) {
-        toast.error("Passwords dont match, please re-enter");
-        check = false;
-      }
-      if ($("#signup-password").val().length < 5) {
-        toast.error("Password must be longer than 5 characters");
-        check = false;
-      }
-      return check;
-    };
 
     if (!passwordValidation()) valid = false;
 
@@ -323,41 +324,39 @@ function ResetPassword(props) {
 }
 
 function LoginControl(props) {
-  if (!props.view) {
-    return (
-      <div>
-        <div className="landing-buttons">
-          <button
-            type="button"
-            className="btn btn-dark btn-lg btn-block landing-button"
-            onClick={props.setLogin}
-          >
-            Login
-          </button>
-          <button
-            type="button"
-            className="btn btn-dark btn-lg btn-block landing-button"
-            onClick={props.setSignUp}
-          >
-            Signup
-          </button>
-        </div>
-        <button
-          className="btn btn-dark btn-lg btn-block landing-guest"
-          onClick={props.setGuest}
-        >
-          Continue without login
-        </button>
-      </div>
-    );
-  }
-
   if (props.view === "reset") return <ResetPassword />;
   if (props.view === "login")
     return (
       <Login ResetPassword={props.ResetPassword} setSignUp={props.setSignUp} />
     );
-  return <SignUp setLogin={props.setLogin} />;
+  if (props.view === "signup") return <SignUp setLogin={props.setLogin} />;
+  
+  return (
+    <div>
+      <div className="landing-buttons">
+        <button
+          type="button"
+          className="btn btn-dark btn-lg btn-block landing-button"
+          onClick={props.setLogin}
+        >
+          Login
+        </button>
+        <button
+          type="button"
+          className="btn btn-dark btn-lg btn-block landing-button"
+          onClick={props.setSignUp}
+        >
+          Signup
+        </button>
+      </div>
+      <button
+        className="btn btn-dark btn-lg btn-block landing-guest"
+        onClick={props.setGuest}
+      >
+        Continue without login
+      </button>
+    </div>
+  );
 }
 
 export default function LandingPage(props) {
@@ -368,27 +367,27 @@ export default function LandingPage(props) {
 
   return (
     <div className="wrapper">
-        <div className="header">
-          <h1 className="landing-title" onClick={() => setView("")}>
-            Lay Family Tree
-          </h1>
-          <LoginControl
-            view={view}
-            ResetPassword={() => {
-              setView("reset");
-            }}
-            setLogin={() => {
-              setView("login");
-            }}
-            setSignUp={() => {
-              setView("signup");
-            }}
-            setGuest={() => {
-              setView("");
-              history.push("/tree");
-            }}
-          />
-        </div>
+      <div className="header">
+        <h1 className="landing-title" onClick={() => setView("")}>
+          Lay Family Tree
+        </h1>
+        <LoginControl
+          view={view}
+          ResetPassword={() => {
+            setView("reset");
+          }}
+          setLogin={() => {
+            setView("login");
+          }}
+          setSignUp={() => {
+            setView("signup");
+          }}
+          setGuest={() => {
+            setView("");
+            history.push("/tree");
+          }}
+        />
+      </div>
       <ToastContainer position="bottom-right" autoClose={5000} limit={5} />
     </div>
   );

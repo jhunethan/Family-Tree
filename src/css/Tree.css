@@ -313,7 +313,7 @@ svg {
   z-index: 1000;
   background: #fff;
   border-radius: 3px;
-  filter: drop-shadow(5px 5px 5px rgba(119, 118, 118, 0.473));
+  filter: drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.226));
   padding: 35px;
 
   animation-name: fade-in;
