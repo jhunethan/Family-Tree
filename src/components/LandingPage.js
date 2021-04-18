@@ -76,7 +76,7 @@ function SignUp(props) {
     if (!passwordValidation()) valid = false;
 
     if (valid) {
-      Axios.post("http://localhost:5000/api/signup", {
+      Axios.post("https://layfamily.herokuapp.com/api/signup", {
         userdetails: user,
       }).then((result) => {
         if (result.data === "success") history.push("/tree");
@@ -176,7 +176,7 @@ function Login(props) {
     }
 
     if (valid)
-      Axios.post("http://localhost:5000/api/login", {
+      Axios.post("https://layfamily.herokuapp.com/api/login", {
         userdetails: user,
       }).then((result) => {
         if (result.data === "success") {
@@ -275,7 +275,7 @@ function ResetPassword(props) {
 
   const resetPass = () => {
     if (email) {
-      return Axios.post("http://localhost:5000/api/login/resetpass", {
+      return Axios.post("https://layfamily.herokuapp.com/api/login/resetpass", {
         email: email,
       }).then((result) => {
         if (result.data === "email not found")

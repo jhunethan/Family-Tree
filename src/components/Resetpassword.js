@@ -12,7 +12,7 @@ export default function Resetpassword() {
   const resetPass = () => {
     try {
       let password = document.getElementById("password-input").value;
-      let url = `http://localhost:5000/api/resetpass/success`;
+      let url = `https://layfamily.herokuapp.com/api/resetpass/success`;
 
       if (token.includes("/reset-password/")) return;
 
@@ -25,7 +25,7 @@ export default function Resetpassword() {
     }
   };
 
-  Axios.post("http://localhost:5000/api/resetpass", {
+  Axios.post("https://layfamily.herokuapp.com/api/resetpass", {
     token: token[0],
   }).then((result) => {
     if (result.data === "invalid token") return false;

@@ -261,7 +261,7 @@ export function MemberPhotos(props) {
   const [cookies] = useCookies(["author"]);
 
   const imageDelete = (e) => {
-    Axios.post("http://localhost:5000/api/delete/image", {
+    Axios.post("https://layfamily.herokuapp.com/api/delete/image", {
       id: props.node.id,
       name: props.node.name,
       author: cookies.author,
