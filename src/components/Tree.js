@@ -952,9 +952,10 @@ export default function Tree(props) {
     for (const x of tableData) {
       if (x.id !== 0) {
         birthdate = x.birthdate ? dateFormat(x.birthdate, "dS mmmm yyyy") : "";
-        datalistarr.push(
-          `${x.generation} ${x.name} <br/> ${birthdate} ${x.id}`
-        );
+        datalistarr.push({
+          name: `${x.generation} ${x.name} <br/> ${birthdate}`,
+          id: x.id,
+        });
       }
     }
 
@@ -962,14 +963,14 @@ export default function Tree(props) {
       let parsed = $.trim($("#datalist-input").val().toLowerCase()).split(" ");
       datalistarr = datalistarr.filter((x) => {
         for (const word of parsed) {
-          if (!x.toLowerCase().includes(word)) return false;
+          if (!x.name.toLowerCase().includes(word)) return false;
         }
         return true;
       });
     }
 
     for (var i = 0; i < datalistarr.length; ++i) {
-      str += `<li>${datalistarr[i]}</>`;
+      str += `<li data-id=${datalistarr[i].id}>${datalistarr[i].name}</>`;
     }
     list.html(str);
 
@@ -1281,10 +1282,7 @@ function TreeWelcome(props) {
     );
 
   //fade out
-  $(".tree-welcome-modal").css(
-    "background-color",
-    "rgba(255, 255, 255, 0)"
-  );
+  $(".tree-welcome-modal").css("background-color", "rgba(255, 255, 255, 0)");
   //wait a second
 
   //continue

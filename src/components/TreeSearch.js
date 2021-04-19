@@ -20,18 +20,17 @@ export default function TreeSearch(props) {
           }}
           onKeyUp={(event) => {
             if (event.key === "Enter") {
-              // Cancel the default action, if needed
               event.preventDefault();
-              // Focus on next element if successful
-              let val = $("#datalist-input").val();
-              if (props.search(val, "first")) event.target.blur();
+              let id = $("#treeSearch-datalist-ul")[0].firstChild.dataset.id;
+              if (props.search(id)) event.target.blur();
             }
           }}
         />
         <button
           id="datalistbutton"
           onClick={(event) => {
-            if (!props.search($("#datalist-input").val(), "first"))
+            let id = $("#treeSearch-datalist-ul")[0].firstChild.dataset.id;
+            if (!props.search(id))
               return document.getElementById("datalist-input").focus();
           }}
         >
@@ -39,9 +38,10 @@ export default function TreeSearch(props) {
         </button>
         <ul
           className="datalist-ul"
+          id="treeSearch-datalist-ul"
           onClick={(e) => {
             try {
-              props.search(e.target.closest("li").textContent);
+              props.search(e.target.closest("li").dataset.id);
             } catch {}
           }}
         ></ul>
