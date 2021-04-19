@@ -32,7 +32,7 @@ svg {
 /* Tree card display */
 
 .partner-container {
-  fill: #313D5A;
+  fill: #fafafa;
   width: 800px;
   height: 300px;
   padding: 8px 12px;
@@ -283,22 +283,27 @@ svg {
 
 .tree-create-button {
   position: absolute;
-  top: 15px;
-  right: 10px;
+  top: 0;
+  right: 150px;
   z-index: 3;
+  height: 50px;
+  width: 50px;
 
-  border: rgba(0, 0, 0, 0) 1px solid;
+background-color: inherit;
+  border: rgba(0, 0, 0, 0.438) 1px solid;
   padding: 10px;
 }
 
 .changeview-button {
   position: absolute;
-  top: 15px;
-  right: 70px;
+  top: 0;
+  right: 0;
   z-index: 3;
   width: 150px;
+  height: 50px;
 
-  border: rgba(0, 0, 0, 0) 1px solid;
+  background-color: inherit;
+  border: rgba(0, 0, 0, 0.438) 1px solid;
   padding: 10px 20px;
 
   cursor: pointer;

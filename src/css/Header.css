@@ -9,8 +9,9 @@
 nav {
   height: 3rem;
   display: flex;
-  background-color: #D64550;
-  height: 80px;
+  background-color: rgb(0,170,255);
+  /* 0,170,255 D64550*/
+  height: 50px;
   width: 100%;
   position: relative;
   z-index: 3;
@@ -29,23 +30,23 @@ nav {
 .nav-link {
   text-decoration: none;
   user-select: none;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 600;
   letter-spacing: 0.1rem;
-  border-bottom: 2px solid #D64550;
-  margin: 0 50px;
+  border-bottom: 2px solid rgb(0,170,255);
+  margin: 0 25px;
 
   color: #EEF4D4;
   transition: all 0.5s;
 }
 
 .nav-link:hover{
-  border-bottom: 2px solid #fff200;
+  border-bottom: 2px solid grey;
   transition: all 0.3s;
 }
 
 .active{
-  border-bottom: 2px solid #ff8800;
+  border-bottom: 2px solid #000;
 }
 
 .nav-logo {
