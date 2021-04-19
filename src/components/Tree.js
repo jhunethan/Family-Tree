@@ -200,7 +200,7 @@ export default function Tree(props) {
     }, 150);
     if (obj.method !== "delete")
       setTimeout(() => {
-        search(`${obj.id}`);
+        search(obj.id);
       }, 500);
   }
 
@@ -862,50 +862,6 @@ export default function Tree(props) {
         if (d.data.birthdate) return `${startdate} - ${enddate}`;
         return "???? - ????";
       });
-    // let treeCardMain = container
-    //   .append("xhtml:section")
-    //   .attr("class", "tree-card-main");
-
-    // treeCardMain
-    //   .append("xhtml:div")
-    //   .attr("class", "tree-card-birth")
-    //   .html(function (d) {
-    //     if (d.data.birthdate)
-    //       return dateFormat(d.data.birthdate, "dS mmmm yyyy");
-    //     return "";
-    //   });
-    // treeCardMain
-    //   .append("xhtml:div")
-    //   .attr("class", "tree-card-birth tree-card-age")
-    //   .html(function (d) {
-    //     if (d.data.deathdate) {
-    //       return dateFormat(d.data.deathdate, "dS mmmm yyyy");
-    //     }
-    //     if (d.data.birthdate) {
-    //       let firstDate = new Date(d.data.birthdate),
-    //         now = new Date(),
-    //         timeDifference = Math.floor(
-    //           Math.abs((now.getTime() - firstDate.getTime()) / 31449600000)
-    //         );
-    //       return `${timeDifference} years old`;
-    //     }
-    //     return "";
-    //   });
-    // let name = treeCardMain.append("xhtml:div").attr("class", "tree-card-name");
-
-    // name.append("p").text(function (d) {
-    //   return d.data.name;
-    // });
-    // treeCardMain
-    //   .append("xhtml:p")
-    //   .text(function (d) {
-    //     try {
-    //       return d.data.extradetails.profession;
-    //     } catch {
-    //       return "";
-    //     }
-    //   })
-    //   .attr("class", "tree-card-footer");
 
     links = d3.select("svg g.links").selectAll("path").data(linksData);
     links
@@ -988,41 +944,32 @@ export default function Tree(props) {
     }
   };
 
-  const search = (text, method) => {
-    let found = false;
-    let node, searchterm;
-    if (method === "first") {
-      try {
-        searchterm = $.trim($("ul.datalist-ul")[0].firstChild.textContent);
-      } catch {}
-    } else {
-      searchterm = $.trim(text);
-    }
-
-    $("#datalist-input")
+  const resetDatalistCSS = () => {
+    return $("#datalist-input")
       .val("")
       .attr("placeholder", "Search by Name or Birthdate");
+  };
+
+  const search = (input) => {
+    let id = Number($.trim(input));
+    let currentNode;
+
+    resetDatalistCSS();
     populateDatalist();
-    if (searchterm !== "No results." && searchterm) found = true;
-    //if search term isnt null && if textcontent isnt "No results."
-    if (found) {
+
+    if (id) {
       if ($("button.changeview-button")[0].textContent === "Read mode")
         $("#card-container").css("display", "block");
-      //get node object
-      let n = searchterm.split(" ");
-      let id = Number(n[n.length - 1]);
-      let tempData = tableData;
-      for (const x of tempData) {
-        if (x.id === id) {
-          node = x;
-        }
-      }
-      let nodeRect = d3.select("svg g.nodes").selectAll("foreignObject")
+
+      currentNode = getNode(id);
+
+      let nodes = d3.select("svg g.nodes").selectAll("foreignObject")
         ._groups[0];
       let dimensions = [];
-      if (nodeRect)
-        for (const x of nodeRect) {
-          if (x.__data__.data.id === node.id) {
+
+      if (nodes) {
+        for (const x of nodes) {
+          if (x.__data__.data.id === currentNode.id) {
             dimensions[0] = x.__data__.x + 250;
             dimensions[1] = x.__data__.y;
             if ($("button.changeview-button")[0].textContent === "Edit Mode") {
@@ -1030,15 +977,15 @@ export default function Tree(props) {
             }
           } else {
             try {
-              if (x.__data__.data.partnerinfo.id === node.id) {
+              if (x.__data__.data.partnerinfo.id === currentNode.id) {
                 dimensions[0] = x.__data__.x + 250;
                 dimensions[1] = x.__data__.y;
               }
             } catch {}
           }
         }
-      try {
-        setInfoCard(node);
+
+        setInfoCard(currentNode);
         zoom.scaleTo(svg.transition().duration(1000), 0.35);
         $("ul.datalist-ul").html("");
         zoom.translateTo(
@@ -1049,13 +996,14 @@ export default function Tree(props) {
         setTimeout(() => {
           zoom.scaleTo(svg.transition().duration(1000), 0.35);
         }, 1000);
-      } catch {}
-      return true;
-    } else {
-      $("#datalist-input").css("border", "2px solid red");
-      $("#datalist-input").attr("placeholder", "Person not found.");
-      return false;
+
+        return true;
+      }
     }
+
+    $("#datalist-input").css("border", "2px solid red");
+    $("#datalist-input").attr("placeholder", "Person not found.");
+    return false;
   };
 
   const populateEditFields = (inputNode) => {
@@ -1183,7 +1131,7 @@ export default function Tree(props) {
     <div>
       <TreeWelcome
         filter={() => populateDatalist()}
-        search={(val, method) => search(val, method)}
+        search={(val) => search(val)}
         node={InfoCard}
         data={tableData}
       />
@@ -1254,7 +1202,7 @@ function TreeWelcome(props) {
 
       let randomID = arr[Math.floor(Math.random() * arr.length)];
 
-      props.search(randomID, "");
+      props.search(randomID);
     } catch (error) {
       console.log(error);
     }
@@ -1271,7 +1219,7 @@ function TreeWelcome(props) {
         <div className="tree-welcome-modal" />
         <TreeSearch
           filter={() => props.filter()}
-          search={(val, method) => props.search(val, method)}
+          search={(val) => props.search(val)}
         />
         <div className="tree-welcome-search-container" />
         <p>or</p>
@@ -1290,7 +1238,7 @@ function TreeWelcome(props) {
   return (
     <TreeSearch
       filter={() => props.filter()}
-      search={(val, method) => props.search(val, method)}
+      search={(val) => props.search(val)}
     />
   );
 }
