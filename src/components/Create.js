@@ -72,6 +72,8 @@ function Create(props) {
     let isPartner = document.getElementById("toggle-slide").checked;
     let pid = null;
 
+    console.log(parentInput)
+
     if (!parentInput) isPartner = false;
 
     if (!isPartner) {
@@ -96,7 +98,16 @@ function Create(props) {
     );
 
     populateDatalist();
-
+      console.log({
+        id: id,
+        generation: $("#genInputC").val(),
+        name: $("#nameInputC").val(),
+        birthdate: $("#birthdateInputC").val(),
+        pid: pid,
+        isPartner: isPartner,
+        parent: node.parent,
+        partner: node.partner,
+      })
     setsendNode({
       id: id,
       generation: $("#genInputC").val(),
@@ -255,6 +266,7 @@ function Create(props) {
             $("#create-parent-input").val(
               $.trim(e.target.closest("li").textContent)
             );
+            inputChangedHandler();
           } catch {}
         }}
       ></ul>

@@ -32,7 +32,7 @@ svg {
 /* Tree card display */
 
 .partner-container {
-  fill: #fafafa;
+  fill: #eff5f8;
   width: 800px;
   height: 300px;
   padding: 8px 12px;
@@ -289,9 +289,10 @@ svg {
   height: 50px;
   width: 50px;
 
-background-color: inherit;
+  background-color: inherit;
   border: rgba(0, 0, 0, 0.438) 1px solid;
   padding: 10px;
+  transition: all 0.3s;
 }
 
 .changeview-button {
@@ -308,6 +309,11 @@ background-color: inherit;
 
   cursor: pointer;
   transition: all 0.3s;
+}
+
+.tree-create-button:hover,
+.changeview-button:hover {
+  background-color: #0188cc;
 }
 
 .tree-welcome {
@@ -349,7 +355,7 @@ background-color: inherit;
     left: 20px;
     max-width: calc(100vw - 40px);
   }
-  .input{
+  .input {
     width: 100%;
   }
 }
