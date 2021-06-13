@@ -109,7 +109,9 @@ export default function Table(props) {
               for (let x = 0; x < data.length; x++) {
                 if (data[x].oldpid === obj.id) data[x].pid = obj.id;
               }
-            } catch {}
+            } catch (err) {
+              console.log(err);
+            }
         }
         toast.success(`Changes made to ${obj.name}`);
         break;
@@ -144,7 +146,9 @@ export default function Table(props) {
         try {
           $("#maidenname-input").val(node.extradetails.maidenname);
           $("#marriagedate-input").val(node.extradetails.marriagedate);
-        } catch {}
+        } catch (err) {
+          console.log(err);
+        }
       } else {
         $("#maidenname-input").css("display", "none").val("");
         $("#marriagedate-input").css("display", "none").val("");
@@ -155,7 +159,7 @@ export default function Table(props) {
         $(`#${x}-input`).val(node.extradetails[x]);
       }
       $("textarea.description-input").val(node.extradetails.description);
-    } catch {
+    } catch (err) {
       for (const x of opStack) {
         $(`#${x}-input`).val("");
       }
@@ -197,7 +201,9 @@ export default function Table(props) {
         .val("")
         .css("border-bottom", "2px solid #bebed2")
         .attr("placeholder", "");
-    } catch {}
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const removeChildren = (id, arr) => {
@@ -216,7 +222,9 @@ export default function Table(props) {
           arr = removeChildren(children[i].id, arr);
         }
       }
-    } catch {}
+    } catch (err) {
+      console.log(err);
+    }
     return arr;
   };
 
@@ -241,7 +249,7 @@ export default function Table(props) {
           }
         }
       } else id = nodestate.id;
-    } catch {
+    } catch (err) {
       id = nodestate.id;
     }
     temparr = removeChildren(id, temparr);
@@ -292,7 +300,9 @@ export default function Table(props) {
         //update current node json object
         setNodestate(getNode(Number(row.firstChild.textContent)));
       }
-    } catch {}
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const closePopups = () => {
@@ -322,7 +332,9 @@ export default function Table(props) {
       ) {
         $("ul.datalist-ul").html("");
       }
-    } catch {}
+    } catch (err) {
+      console.log(err);
+    }
   });
 
   return (

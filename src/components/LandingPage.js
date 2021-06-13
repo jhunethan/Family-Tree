@@ -20,7 +20,7 @@ function SignUp(props) {
           return word[0].toUpperCase() + word.substr(1);
         })
         .join(" ");
-    } catch {
+    } catch (err) {
       return "invalid input";
     }
   }

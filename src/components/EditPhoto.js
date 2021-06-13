@@ -57,7 +57,7 @@
 //     //       } else {
 //     //         photo_id_string = Response.data.public_id;
 //     //       }
-//     //     } catch {
+//     //     } catch (err) {
 //     //       photo_id_string = Response.data.public_id;
 //     //     }
 //     //     let obj = props.node;
@@ -213,7 +213,7 @@ export default class EditPhoto extends PureComponent {
         } else {
           photo_id_string = Response.data.public_id;
         }
-      } catch {
+      } catch (err) {
         photo_id_string = Response.data.public_id;
       }
       $("#card-container").css("display", "none");

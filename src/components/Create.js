@@ -86,7 +86,7 @@ function Create(props) {
 
     try {
       pid = props.getPID(parentInput);
-    } catch {
+    } catch (err) {
       pid = 0;
     }
 
@@ -129,7 +129,7 @@ function Create(props) {
     try {
       $("div.create-form").css("display", "none");
       $("#Modal").css("display", "none");
-    } catch {}
+    } catch (err) {console.log(err)}
 
     let node = sendNode;
     node.method = "create";
@@ -267,7 +267,7 @@ function Create(props) {
               $.trim(e.target.closest("li").textContent)
             );
             inputChangedHandler();
-          } catch {}
+          } catch (err) {console.log(err)}
         }}
       ></ul>
       <div className="create-form-relationship">
@@ -299,7 +299,7 @@ function Create(props) {
           try {
             document.getElementsByClassName("Create")[0].style.display = "none";
             document.getElementById("Modal").style.display = "none";
-          } catch {}
+          } catch (err) {console.log(err)}
         }}
       >
         Cancel

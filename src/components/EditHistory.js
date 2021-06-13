@@ -12,7 +12,7 @@ export function Edits(props) {
     } else {
       changes[0] = props.data.changes;
     }
-  } catch {
+  } catch (err) {
     changes[0] = props.data.changes;
   }
   if (props.data.method === "delete") changes[0] = `deleted ${props.data.name}`;

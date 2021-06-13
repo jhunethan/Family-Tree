@@ -60,7 +60,7 @@ export default function NodeCard(props) {
         } else {
           photo_id_string = Response.data.public_id;
         }
-      } catch {
+      } catch (err) {
         photo_id_string = Response.data.public_id;
       }
       $("#card-container").css("display", "none");

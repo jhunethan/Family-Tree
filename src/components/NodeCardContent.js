@@ -49,7 +49,7 @@ export function NodeCardDetails(props) {
             </section>
           );
         }
-      } catch {}
+      } catch (err) {console.log(err)}
       return null;
     case "generation":
       if (props.node.generation) {
@@ -71,7 +71,7 @@ export function NodeCardDetails(props) {
             </section>
           );
         }
-      } catch {}
+      } catch (err) {console.log(err)}
       return null;
     case "birthplace":
       try {
@@ -83,7 +83,7 @@ export function NodeCardDetails(props) {
             </section>
           );
         }
-      } catch {}
+      } catch (err) {console.log(err)}
       return null;
     case "profession":
       try {
@@ -95,7 +95,7 @@ export function NodeCardDetails(props) {
             </section>
           );
         }
-      } catch {}
+      } catch (err) {console.log(err)}
       return null;
     case "extranames":
       try {
@@ -107,7 +107,7 @@ export function NodeCardDetails(props) {
             </section>
           );
         }
-      } catch {}
+      } catch (err) {console.log(err)}
       return null;
     case "fblink":
       try {
@@ -122,7 +122,7 @@ export function NodeCardDetails(props) {
             </section>
           );
         }
-      } catch {}
+      } catch (err) {console.log(err)}
       return null;
     case "description":
       try {
@@ -141,7 +141,7 @@ export function NodeCardDetails(props) {
             </section>
           );
         }
-      } catch {}
+      } catch (err) {console.log(err)}
       return null;
     default:
       return null;
@@ -178,7 +178,7 @@ export function ImmediateFamily(props) {
             </div>
           );
         }
-      } catch {
+      } catch (err) {
         if (props.node.parent) {
           return (
             <div className="card-parents card-related">
@@ -222,7 +222,7 @@ export function ImmediateFamily(props) {
             </div>
           );
         } else return null;
-      } catch {
+      } catch (err) {
         return null;
       }
     case "children":
@@ -248,7 +248,7 @@ export function ImmediateFamily(props) {
             </div>
           );
         }
-      } catch {
+      } catch (err) {
         return null;
       }
       return null;
@@ -287,7 +287,7 @@ export function MemberPhotos(props) {
   //     //get user id from link
   //     id = props.node.extradetails.fblink.split("=").slice(-1);
   //   }
-  // } catch {}
+  // } catch (err) {console.log(err)}
 
   try {
     if (props.node.extradetails.photo_id) {
@@ -320,7 +320,7 @@ export function MemberPhotos(props) {
         </div>
       );
     }
-  } catch {}
+  } catch (err) {console.log(err)}
   return (
     <div className="image-container">
       <img src={placeholder} className="image" alt="placeholder" />

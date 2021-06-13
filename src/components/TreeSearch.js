@@ -42,7 +42,7 @@ export default function TreeSearch(props) {
           onClick={(e) => {
             try {
               props.search(e.target.closest("li").dataset.id);
-            } catch {}
+            } catch (err) {console.log(err)}
           }}
         ></ul>
       </div>
