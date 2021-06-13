@@ -9,7 +9,7 @@ export default function Modal(props) {
         try {
           props.close();
           document.getElementById("Modal").style.display = "none";
-        } catch (err) {console.log(err)}
+        } catch {}
       }}
     ></div>
   );

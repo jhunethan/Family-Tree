@@ -29,7 +29,7 @@ export const ReactTable = (props) => {
   const { globalFilter } = state;
 
   return (
-    <div>
+    <>
       <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
       <div>
         <table
@@ -84,6 +84,6 @@ export const ReactTable = (props) => {
           </tfoot>
         </table>
       </div>
-    </div>
+    </>
   );
 };

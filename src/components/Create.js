@@ -72,8 +72,6 @@ function Create(props) {
     let isPartner = document.getElementById("toggle-slide").checked;
     let pid = null;
 
-    console.log(parentInput)
-
     if (!parentInput) isPartner = false;
 
     if (!isPartner) {
@@ -86,7 +84,7 @@ function Create(props) {
 
     try {
       pid = props.getPID(parentInput);
-    } catch (err) {
+    } catch {
       pid = 0;
     }
 
@@ -98,16 +96,7 @@ function Create(props) {
     );
 
     populateDatalist();
-      console.log({
-        id: id,
-        generation: $("#genInputC").val(),
-        name: $("#nameInputC").val(),
-        birthdate: $("#birthdateInputC").val(),
-        pid: pid,
-        isPartner: isPartner,
-        parent: node.parent,
-        partner: node.partner,
-      })
+
     setsendNode({
       id: id,
       generation: $("#genInputC").val(),
@@ -129,7 +118,7 @@ function Create(props) {
     try {
       $("div.create-form").css("display", "none");
       $("#Modal").css("display", "none");
-    } catch (err) {console.log(err)}
+    } catch {}
 
     let node = sendNode;
     node.method = "create";
@@ -267,7 +256,7 @@ function Create(props) {
               $.trim(e.target.closest("li").textContent)
             );
             inputChangedHandler();
-          } catch (err) {console.log(err)}
+          } catch {}
         }}
       ></ul>
       <div className="create-form-relationship">
@@ -299,7 +288,7 @@ function Create(props) {
           try {
             document.getElementsByClassName("Create")[0].style.display = "none";
             document.getElementById("Modal").style.display = "none";
-          } catch (err) {console.log(err)}
+          } catch {}
         }}
       >
         Cancel

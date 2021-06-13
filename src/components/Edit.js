@@ -30,7 +30,7 @@ function ListDisplay(props) {
         })}
       </div>
     );
-  } catch (err) {console.log(err)}
+  } catch {}
   return <div id={`flex-cards-display-${props.method}`}></div>;
 }
 
@@ -66,7 +66,7 @@ export default function Edit(props) {
           arr = filterChildren(children[i].id, arr);
         }
       }
-    } catch (err) {console.log(err)}
+    } catch {}
     return arr;
   };
 
@@ -139,7 +139,7 @@ export default function Edit(props) {
 
     try {
       pid = props.getPID($("#parentInput").val());
-    } catch (err) {
+    } catch {
       pid = 0;
     }
 
@@ -156,7 +156,7 @@ export default function Edit(props) {
     try {
       tempnode.extranames = nodeInput.extradetails.extranames;
       tempnode.languages = nodeInput.extradetails.languages;
-    } catch (err) {console.log(err)}
+    } catch {}
     tempnode.description = $.trim($("textarea.description-input").val());
 
     if (isPartner === 0) {
@@ -395,7 +395,7 @@ export default function Edit(props) {
         arr.push("description");
         setExtrachanged(true);
       }
-    } catch (err) {
+    } catch {
       for (const x of opStack) {
         if ($.trim($(`#${x}-input`).val().length) > 0) {
           arr.push(x);
@@ -431,7 +431,7 @@ export default function Edit(props) {
           }
           node.extradetails[method] = names.join(",");
           setNodeInput(node);
-        } catch (err) {
+        } catch {
           node.extradetails[method] = $.trim(val);
           setNodeInput(node);
         }
@@ -524,7 +524,7 @@ export default function Edit(props) {
                   .filter((x) => x !== deleted)
                   .join(",");
                 setNodeInput(node);
-              } catch (err) {console.log(err)}
+              } catch {}
               inputChangedHandler();
             }}
           />
@@ -602,7 +602,7 @@ export default function Edit(props) {
                     $("#parentInput").val($.trim(parentSuggestion));
                   }
                   inputChangedHandler();
-                } catch (err) {console.log(err)}
+                } catch {}
                 // Focus on next element
                 document.getElementById("birthplace-input").focus();
               }
@@ -616,7 +616,7 @@ export default function Edit(props) {
             try {
               $("#parentInput").val($.trim(e.target.closest("li").textContent));
               inputChangedHandler();
-            } catch (err) {console.log(err)}
+            } catch {}
           }}
         ></ul>
         <div className="radio-toggles">
@@ -770,7 +770,7 @@ export default function Edit(props) {
                   .filter((x) => x !== deleted)
                   .join(",");
                 setNodeInput(node);
-              } catch (err) {console.log(err)}
+              } catch {}
               inputChangedHandler();
             }}
           />

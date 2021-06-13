@@ -97,7 +97,7 @@ export default function Tree(props) {
       if ($("#Tree").children().length === 0) {
         try {
           buildTree();
-        } catch (err){ console.log(err)}
+        } catch {}
         clearInterval(intervalId);
       }
     }, 200);
@@ -127,7 +127,7 @@ export default function Tree(props) {
         .val("")
         .css("border-bottom", "2px solid #bebed2")
         .attr("placeholder", "");
-    } catch (err) {console.log(err)}
+    } catch {}
   };
 
   const getNode = (idKey) => {
@@ -189,7 +189,7 @@ export default function Tree(props) {
               for (let x = 0; x < data.length; x++) {
                 if (data[x].oldpid === obj.id) data[x].pid = obj.id;
               }
-            } catch (err) {console.log(err)}
+            } catch {}
         }
         toast.success(`Changes made to ${obj.name}`);
         break;
@@ -520,7 +520,7 @@ export default function Tree(props) {
                 try {
                   if (event.target !== $("#datalist-input")[0])
                     $("ul.datalist-ul").html("");
-                } catch (err) {console.log(err)}
+                } catch {}
               });
             }
           });
@@ -558,7 +558,7 @@ export default function Tree(props) {
                 try {
                   if (event.target !== $("#datalist-input")[0])
                     $("ul.datalist-ul").html("");
-                } catch (err) {console.log(err)}
+                } catch {}
               });
             }
           });
@@ -642,7 +642,7 @@ export default function Tree(props) {
         treeData.descendants().filter(function (d) {
           try {
             if (d.data.partnerinfo.name) return true;
-          } catch (err) {console.log(err)}
+          } catch {}
           return false;
         })
       );
@@ -676,7 +676,7 @@ export default function Tree(props) {
         try {
           if (d.data.partnerinfo.marriagedate)
             return `Married: ${d.data.partnerinfo.marriagedate}`;
-        } catch (err) {console.log(err)}
+        } catch {}
       });
 
     let partnerContainer = partnerShapes
@@ -697,7 +697,7 @@ export default function Tree(props) {
       .classed("hide", function (d) {
         try {
           if (d.data.partnerinfo.name === "text") return false;
-        } catch (err) {
+        } catch {
           return true;
         }
       })
@@ -731,7 +731,7 @@ export default function Tree(props) {
         //       return 'data:image/png;base64,' + btoa(res.data);
         //     });
         //   }
-        // } catch (err) {console.log(err)}
+        // } catch {}
         return profile;
       })
       .attr("class", "tree-card-profile");
@@ -766,7 +766,7 @@ export default function Tree(props) {
         try {
           let deathdate = d.data.partnerinfo.deathdate;
           enddate = deathdate ? dateFormat(deathdate, "yyyy") : "Present";
-        } catch (err) {
+        } catch {
           enddate = "Present";
         }
         if (d.data.partnerinfo.birthdate) return `${startdate} - ${enddate}`;
@@ -792,7 +792,7 @@ export default function Tree(props) {
         try {
           if (!d.data.partnerinfo.name === "text") return d.x;
           return d.x - 662.5;
-        } catch (err) {
+        } catch {
           return d.x - 300;
         }
       })
@@ -822,7 +822,7 @@ export default function Tree(props) {
         //       return 'data:image/png;base64,' + btoa(res.data);
         //     });
         //   }
-        // } catch (err) {console.log(err)}
+        // } catch {}
         return profile;
       })
       .attr("class", "tree-card-profile");
@@ -856,7 +856,7 @@ export default function Tree(props) {
         try {
           let deathdate = d.data.deathdate;
           enddate = deathdate ? dateFormat(deathdate, "yyyy") : "Present";
-        } catch (err) {
+        } catch {
           enddate = "Present";
         }
         if (d.data.birthdate) return `${startdate} - ${enddate}`;
@@ -981,7 +981,7 @@ export default function Tree(props) {
                 dimensions[0] = x.__data__.x + 250;
                 dimensions[1] = x.__data__.y;
               }
-            } catch (err) {console.log(err)}
+            } catch {}
           }
         }
 
@@ -1030,7 +1030,7 @@ export default function Tree(props) {
         try {
           $("#maidenname-input").val(node.extradetails.maidenname);
           $("#marriagedate-input").val(node.extradetails.marriagedate);
-        } catch (err) {console.log(err)}
+        } catch {}
       } else {
         $("#maidenname-input").css("display", "none").val("");
         $("#marriagedate-input").css("display", "none").val("");
@@ -1041,7 +1041,7 @@ export default function Tree(props) {
         $(`#${x}-input`).val(node.extradetails[x]);
       }
       $("textarea.description-input").val(node.extradetails.description);
-    } catch (err) {
+    } catch {
       for (const x of opStack) {
         $(`#${x}-input`).val("");
       }
@@ -1063,7 +1063,7 @@ export default function Tree(props) {
           arr = filterChildren(children[i].id, arr);
         }
       }
-    } catch (err) {console.log(err)}
+    } catch {}
     return arr;
   };
 
@@ -1094,7 +1094,7 @@ export default function Tree(props) {
           }
         }
       } else id = extData.id;
-    } catch (err) {
+    } catch {
       id = extData.id;
     }
     temparr = filterChildren(id, temparr);
@@ -1124,7 +1124,7 @@ export default function Tree(props) {
     try {
       if (event.target !== $("#datalist-input")[0])
         $("ul.datalist-ul").html("");
-    } catch (err) {console.log(err)}
+    } catch {}
   });
 
   return (
@@ -1210,7 +1210,7 @@ function TreeWelcome(props) {
 
   try {
     if (props.node.name) personSelected = true;
-  } catch (err) {console.log(err)}
+  } catch {}
   if (!personSelected)
     return (
       <div className="tree-welcome">
