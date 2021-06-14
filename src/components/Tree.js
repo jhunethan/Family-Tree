@@ -1218,6 +1218,7 @@ function TreeWelcome(props) {
         <p>Search for a family member to continue</p>
         <div className="tree-welcome-modal" />
         <TreeSearch
+          align={'auto'}
           filter={() => props.filter()}
           search={(val) => props.search(val)}
         />
@@ -1237,6 +1238,7 @@ function TreeWelcome(props) {
 
   return (
     <TreeSearch
+      align={0}
       filter={() => props.filter()}
       search={(val) => props.search(val)}
     />

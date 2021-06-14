@@ -2,9 +2,10 @@ import React from "react";
 import * as $ from "jquery";
 
 export default function TreeSearch(props) {
+
   return (
     <div>
-      <div className="datalist">
+      <div className="datalist" style={{right:props.align}}>
         <input
           id="datalist-input"
           className="input"
