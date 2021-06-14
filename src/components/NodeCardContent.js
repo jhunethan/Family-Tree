@@ -261,7 +261,7 @@ export function MemberPhotos(props) {
   const [cookies] = useCookies(["author"]);
 
   const imageDelete = (e) => {
-    Axios.post("http://apilayfamilytree.com/api/delete/image", {
+    Axios.post("https://apilayfamilytree.com/api/delete/image", {
       id: props.node.id,
       name: props.node.name,
       author: cookies.author,

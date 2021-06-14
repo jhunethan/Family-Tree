@@ -49,10 +49,10 @@ export default function EditHistory(props) {
   }
 
   useEffect(() => {
-    Axios.get("http://apilayfamilytree.com/api/get/edithistory").then((result) => {
+    Axios.get("https://apilayfamilytree.com/api/get/edithistory").then((result) => {
       setEditHistory(result.data.reverse());
     });
-    Axios.get("http://apilayfamilytree.com/api/get").then((result) => {
+    Axios.get("https://apilayfamilytree.com/api/get").then((result) => {
       setDatabasesize(result.data.length);
       // setData(result.data);
     });

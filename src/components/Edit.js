@@ -256,7 +256,7 @@ export default function Edit(props) {
     if (changed && checkParent()) {
       //save
       console.log("id info updated");
-      Axios.post("http://apilayfamilytree.com/api/update", {
+      Axios.post("https://apilayfamilytree.com/api/update", {
         input: nodeInput,
         name: props.nodedata.name,
         author: cookies.author,
@@ -266,7 +266,7 @@ export default function Edit(props) {
     }
     if (extrachanged) {
       console.log("extra updated");
-      Axios.post("http://apilayfamilytree.com/api/updateextra", {
+      Axios.post("https://apilayfamilytree.com/api/updateextra", {
         id: props.nodedata.id,
         name: props.nodedata.name,
         input: nodeInput,
@@ -312,7 +312,7 @@ export default function Edit(props) {
     node.method = "delete";
     if (userValidation.val() === "confirm") {
       //delete node
-      Axios.post("http://apilayfamilytree.com/api/delete", {
+      Axios.post("https://apilayfamilytree.com/api/delete", {
         id: props.nodedata.id,
         name: props.nodedata.name,
         author: cookies.author,
