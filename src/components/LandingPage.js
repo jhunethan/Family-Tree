@@ -77,7 +77,7 @@ function SignUp(props) {
     if (!passwordValidation()) valid = false;
 
     if (valid) {
-      Axios.post("https://layfamily.herokuapp.com/api/signup", {
+      Axios.post("http://apilayfamilytree.com/api/signup", {
         userdetails: user,
       }).then((result) => {
         if (result.data === "success") history.push("/tree");
@@ -177,7 +177,7 @@ function Login(props) {
     }
 
     if (valid)
-      Axios.post("https://layfamily.herokuapp.com/api/login", {
+      Axios.post("http://apilayfamilytree.com/api/login", {
         userdetails: user,
       }).then((result) => {
         if (result.data === "success") {
@@ -276,7 +276,7 @@ function ResetPassword(props) {
 
   const resetPass = () => {
     if (email) {
-      return Axios.post("https://layfamily.herokuapp.com/api/login/resetpass", {
+      return Axios.post("http://apilayfamilytree.com/api/login/resetpass", {
         email: email,
       }).then((result) => {
         if (result.data === "email not found")

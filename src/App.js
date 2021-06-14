@@ -13,7 +13,7 @@ import Resetpassword from "./components/Resetpassword";
 
 export default function App() {
   //ping backend and check if database is working
-  Axios.get("https://layfamily.herokuapp.com/testconnection").then((result) => {
+  Axios.get("http://apilayfamilytree.com/testconnection").then((result) => {
     console.log(result);
   });
 

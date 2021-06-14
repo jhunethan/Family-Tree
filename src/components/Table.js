@@ -55,7 +55,7 @@ export default function Table(props) {
     return setRadiochecked(false);
   };
   useEffect(() => {
-    Axios.get("https://layfamily.herokuapp.com/api/get").then((result) => {
+    Axios.get("http://apilayfamilytree.com/api/get").then((result) => {
       setTableData(result.data);
     });
   }, [update]);

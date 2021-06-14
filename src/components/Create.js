@@ -166,7 +166,7 @@ function Create(props) {
   const submit = () => {
     inputChangedHandler();
     if (validation()) {
-      Axios.post("https://layfamily.herokuapp.com/api/insert", {
+      Axios.post("http://apilayfamilytree.com/api/insert", {
         input: sendNode,
         author: cookies.author,
       }).then(successAdd());
