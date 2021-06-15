@@ -70,7 +70,7 @@ export default function NodeCard(props) {
       obj.extradetails.photo_id = photo_id_string;
       props.update(obj);
 
-      Axios.put("https://apilayfamilytree.com/api/updateextra", {
+      Axios.post("https://apilayfamilytree.com/api/image", {
         id: Number(props.node.id),
         name: props.node.name,
         photo_id: photo_id_string,

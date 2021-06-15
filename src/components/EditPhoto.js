@@ -64,7 +64,7 @@
 //     //     if (!obj.extradetails) obj.extradetails = {};
 //     //     obj.extradetails.photo_id = photo_id_string;
 //     //     props.update(obj);
-//     //     Axios.put("https://apilayfamilytree.com/api/updateextra", {
+//     //     Axios.post("https://apilayfamilytree.com/api/extradetails", {
 //     //       id: Number(props.node.id),
 //     //       name: props.node.name,
 //     //       photo_id: photo_id_string,
@@ -223,7 +223,7 @@ export default class EditPhoto extends PureComponent {
       obj.extradetails.photo_id = photo_id_string;
       this.props.update(obj);
 
-      Axios.put("https://apilayfamilytree.com/api/updateextra", {
+      Axios.post("https://apilayfamilytree.com/api/image", {
         id: Number(this.props.node.id),
         name: this.props.node.name,
         photo_id: photo_id_string,

@@ -77,7 +77,7 @@ export default function Tree(props) {
   useEffect(() => {
     var start = Date.now();
 
-    Axios.get("https://apilayfamilytree.com/api/get").then((result) => {
+    Axios.get("https://apilayfamilytree.com/api/familymembers").then((result) => {
       setTableData(result.data);
       if (result.data) {
         let loadTime = (Date.now() - start) / 1000;
@@ -272,7 +272,7 @@ export default function Tree(props) {
     if (!name || name === newData.name) return closePopups();
     if (newData.name === "" && name) {
       newData.name = name;
-      Axios.post("https://apilayfamilytree.com/api/insert", {
+      Axios.post("https://apilayfamilytree.com/api/familymembers", {
         input: newData,
         author: cookies.author,
       });
@@ -282,7 +282,7 @@ export default function Tree(props) {
       //save
       newData.name = name;
 
-      Axios.post("https://apilayfamilytree.com/api/update", {
+      Axios.patch("https://apilayfamilytree.com/api/familymembers", {
         input: newData,
         name: newData.name,
         author: cookies.author,
@@ -307,7 +307,7 @@ export default function Tree(props) {
       obj.parent = "";
       obj.partner = "";
       obj.isPartner = 0;
-      Axios.post("https://apilayfamilytree.com/api/update", {
+      Axios.patch("https://apilayfamilytree.com/api/familymembers", {
         input: obj,
         name: obj.name,
         author: cookies.author,
@@ -329,7 +329,7 @@ export default function Tree(props) {
           obj.parent = "";
           obj.partner = parent.name;
           obj.isPartner = 1;
-          Axios.post("https://apilayfamilytree.com/api/update", {
+          Axios.patch("https://apilayfamilytree.com/api/familymembers", {
             input: obj,
             name: obj.name,
             author: cookies.author,
@@ -355,7 +355,7 @@ export default function Tree(props) {
       obj.pid = Number(parent.id);
       obj.parent = parent.name;
 
-      Axios.post("https://apilayfamilytree.com/api/update", {
+      Axios.patch("https://apilayfamilytree.com/api/familymembers", {
         input: obj,
         name: obj.name,
         author: cookies.author,
