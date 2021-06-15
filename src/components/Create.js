@@ -176,7 +176,7 @@ function Create(props) {
   return (
     <div className="create-form">
       <h2 className="create-form-title">Add New</h2>
-      <p type="Generation" className="create-form-section">
+      <p type="Generation Name" className="create-form-section">
         <input
           autoComplete="off"
           id="genInputC"

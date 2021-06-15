@@ -354,3 +354,11 @@ background-color: inherit;
     width: 100%;
   }
 }
+
+.loading-container{
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  place-items: center;
+}

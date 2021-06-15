@@ -9,6 +9,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import profile from "../css/person-placeholder.jpg";
+import loading from "../css/loading.gif"
 
 import NodeCard from "./NodeCard";
 import Modal from "./Modal";
@@ -42,7 +43,7 @@ export default function Tree(props) {
   //datalist for search autocomplete
   const [datalist, setDatalist] = useState([]);
   //holds all data with all family members in JSON form
-  const [tableData, setTableData] = useState([]);
+  const [tableData, setTableData] = useState(undefined);
   //partner/parent toggle
   const [radiochecked, setRadiochecked] = useState(true);
   //read/edit mode toggle
@@ -1134,7 +1135,7 @@ export default function Tree(props) {
         search={(val) => search(val)}
         node={InfoCard}
         data={tableData}
-      />
+        />
       <button
         className="tree-create-button"
         onClick={() => resetCreateFields()}
@@ -1191,56 +1192,63 @@ export default function Tree(props) {
 function TreeWelcome(props) {
   let personSelected = false;
 
-  const randomSearch = () => {
+  if (props.data) {
+    const randomSearch = () => {
+      try {
+        let arr = [],
+          data = props.data;
+        data.map((person) => {
+          if (person.id === 0) return null;
+          return arr.push(`${person.id}`);
+        });
+
+        let randomID = arr[Math.floor(Math.random() * arr.length)];
+
+        props.search(randomID);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     try {
-      let arr = [],
-        data = props.data;
-      data.map((person) => {
-        if (person.id === 0) return null;
-        return arr.push(`${person.id}`);
-      });
+      if (props.node.name) personSelected = true;
+    } catch {}
+    if (!personSelected)
+      return (
+        <div className="tree-welcome">
+          <h1 className="tree-welcome-title">Lay Family Tree</h1>
+          <p>Search for a family member to continue</p>
+          <div className="tree-welcome-modal" />
+          <TreeSearch
+            align={"auto"}
+            filter={() => props.filter()}
+            search={(val) => props.search(val)}
+          />
+          <div className="tree-welcome-search-container" />
+          <p>or</p>
+          <button id="datalistbutton" onClick={() => randomSearch()}>
+            Random family member
+          </button>
+        </div>
+      );
 
-      let randomID = arr[Math.floor(Math.random() * arr.length)];
+    //fade out
+    $(".tree-welcome-modal").css("background-color", "rgba(255, 255, 255, 0)");
+    //wait a second
 
-      props.search(randomID);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    //continue
 
-  try {
-    if (props.node.name) personSelected = true;
-  } catch {}
-  if (!personSelected)
     return (
-      <div className="tree-welcome">
-        <h1 className="tree-welcome-title">Lay Family Tree</h1>
-        <p>Search for a family member to continue</p>
-        <div className="tree-welcome-modal" />
-        <TreeSearch
-          align={'auto'}
-          filter={() => props.filter()}
-          search={(val) => props.search(val)}
-        />
-        <div className="tree-welcome-search-container" />
-        <p>or</p>
-        <button id="datalistbutton" onClick={() => randomSearch()}>
-          Random family member
-        </button>
-      </div>
+      <TreeSearch
+        align={0}
+        filter={() => props.filter()}
+        search={(val) => props.search(val)}
+      />
     );
-
-  //fade out
-  $(".tree-welcome-modal").css("background-color", "rgba(255, 255, 255, 0)");
-  //wait a second
-
-  //continue
-
+  }else{
   return (
-    <TreeSearch
-      align={0}
-      filter={() => props.filter()}
-      search={(val) => props.search(val)}
-    />
-  );
+    <div className="loading-container">
+      <img src={loading} alt="loading" />
+    </div>
+  )}
 }

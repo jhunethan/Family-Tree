@@ -450,7 +450,7 @@ export default function Edit(props) {
         <button type="submit" id="deleteNode" onClick={deleteNode}>
           Delete
         </button>
-        <p type="Generation">
+        <p type="Generation Name">
           <input
             autoComplete="off"
             id="generation-input"
@@ -467,7 +467,7 @@ export default function Edit(props) {
             }}
           />
         </p>
-        <p type="Name:">
+        <p type="Name">
           <input
             autoComplete="off"
             id="name-input"
@@ -499,6 +499,7 @@ export default function Edit(props) {
               onKeyUp={function (event) {
                 if (event.key === "Enter") {
                   addOption("extranames");
+                  inputChangedHandler()
                 }
               }}
             />
@@ -508,6 +509,7 @@ export default function Edit(props) {
             className="edit-button"
             onClick={() => {
               addOption("extranames");
+              inputChangedHandler()
             }}
           >
             Add
@@ -745,6 +747,7 @@ export default function Edit(props) {
               onKeyUp={function (event) {
                 if (event.key === "Enter") {
                   addOption("languages");
+                  inputChangedHandler()
                 }
               }}
             />
@@ -754,6 +757,7 @@ export default function Edit(props) {
             className="edit-button"
             onClick={() => {
               addOption("languages");
+              inputChangedHandler()
             }}
           >
             Add
@@ -820,12 +824,11 @@ export default function Edit(props) {
           type="text"
           name="description-input"
           className="extra-details-input description-input"
-          placeholder="description up to 250 words..."
+          placeholder="Tell us about this person..."
           onChange={descriptionHandler}
         />
 
         <div className="edit-button-container">
-          {" "}
           <button
             type="button"
             id="save"

@@ -27,44 +27,45 @@
 
 .card-nav {
   position: fixed;
-  margin: 0 0 0 0;
+  margin: 10px 0 0 0;
+  gap: 5px;
   z-index: 5;
   width: 100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: row-reverse;
   border-radius: 15px 0 0 0;
-
-  background-color: #ff3228;
+  background-color: #00aaff;
 }
 
 .card-nav > * {
-  background-color: #ff2d22;
+  background-color: #00aaff;
   border: none;
   outline: none;
   color: white;
-  padding: 5px 20px;
-  font-weight: 600;
-  font-size: 24px;
+  padding: 5px 25px;
+  transition: all 0.3s;
 }
 
-.card-nav > *:hover {
+.card-nav > *:hover, #card-edit:hover {
   background-color: #ff756e;
 }
 
 #card-expand {
   font-size: 30px;
-  padding: 5px 15px;
-  flex-grow: 2;
 }
 
 #card-close {
-  border-radius: 15px 0 0 0;
+  margin-left: auto;
+  font-size: 40px;
+  font-weight: bold;
 }
 
-.card-edit-icon {
-  enable-background: new 0 0 50 50;
-  height: 30px;
-  width: 30px;
+#card-edit {
+  background-color: #2789b9;
+
+  font-size: 50px;
+  font-weight: bold;
+  padding: 0 20px;
 }
 
 .top-card {

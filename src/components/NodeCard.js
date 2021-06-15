@@ -4,7 +4,6 @@ import Axios from "axios";
 import { useCookies } from "react-cookie";
 
 import "../css/NodeCard.css";
-import editIcon from "../css/edit-button.png";
 import {
   NodeCardDetails,
   ImmediateFamily,
@@ -105,13 +104,13 @@ export default function NodeCard(props) {
             $("#card-container").css("display", "none");
           }}
         >
-          X
+          <span aria-hidden="true">&times;</span>
         </button>
         <button id="card-expand" onClick={transform}>
-          {"<>"}
+        {"<>"}
         </button>
         <button id="card-edit" onClick={props.edit}>
-          <img src={editIcon} className="card-edit-icon" alt="edit"></img>
+          •••
         </button>
       </div>
       <div className="card-main">
