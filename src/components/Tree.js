@@ -9,7 +9,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import profile from "../css/person-placeholder.jpg";
-import loading from "../css/loading.gif"
+import loading from "../css/loading.gif";
 
 import NodeCard from "./NodeCard";
 import Modal from "./Modal";
@@ -38,6 +38,7 @@ var datalistarr,
 export default function Tree(props) {
   //stores users name
   const [cookies] = useCookies(["author"]);
+  const [welcome, setWelcome] = useState(false);
   //triggers server data fetch and page rerender
   const [update, setUpdate] = useState(false);
   //datalist for search autocomplete
@@ -955,6 +956,7 @@ export default function Tree(props) {
     let id = Number($.trim(input));
     let currentNode;
 
+    setWelcome(true);
     resetDatalistCSS();
     populateDatalist();
 
@@ -1135,7 +1137,11 @@ export default function Tree(props) {
         search={(val) => search(val)}
         node={InfoCard}
         data={tableData}
-        />
+        welcome={welcome}
+        setWelcome={(status) => {
+          setWelcome(status);
+        }}
+      />
       <button
         className="tree-create-button"
         onClick={() => resetCreateFields()}
@@ -1213,7 +1219,7 @@ function TreeWelcome(props) {
     try {
       if (props.node.name) personSelected = true;
     } catch {}
-    if (!personSelected)
+    if (!personSelected && !props.welcome) {
       return (
         <div className="tree-welcome">
           <h1 className="tree-welcome-title">Lay Family Tree</h1>
@@ -1231,24 +1237,29 @@ function TreeWelcome(props) {
           </button>
         </div>
       );
+    } else {
+      //fade out
+      $(".tree-welcome-modal").css(
+        "background-color",
+        "rgba(255, 255, 255, 0)"
+      );
+      //wait a second
 
-    //fade out
-    $(".tree-welcome-modal").css("background-color", "rgba(255, 255, 255, 0)");
-    //wait a second
+      //continue
 
-    //continue
-
+      return (
+        <TreeSearch
+          align={0}
+          filter={() => props.filter()}
+          search={(val) => props.search(val)}
+        />
+      );
+    }
+  } else {
     return (
-      <TreeSearch
-        align={0}
-        filter={() => props.filter()}
-        search={(val) => props.search(val)}
-      />
+      <div className="loading-container">
+        <img src={loading} alt="loading" />
+      </div>
     );
-  }else{
-  return (
-    <div className="loading-container">
-      <img src={loading} alt="loading" />
-    </div>
-  )}
+  }
 }
