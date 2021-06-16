@@ -362,3 +362,8 @@ background-color: inherit;
   display: grid;
   place-items: center;
 }
+
+.loading-container > img{
+  height: 200px;
+  width: 200px;
+}

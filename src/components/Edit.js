@@ -210,14 +210,14 @@ export default function Edit(props) {
       !props.nodedata.partner
     ) {
       setChanged(true);
-      changesStack.push("parent-node");
+      changesStack.push("partner");
     }
     if (
       $("#parentInput").val() !== props.nodedata.partner &&
       !props.nodedata.parent
     ) {
       setChanged(true);
-      changesStack.push("parent-node");
+      changesStack.push("parent");
     }
     if (
       getRadioVal("option-1", "option-2") === "partner" &&
@@ -236,8 +236,30 @@ export default function Edit(props) {
     setChanges(changesStack.join(","));
   }
 
+  function checkPartner() {
+    const element = $("#parentInput");
+
+    for (const x of props.data) {
+      if(x.name === props.nodedata.name) continue;
+      let namecheck = x.generation + " " + x.name;
+      console.log(namecheck===element.val() || element.val() === x.name)
+      console.log({namecheck,name:x.name})
+      if (element.val() === namecheck) return true;
+      if (x.name === element.val()) return true;
+    }
+    if ($.trim(element.val()) === "") return true;
+    element.css("border-bottom", "2px solid red");
+    element.val("");
+    element.attr("placeholder", "invalid parent: click from list");
+    toast.error("Partner not found: please re-enter");
+    return false;
+  }
+
   function checkParent() {
-    let element = $("#parentInput");
+    const element = $("#parentInput");
+
+    if(props.nodedata.partner) return checkPartner();
+
     for (const x of props.datalist) {
       let namecheck = x.generation + " " + x.name;
       if (element.val() === namecheck) return true;

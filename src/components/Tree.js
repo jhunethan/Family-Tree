@@ -361,7 +361,7 @@ export default function Tree(props) {
         input: obj,
         name: obj.name,
         author: cookies.author,
-        changes: "changed parent",
+        changes: "parent",
       });
       dynamicUpdate(obj);
     } else {
