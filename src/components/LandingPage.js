@@ -5,7 +5,7 @@ import * as $ from "jquery";
 import Axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { ToastContainer, toast } from "react-toastify";
-// import { useCookies } from "react-cookie";
+import { useCookies } from "react-cookie";
 
 function SignUp(props) {
   const [user, setUser] = useState({});
@@ -73,8 +73,7 @@ function SignUp(props) {
       valid = false;
       toast.error("invalid email", { toastId: "invalidEmail" });
     }
-
-    if (!passwordValidation()) valid = false;
+    if (passwordValidation() === false) valid = false;
 
     if (valid) {
       Axios.post("https://apilayfamilytree.com/api/signup", {
@@ -158,7 +157,13 @@ function SignUp(props) {
 
 function Login(props) {
   const [user, setUser] = useState({});
+  const [cookies, setCookie] = useCookies(["lay-access"]);
   var history = useHistory();
+
+  function setUserPrivileges(user) {
+    setCookie("lay-email", user.email);
+    setCookie("lay-password", user.password);
+  }
 
   const checkChanges = (method) => {
     let tempUser = user;
@@ -180,13 +185,22 @@ function Login(props) {
       Axios.post("https://apilayfamilytree.com/api/login", {
         userdetails: user,
       }).then((result) => {
-        if (result.data === "success") {
+        const { msg, user } = result.data;
+        if (msg === "success") {
+          setUserPrivileges(user);
           return history.push("/tree");
         }
-        toast.error(result.data);
+        toast.error(msg);
       });
   };
 
+  if (cookies["lay-email"] && cookies["lay-password"]) {
+    Axios.post("https://apilayfamilytree.com/api/checkaccess",cookies).then((response) => {
+      if (response.data.access) {
+        return history.push("/tree");
+      }
+    });
+  }
   return (
     <form id="form-login">
       <h3>Log in</h3>
@@ -199,6 +213,11 @@ function Login(props) {
           className="form-control"
           placeholder="Enter email"
           onChange={() => checkChanges("email")}
+          onKeyPress={(event) => {
+            if (event.key === "Enter") {
+              $("#login-password").trigger("select");
+            }
+          }}
         />
       </div>
 
@@ -210,6 +229,9 @@ function Login(props) {
           className="form-control"
           placeholder="Enter password"
           onChange={() => checkChanges("password")}
+          onKeyPress={(event) => {
+            if (event.key === "Enter") submit();
+          }}
         />
       </div>
 
@@ -330,7 +352,7 @@ function LoginControl(props) {
       <Login ResetPassword={props.ResetPassword} setSignUp={props.setSignUp} />
     );
   if (props.view === "signup") return <SignUp setLogin={props.setLogin} />;
-  
+
   return (
     <div>
       <div className="landing-buttons">
