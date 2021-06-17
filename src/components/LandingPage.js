@@ -186,7 +186,6 @@ function Login(props) {
         userdetails: user,
       }).then((result) => {
         const { msg, user } = result.data;
-        console.log(result.data)
         if (msg === "success") {
           setUserPrivileges(user);
           return history.push("/tree");
