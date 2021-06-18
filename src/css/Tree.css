@@ -9,9 +9,11 @@
 @keyframes fade-in {
   from {
     opacity: 0;
+    transform: translateY(-10px);
   }
   to {
     opacity: 1;
+    transform: translateY(0px);
   }
 }
 
@@ -282,33 +284,51 @@ svg {
   transition: all 0.3s;
 }
 
-.tree-create-button {
-  position: absolute;
-  top: 0;
-  right: 150px;
-  z-index: 3;
-  height: 50px;
-  width: 50px;
-
-background-color: inherit;
-  border: rgba(0, 0, 0, 0.438) 1px solid;
-  padding: 10px;
-}
-
-.changeview-button {
+.tree-nav {
   position: absolute;
   top: 0;
   right: 0;
   z-index: 3;
-  width: 150px;
+  align-items: flex-end;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.tree-nav-toggle {
+  animation: fade-in 0.5s;
+  display: flex;
+  flex-direction: column;
+
+  background-color: #06aafe;
+  width: 75px;
   height: 50px;
-
-  background-color: inherit;
-  border: rgba(0, 0, 0, 0.438) 1px solid;
-  padding: 10px 20px;
-
-  cursor: pointer;
+  border:none;
+  padding: 10px 15px;
+  border-left: solid #0090d8 1px;
   transition: all 0.3s;
+}
+
+.tree-nav-toggle > span{
+  display: block;
+  margin:2px;
+  height: 6px;
+  width:40px;
+  background: #fff;
+  border-radius: 9px;
+}
+
+.tree-nav-toggle:hover{
+  background-color: #0090d8;
+}
+
+.tree-nav-button {
+  animation: fade-in 0.5s;
+
+  background-color: #06aafe;
+  width: 150px;
+  border: none;
+  padding: 10px;
 }
 
 .tree-welcome {
@@ -350,12 +370,12 @@ background-color: inherit;
     left: 20px;
     max-width: calc(100vw - 40px);
   }
-  .input{
+  .input {
     width: 100%;
   }
 }
 
-.loading-container{
+.loading-container {
   position: absolute;
   width: 100vw;
   height: 100vh;
@@ -363,7 +383,7 @@ background-color: inherit;
   place-items: center;
 }
 
-.loading-container > img{
+.loading-container > img {
   height: 200px;
   width: 200px;
 }
