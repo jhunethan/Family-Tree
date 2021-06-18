@@ -30,10 +30,33 @@ import TreeSearch from "./TreeSearch";
 // </div>
 // </div>
 
-var height;
-var width;
-var datalistarr,
-  treeData = [];
+function TreeNav(props) {
+  function toggle() {
+    $(".tree-nav-button").toggleClass("hidden");
+  }
+
+  return (
+    <div className="tree-nav">
+      <button className="tree-nav-toggle" onClick={toggle}>
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <button
+        className="tree-nav-button hidden"
+        onClick={() => props.resetCreateFields()}
+      >
+        ➕
+      </button>
+      <button
+        className="tree-nav-button hidden changeview-button"
+        onClick={() => props.changeView()}
+      >
+        Read Mode
+      </button>
+    </div>
+  );
+}
 
 export default function Tree(props) {
   //stores users name
@@ -58,6 +81,10 @@ export default function Tree(props) {
     parent: "",
   });
   var dateFormat = require("dateformat");
+  var height;
+  var width;
+  var datalistarr,
+    treeData = [];
 
   const switchRadio = (val) => {
     if (val.value === "child") return setRadiochecked(true);
@@ -149,6 +176,7 @@ export default function Tree(props) {
 
   async function dynamicUpdate(obj) {
     let data = tableData;
+    console.log(obj)
 
     if (!obj) {
       await setTableData([]);
@@ -161,10 +189,9 @@ export default function Tree(props) {
       case "delete":
         data = data.filter((x) => x.id !== obj.id);
         for (let i = 0; i < data.length; i++) {
-          if (data[i.pid === obj.id]) data[i].pid = 0;
-          if (obj.isPartner) {
-            if (data[i].id === obj.pid) data[i].partnerinfo = undefined;
-          }
+          if (data[i].pid === obj.id) data[i].pid = 0;
+          if (obj.isPartner && data[i].id === obj.pid)
+            data[i].partnerinfo = undefined;
         }
         toast.success(`Removed ${obj.name}`);
         break;
@@ -184,6 +211,11 @@ export default function Tree(props) {
           if (data[i].id === obj.id) data[i] = obj;
           if (obj.isPartner) {
             if (data[i].id === obj.pid) data[i].partnerinfo = obj;
+            try {
+              if (data[i].partnerinfo.id === obj.id) {
+                data[i].partnerinfo = null;
+              }
+            } catch {}
           } else
             try {
               if (data[i].partnerinfo.id === obj.id)
@@ -321,12 +353,19 @@ export default function Tree(props) {
 
     if (partner) {
       //make sure parent is valid
-      let arr = filterChildren(Number(child.__data__.data.id), tableData);
 
-      if (arr.includes(parent)) {
-        if (child.__data__.data.name) {
-          let obj = child.__data__.data;
+      let obj = child.__data__.data;
+      obj = child["classList"][0] === "partnernode" ? obj.partnerinfo : obj;
 
+      function checkValidPartner() {
+        if (parent.id === obj.id) return false;
+        if (parent.partnerinfo) return false;
+        if (parent.isPartner) return false;
+        return true;
+      }
+
+      if (checkValidPartner()) {
+        if (obj.name) {
           obj.pid = parent.id;
           obj.parent = "";
           obj.partner = parent.name;
@@ -335,7 +374,7 @@ export default function Tree(props) {
             input: obj,
             name: obj.name,
             author: cookies.author,
-            changes: "set parent",
+            changes: "partner,isPartner",
           });
           dynamicUpdate(obj);
         } else {
@@ -354,14 +393,17 @@ export default function Tree(props) {
 
     if (arr.includes(parent)) {
       let obj = child.__data__.data;
+      obj = child["classList"][0] === "partnernode" ? obj.partnerinfo : obj;
       obj.pid = Number(parent.id);
       obj.parent = parent.name;
+      obj.isPartner = 0;
+      obj.partner = "";
 
       Axios.patch("https://apilayfamilytree.com/api/familymembers", {
         input: obj,
         name: obj.name,
         author: cookies.author,
-        changes: "parent",
+        changes: "parent,isPartner",
       });
       dynamicUpdate(obj);
     } else {
@@ -411,7 +453,9 @@ export default function Tree(props) {
 
   function nodeClick(el, type) {
     let child =
-      type === "partner" ? el.__data__.data.partnerinfo : el.__data__.data;
+      el.classList[0] === "partnerNode" || type === "partner"
+        ? el.__data__.data.partnerinfo
+        : el.__data__.data;
     setInfoCard(child);
     //alternative function
     //show a edit menu for a node letting the user change the tree dynamically
@@ -503,16 +547,13 @@ export default function Tree(props) {
             let classes = event.target.classList;
             if (classes[0] !== "edit-menu-button") {
               if (event.target.classList[0] === "node") {
-                let parent =
-                  el.classList[0] === "partnernode"
-                    ? event.target.__data__.data.partnerinfo
-                    : event.target.__data__.data;
+                let parent = event.target.__data__.data;
                 addParent(el, parent, true);
               } else {
                 if (event.target.classList[0] === "partnernode") {
                   toast.error("Invalid partner selected.");
                 } else toast.error("No partner selected.");
-                nodeClick(el);
+                nodeClick(el, "partner");
               }
               toast.dismiss("selectError");
               $(window).off("click");
@@ -940,7 +981,7 @@ export default function Tree(props) {
   const getPID = (nameKey) => {
     for (var i = 0; i < tableData.length; i++) {
       let namecheck = tableData[i].generation + " " + tableData[i].name;
-      if ($.trim(namecheck) === $.trim(nameKey)) {
+      if ($.trim(namecheck) === $.trim(nameKey) || $.trim(tableData[i].name) === $.trim(nameKey)) {
         return tableData[i].id;
       }
     }
@@ -1142,15 +1183,11 @@ export default function Tree(props) {
           setWelcome(status);
         }}
       />
-      <button
-        className="tree-create-button"
-        onClick={() => resetCreateFields()}
-      >
-        ➕
-      </button>
-      <button className="changeview-button" onClick={() => changeView()}>
-        Read Mode
-      </button>
+      <TreeNav
+        resetCreateFields={() => resetCreateFields()}
+        changeView={() => changeView()}
+      />
+
       <NodeCard
         show={(obj) => {
           setInfoCard(obj);

@@ -71,18 +71,21 @@ export default function Edit(props) {
   };
 
   var inputChangedHandler = () => {
-    let isPartner = false,
+    let {
+      isPartner = false,
       partner,
       parent,
       pid,
       deathdate = null,
-      extraopStack = [
-        "birthplace",
-        "location",
-        "fblink",
-        "profession",
-        "marriagedate",
-      ];
+    } = props.nodedata;
+
+    const extraopStack = [
+      "birthplace",
+      "location",
+      "fblink",
+      "profession",
+      "marriagedate",
+    ];
 
     CheckInput();
     checkExtraChanges();
@@ -127,24 +130,27 @@ export default function Edit(props) {
       }
     }
 
+    
     if ($("#isDeceased")[0].checked) deathdate = $("#deathdate-input").val();
-
+    
     if (getRadioVal("option-1", "option-2") === "partner") {
       isPartner = 1;
       partner = $("#parentInput").val();
+      parent = "";
     } else {
       isPartner = 0;
       parent = $("#parentInput").val();
+      partner = "";
     }
-
+    
     try {
       pid = props.getPID($("#parentInput").val());
     } catch {
       pid = 0;
     }
-
+    
     if (pid === 0 || !pid) isPartner = 0;
-
+    
     let tempnode = {};
 
     tempnode.maidenname =
@@ -164,7 +170,9 @@ export default function Edit(props) {
       tempnode.maidenname = null;
     }
 
-    setNodeInput({
+
+
+    const newObject = {
       id: props.nodedata.id,
       generation: $("#generation-input").val(),
       name: $("#name-input").val(),
@@ -175,7 +183,10 @@ export default function Edit(props) {
       parent: parent,
       partner: partner,
       extradetails: tempnode,
-    });
+    };
+    console.log(newObject);
+
+    setNodeInput(newObject);
   };
 
   function getRadioVal(radio1, radio2) {
@@ -184,6 +195,7 @@ export default function Edit(props) {
   }
 
   function CheckInput() {
+    console.log(props.nodedata);
     let changesStack = [],
       opStack = ["generation", "name", "birthdate"];
     let data = props.nodedata;
@@ -240,10 +252,8 @@ export default function Edit(props) {
     const element = $("#parentInput");
 
     for (const x of props.data) {
-      if(x.name === props.nodedata.name) continue;
+      if (x.name === props.nodedata.name) continue;
       let namecheck = x.generation + " " + x.name;
-      console.log(namecheck===element.val() || element.val() === x.name)
-      console.log({namecheck,name:x.name})
       if (element.val() === namecheck) return true;
       if (x.name === element.val()) return true;
     }
@@ -258,7 +268,7 @@ export default function Edit(props) {
   function checkParent() {
     const element = $("#parentInput");
 
-    if(props.nodedata.partner) return checkPartner();
+    if (props.nodedata.partner) return checkPartner();
 
     for (const x of props.datalist) {
       let namecheck = x.generation + " " + x.name;
@@ -278,6 +288,7 @@ export default function Edit(props) {
     if (changed && checkParent()) {
       //save
       console.log("id info updated");
+      console.log(nodeInput);
       Axios.patch("https://apilayfamilytree.com/api/familymembers", {
         input: nodeInput,
         name: props.nodedata.name,
@@ -521,7 +532,7 @@ export default function Edit(props) {
               onKeyUp={function (event) {
                 if (event.key === "Enter") {
                   addOption("extranames");
-                  inputChangedHandler()
+                  inputChangedHandler();
                 }
               }}
             />
@@ -531,7 +542,7 @@ export default function Edit(props) {
             className="edit-button"
             onClick={() => {
               addOption("extranames");
-              inputChangedHandler()
+              inputChangedHandler();
             }}
           >
             Add
@@ -769,7 +780,7 @@ export default function Edit(props) {
               onKeyUp={function (event) {
                 if (event.key === "Enter") {
                   addOption("languages");
-                  inputChangedHandler()
+                  inputChangedHandler();
                 }
               }}
             />
@@ -779,7 +790,7 @@ export default function Edit(props) {
             className="edit-button"
             onClick={() => {
               addOption("languages");
-              inputChangedHandler()
+              inputChangedHandler();
             }}
           >
             Add
