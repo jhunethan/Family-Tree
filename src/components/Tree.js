@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import profile from "../css/person-placeholder.jpg";
 import loading from "../css/loading.gif";
+import layCharacter from "../css/layCharacter.png";
 
 import NodeCard from "./NodeCard";
 import Modal from "./Modal";
@@ -41,12 +42,6 @@ function TreeNav(props) {
         <span></span>
         <span></span>
         <span></span>
-      </button>
-      <button
-        className="tree-nav-button hidden"
-        onClick={() => props.resetCreateFields()}
-      >
-        ➕
       </button>
       <button
         className="tree-nav-button hidden changeview-button"
@@ -106,10 +101,27 @@ export default function Tree(props) {
   useEffect(() => {
     var start = Date.now();
 
+    const serverCheck = setInterval(() => {
+      const currentLoadTime = (Date.now() - start) / 1000;
+      console.log(currentLoadTime);
+      if (currentLoadTime > 5) {
+        toast.error("Please refresh the page.", {
+          position: "top-center",
+          autoClose: false,
+        });
+        toast.error(
+          "Server took too long to respond. There may be an issue with the server.",
+          { position: "top-center", autoClose: false }
+        );
+        clearInterval(serverCheck);
+      }
+    }, 500);
+
     Axios.get("https://apilayfamilytree.com/api/familymembers").then((result) => {
       setTableData(result.data);
       if (result.data) {
         let loadTime = (Date.now() - start) / 1000;
+        clearInterval(serverCheck);
         toast.success(`Tree loaded in ${loadTime} s`, {
           position: "top-center",
           autoClose: 2500,
@@ -176,7 +188,6 @@ export default function Tree(props) {
 
   async function dynamicUpdate(obj) {
     let data = tableData;
-    console.log(obj)
 
     if (!obj) {
       await setTableData([]);
@@ -211,6 +222,10 @@ export default function Tree(props) {
           if (data[i].id === obj.id) data[i] = obj;
           if (obj.isPartner) {
             if (data[i].id === obj.pid) data[i].partnerinfo = obj;
+            if (data[i].pid === obj.id && !data[i].isPartner) {
+              data[i].pid = 0;
+              data[i].parent = "";
+            }
             try {
               if (data[i].partnerinfo.id === obj.id) {
                 data[i].partnerinfo = null;
@@ -546,14 +561,14 @@ export default function Tree(props) {
           $(window).on("click", function (event) {
             let classes = event.target.classList;
             if (classes[0] !== "edit-menu-button") {
-              if (event.target.classList[0] === "node") {
-                let parent = event.target.__data__.data;
-                addParent(el, parent, true);
+              if (
+                event.target.classList[0] === "node" ||
+                event.target.classList[0] === "partnernode"
+              ) {
+                addParent(el, event.target.__data__.data, true);
               } else {
-                if (event.target.classList[0] === "partnernode") {
-                  toast.error("Invalid partner selected.");
-                } else toast.error("No partner selected.");
-                nodeClick(el, "partner");
+                toast.error("No partner selected");
+                nodeClick(el);
               }
               toast.dismiss("selectError");
               $(window).off("click");
@@ -981,7 +996,10 @@ export default function Tree(props) {
   const getPID = (nameKey) => {
     for (var i = 0; i < tableData.length; i++) {
       let namecheck = tableData[i].generation + " " + tableData[i].name;
-      if ($.trim(namecheck) === $.trim(nameKey) || $.trim(tableData[i].name) === $.trim(nameKey)) {
+      if (
+        $.trim(namecheck) === $.trim(nameKey) ||
+        $.trim(tableData[i].name) === $.trim(nameKey)
+      ) {
         return tableData[i].id;
       }
     }
@@ -1183,6 +1201,12 @@ export default function Tree(props) {
           setWelcome(status);
         }}
       />
+      <button
+        className="tree-nav-button tree-create-button"
+        onClick={() => resetCreateFields()}
+      >
+        <span className="plus-symbol">+</span>
+      </button>
       <TreeNav
         resetCreateFields={() => resetCreateFields()}
         changeView={() => changeView()}
@@ -1224,7 +1248,7 @@ export default function Tree(props) {
       />
       <ToastContainer
         hideProgressBar={true}
-        position="bottom-right"
+        position="top-center"
         autoClose={5000}
         limit={5}
       />
@@ -1259,6 +1283,7 @@ function TreeWelcome(props) {
     if (!personSelected && !props.welcome) {
       return (
         <div className="tree-welcome">
+          <img src={layCharacter} alt="logo" className="landing-logo" />
           <h1 className="tree-welcome-title">Lay Family Tree</h1>
           <p>Search for a family member to continue</p>
           <div className="tree-welcome-modal" />

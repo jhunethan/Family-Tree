@@ -286,9 +286,11 @@ function Create(props) {
         className="create-form-button"
         onClick={() => {
           try {
-            document.getElementsByClassName("Create")[0].style.display = "none";
-            document.getElementById("Modal").style.display = "none";
-          } catch {}
+            $(".create-form").css("display", "none");
+            $("#Modal").css("display", "none");
+          } catch (err) {
+            console.log(err);
+          }
         }}
       >
         Cancel

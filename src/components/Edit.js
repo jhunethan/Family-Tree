@@ -130,9 +130,8 @@ export default function Edit(props) {
       }
     }
 
-    
     if ($("#isDeceased")[0].checked) deathdate = $("#deathdate-input").val();
-    
+
     if (getRadioVal("option-1", "option-2") === "partner") {
       isPartner = 1;
       partner = $("#parentInput").val();
@@ -142,15 +141,15 @@ export default function Edit(props) {
       parent = $("#parentInput").val();
       partner = "";
     }
-    
+
     try {
       pid = props.getPID($("#parentInput").val());
     } catch {
       pid = 0;
     }
-    
+
     if (pid === 0 || !pid) isPartner = 0;
-    
+
     let tempnode = {};
 
     tempnode.maidenname =
@@ -169,8 +168,6 @@ export default function Edit(props) {
       tempnode.marriagedate = null;
       tempnode.maidenname = null;
     }
-
-
 
     const newObject = {
       id: props.nodedata.id,
@@ -251,11 +248,12 @@ export default function Edit(props) {
   function checkPartner() {
     const element = $("#parentInput");
 
-    for (const x of props.data) {
-      if (x.name === props.nodedata.name) continue;
-      let namecheck = x.generation + " " + x.name;
-      if (element.val() === namecheck) return true;
-      if (x.name === element.val()) return true;
+    console.log({ element: element.val() });
+
+    for (let i = 0; i < props.data.length; i++) {
+      let namecheck = props.data[i].generation + " " + props.data[i].name;
+      if (element.val() === namecheck || element.val() === props.data[i].name) return true;
+      console.log({namecheck,name:props.data[i].name})
     }
     if ($.trim(element.val()) === "") return true;
     element.css("border-bottom", "2px solid red");

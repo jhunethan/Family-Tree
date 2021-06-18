@@ -100,6 +100,15 @@ export default function Table(props) {
       default:
         for (let i = 0; i < data.length; i++) {
           if (data[i].id === obj.id) data[i] = obj;
+          if (data[i].pid === obj.id) {
+            if (data[i].isPartner) {
+              data[i].partner = `${obj.name}`;
+              data[i].parent = "";
+            } else {
+              data[i].parent = `${obj.name}`;
+              data[i].partner = "";
+            }
+          }
           if (obj.isPartner) {
             if (data[i].id === obj.pid) data[i].partnerinfo = obj;
           } else

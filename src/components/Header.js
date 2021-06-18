@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 import * as $ from "jquery";
 
 import "../css/Header.css";
+import layCharacter from "../css/layCharacter.png";
 
 export default function Header(props) {
-
   const toggleActive = (tab) => {
     if (!window.location.href.includes(tab)) {
       $("#nav-link-one").toggleClass("active");
@@ -25,8 +25,8 @@ export default function Header(props) {
           ☰
         </i>
 
-        <a href="/" className="nav-logo">
-          LAY
+        <a href="/" className="nav-logo-container">
+          <img src={layCharacter} alt="logo" className="nav-logo"/>
         </a>
         <ul className="nav-ul header-navigation hidden">
           <Link

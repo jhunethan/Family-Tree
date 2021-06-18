@@ -6,6 +6,7 @@ import Axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { ToastContainer, toast } from "react-toastify";
 import { useCookies } from "react-cookie";
+import layCharacter from "../css/layCharacter.png";
 
 function SignUp(props) {
   const [user, setUser] = useState({});
@@ -195,11 +196,13 @@ function Login(props) {
   };
 
   if (cookies["lay-email"] && cookies["lay-password"]) {
-    Axios.post("https://apilayfamilytree.com/api/checkaccess",cookies).then((response) => {
-      if (response.data.access) {
-        return history.push("/tree");
+    Axios.post("https://apilayfamilytree.com/api/checkaccess", cookies).then(
+      (response) => {
+        if (response.data.access) {
+          return history.push("/tree");
+        }
       }
-    });
+    );
   }
   return (
     <form id="form-login">
@@ -390,6 +393,7 @@ export default function LandingPage(props) {
   return (
     <div className="wrapper">
       <div className="header">
+        <img src={layCharacter} alt="logo" className="landing-logo" />
         <h1 className="landing-title" onClick={() => setView("")}>
           Lay Family Tree
         </h1>
