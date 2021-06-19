@@ -17,7 +17,6 @@ export default function Resetpassword() {
       if (token.includes("/reset-password/")) return;
 
       Axios.post(url, { email: email, password: password }).then((result) => {
-        console.log(result);
         if (result.data === "password changed") history.push("/tree");
       });
     } catch (error) {

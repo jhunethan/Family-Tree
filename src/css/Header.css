@@ -14,7 +14,7 @@ nav {
   height: 50px;
   width: 100%;
   position: relative;
-  z-index: 3;
+  z-index: 10;
 }
 
 
@@ -35,6 +35,7 @@ nav {
   letter-spacing: 0.1rem;
   border-bottom: 2px solid rgb(0,170,255);
   margin: 0 25px;
+  z-index: 12;
 
   color: #EEF4D4;
   transition: all 0.5s;

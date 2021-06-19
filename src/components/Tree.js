@@ -7,6 +7,8 @@ import "dateformat";
 import { useCookies } from "react-cookie";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useHistory } from "react-router-dom";
+
 
 import profile from "../css/person-placeholder.jpg";
 import loading from "../css/loading.gif";
@@ -32,8 +34,19 @@ import TreeSearch from "./TreeSearch";
 // </div>
 
 function TreeNav(props) {
+  const [cookies, setCookies, removeCookies] = useCookies(["lay-access"]);
+  const history = useHistory();
   function toggle() {
     $(".tree-nav-button").toggleClass("hidden");
+  }
+
+  function logout() {
+    console.log(`${cookies['lay-email']} has been logged out`)
+    setCookies('lay-access','')
+    removeCookies('lay-email')
+    removeCookies('lay-password')
+    removeCookies('lay-access')
+    history.push('/')
   }
 
   return (
@@ -48,6 +61,9 @@ function TreeNav(props) {
         onClick={() => props.changeView()}
       >
         Read Mode
+      </button>
+      <button className="tree-nav-button hidden logout-button" onClick={logout}>
+        Logout
       </button>
     </div>
   );
@@ -103,7 +119,6 @@ export default function Tree(props) {
 
     const serverCheck = setInterval(() => {
       const currentLoadTime = (Date.now() - start) / 1000;
-      console.log(currentLoadTime);
       if (currentLoadTime > 5) {
         toast.error("Please refresh the page.", {
           position: "top-center",
@@ -705,38 +720,6 @@ export default function Tree(props) {
         })
       );
 
-    partnerShapes
-      .enter()
-      .append("rect")
-      .attr("class", function (d) {
-        return "partner-container level-" + d.depth;
-      })
-      .attr("x", function (d) {
-        return d.x - 525;
-      })
-      .attr("y", function (d) {
-        return d.y - 400;
-      })
-      .attr("fill", "#ffeece")
-      .attr("rx", 5)
-      .attr("ry", 5);
-    partnerShapes
-      .enter()
-      .append("html:div")
-      .attr("font-size", "50")
-      .attr("x", function (d) {
-        return d.x - 50;
-      })
-      .attr("y", function (d) {
-        return d.y - 550;
-      })
-      .html(function (d) {
-        try {
-          if (d.data.partnerinfo.marriagedate)
-            return `Married: ${d.data.partnerinfo.marriagedate}`;
-        } catch {}
-      });
-
     let partnerContainer = partnerShapes
       .enter()
       .append("foreignObject")
@@ -770,7 +753,35 @@ export default function Tree(props) {
       .attr("class", function (d) {
         return "partnernode tree-card level-" + d.depth;
       })
+      .attr("title", (d) => {
+        const { generation, name, birthdate } = d.data.partnerinfo;
+        let userDetails = generation ? `${generation}\n` : "";
+        userDetails += `${name}\n${birthdate}`;
+        return userDetails;
+      })
       .on("click", (d) => nodeClick(d.target, ""));
+
+    partnerShapes
+      .enter()
+      .append("text")
+      .attr("class", "icon")
+      .attr("text-anchor", "middle")
+      .attr("dominant-baseline", "central")
+      .attr("x", function (d) {
+        return d.x;
+      })
+      .attr("y", function (d) {
+        return d.y - 450;
+      })
+      .style("font-size", "50px")
+      .text(function (d) {
+        try {
+          const { marriagedate } = d.data.partnerinfo.extradetails;
+          if (marriagedate)
+            return `Married - ${dateFormat(marriagedate, "dS mmmm yyyy")}`;
+        } catch {}
+        return null;
+      });
 
     let partnerLeft = partnerBody
       .append("xhtml:div")
@@ -862,6 +873,12 @@ export default function Tree(props) {
       .append("xhtml:div")
       .attr("class", function (d) {
         return "node tree-card level-" + d.depth;
+      })
+      .attr("title", (d) => {
+        const { generation, name, birthdate } = d.data;
+        let userDetails = generation ? `${generation}\n` : "";
+        userDetails += `${name}\n${birthdate}`;
+        return userDetails;
       })
       .on("click", (d) => nodeClick(d.target, ""));
 
@@ -1283,8 +1300,14 @@ function TreeWelcome(props) {
     if (!personSelected && !props.welcome) {
       return (
         <div className="tree-welcome">
-          <img src={layCharacter} alt="logo" className="landing-logo" />
-          <h1 className="tree-welcome-title">Lay Family Tree</h1>
+          <a href="/" className="nav-logo-container">
+            <img src={layCharacter} alt="logo" className="landing-logo" />
+          </a>
+          <a href="/" className="nav-logo-container">
+            <h1 className="tree-welcome-title landing-title">
+              Lay Family Tree
+            </h1>
+          </a>
           <p>Search for a family member to continue</p>
           <div className="tree-welcome-modal" />
           <TreeSearch

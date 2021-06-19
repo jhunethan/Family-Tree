@@ -185,7 +185,6 @@ export default class EditPhoto extends PureComponent {
         blob.name = fileName;
         window.URL.revokeObjectURL(this.fileUrl);
         this.fileUrl = window.URL.createObjectURL(blob);
-        console.log(blob);
         //set blob as edited image state
         this.setState({ image: blob });
         resolve(this.fileUrl);

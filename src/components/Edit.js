@@ -181,7 +181,6 @@ export default function Edit(props) {
       partner: partner,
       extradetails: tempnode,
     };
-    console.log(newObject);
 
     setNodeInput(newObject);
   };
@@ -192,7 +191,6 @@ export default function Edit(props) {
   }
 
   function CheckInput() {
-    console.log(props.nodedata);
     let changesStack = [],
       opStack = ["generation", "name", "birthdate"];
     let data = props.nodedata;
@@ -253,7 +251,6 @@ export default function Edit(props) {
     for (let i = 0; i < props.data.length; i++) {
       let namecheck = props.data[i].generation + " " + props.data[i].name;
       if (element.val() === namecheck || element.val() === props.data[i].name) return true;
-      console.log({namecheck,name:props.data[i].name})
     }
     if ($.trim(element.val()) === "") return true;
     element.css("border-bottom", "2px solid red");
@@ -282,11 +279,8 @@ export default function Edit(props) {
   }
 
   function saveEdit() {
-    console.log(nodeInput);
     if (changed && checkParent()) {
       //save
-      console.log("id info updated");
-      console.log(nodeInput);
       Axios.patch("https://apilayfamilytree.com/api/familymembers", {
         input: nodeInput,
         name: props.nodedata.name,
@@ -296,7 +290,6 @@ export default function Edit(props) {
       closeEditMenu();
     }
     if (extrachanged) {
-      console.log("extra updated");
       Axios.patch("https://apilayfamilytree.com/api/extradetails", {
         id: props.nodedata.id,
         name: props.nodedata.name,
@@ -343,7 +336,6 @@ export default function Edit(props) {
     node.method = "delete";
     if (userValidation.val() === "confirm") {
       //delete node
-      console.log(props.nodedata);
       Axios.delete(
         `https://apilayfamilytree.com/api/familymembers?id=${props.nodedata.id}&name=${props.nodedata.name}&author=${cookies.author}`
       );

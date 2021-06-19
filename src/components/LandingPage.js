@@ -10,6 +10,8 @@ import layCharacter from "../css/layCharacter.png";
 
 function SignUp(props) {
   const [user, setUser] = useState({});
+  const [cookies, setCookie] = useCookies(["lay-access"]);
+
   var history = useHistory();
 
   function capitalize(str) {
@@ -60,6 +62,13 @@ function SignUp(props) {
     }
   };
 
+  function setUserPrivileges(user) {
+    props.setAuth(true);
+    console.log(cookies);
+    setCookie("lay-email", user.email);
+    setCookie("lay-password", user.password);
+  }
+
   const submit = () => {
     let valid = true;
 
@@ -80,7 +89,11 @@ function SignUp(props) {
       Axios.post("https://apilayfamilytree.com/api/signup", {
         userdetails: user,
       }).then((result) => {
-        if (result.data === "success") history.push("/tree");
+        if (result.data === "success") {
+          props.setAuth(true);
+          setUserPrivileges(user);
+          history.push("/tree");
+        }
         if (result.data === "email exists")
           toast.error(
             "There is already an account with that email, please sign in"
@@ -162,6 +175,7 @@ function Login(props) {
   var history = useHistory();
 
   function setUserPrivileges(user) {
+    props.setAuth(true);
     setCookie("lay-email", user.email);
     setCookie("lay-password", user.password);
   }
@@ -198,7 +212,9 @@ function Login(props) {
   if (cookies["lay-email"] && cookies["lay-password"]) {
     Axios.post("https://apilayfamilytree.com/api/checkaccess", cookies).then(
       (response) => {
-        if (response.data.access) {
+        const { access, msg } = response.data;
+        if (access && msg === "user found") {
+          props.setAuth(true);
           return history.push("/tree");
         }
       }
@@ -352,9 +368,9 @@ function LoginControl(props) {
   if (props.view === "reset") return <ResetPassword />;
   if (props.view === "login")
     return (
-      <Login ResetPassword={props.ResetPassword} setSignUp={props.setSignUp} />
+      <Login setAuth={props.setAuth} ResetPassword={props.ResetPassword} setSignUp={props.setSignUp} />
     );
-  if (props.view === "signup") return <SignUp setLogin={props.setLogin} />;
+  if (props.view === "signup") return <SignUp setAuth={props.setAuth} setLogin={props.setLogin} />;
 
   return (
     <div>
@@ -374,31 +390,30 @@ function LoginControl(props) {
           Signup
         </button>
       </div>
-      <button
-        className="btn btn-dark btn-lg btn-block landing-guest"
-        onClick={props.setGuest}
-      >
-        Continue without login
-      </button>
     </div>
   );
 }
 
 export default function LandingPage(props) {
   const [view, setView] = useState("");
-  var history = useHistory();
 
   $("ul.header-navigation").addClass("hidden");
 
   return (
     <div className="wrapper">
       <div className="header">
-        <img src={layCharacter} alt="logo" className="landing-logo" />
+        <img
+          src={layCharacter}
+          alt="logo"
+          className="landing-logo"
+          onClick={setView}
+        />
         <h1 className="landing-title" onClick={() => setView("")}>
           Lay Family Tree
         </h1>
         <LoginControl
           view={view}
+          setAuth={props.setAuth}
           ResetPassword={() => {
             setView("reset");
           }}
@@ -407,10 +422,6 @@ export default function LandingPage(props) {
           }}
           setSignUp={() => {
             setView("signup");
-          }}
-          setGuest={() => {
-            setView("");
-            history.push("/tree");
           }}
         />
       </div>

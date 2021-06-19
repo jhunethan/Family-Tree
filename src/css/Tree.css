@@ -41,6 +41,12 @@ svg {
   transition: all 0.3s;
 }
 
+.marriage-date{
+  z-index: 10;
+  font-size: 100;
+  fill: black;
+}
+
 .tree-card > * {
   user-select: none;
   pointer-events: none;
@@ -288,7 +294,7 @@ svg {
   position: absolute;
   top: 0;
   right: 0;
-  z-index: 3;
+  z-index: 12;
   align-items: flex-end;
 
   display: flex;
@@ -335,7 +341,7 @@ svg {
   position: absolute;
   right: 75px;
   top: 0;
-  z-index: 3;
+  z-index: 10;
   transition: all 0.3s;
 
   background-color: #0090d8;
@@ -357,7 +363,7 @@ svg {
   max-width: 90vw;
   top: 20vh;
   left: calc(50vw - 250px);
-  z-index: 1000;
+  z-index: 11;
   background: #fff;
   border-radius: 3px;
   filter: drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.226));
@@ -369,6 +375,7 @@ svg {
 
 .tree-welcome-title {
   text-align: center;
+  color: black;
 }
 
 .tree-welcome-search-container {
