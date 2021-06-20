@@ -1,9 +1,46 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import * as $ from "jquery";
+import { useCookies } from "react-cookie";
 
 import "../css/Header.css";
 import layCharacter from "../css/layCharacter.png";
+
+function AdminNav(props) {
+  const [cookies] = useCookies();
+  return cookies["lay-access"] === "admin" ? (
+    <ul className="nav-ul header-navigation hidden">
+      <Link
+        to="/table"
+        id="nav-link-one"
+        className="nav-link"
+        onClick={() => {
+          props.toggleActive("table");
+        }}
+      >
+        Table
+      </Link>
+      <Link
+        to="/tree"
+        id="nav-link-two"
+        className="nav-link active"
+        onClick={() => {
+          props.toggleActive("tree");
+        }}
+      >
+        Tree
+      </Link>
+      <i
+        className="far fa-times-circle"
+        onClick={() => {
+          document.querySelector(".nav-ul").classList.toggle("visible");
+        }}
+      >
+        ☰
+      </i>
+    </ul>
+  ) : null;
+}
 
 export default function Header(props) {
   const toggleActive = (tab) => {
@@ -26,38 +63,9 @@ export default function Header(props) {
         </i>
 
         <a href="/" className="nav-logo-container">
-          <img src={layCharacter} alt="logo" className="nav-logo"/>
+          <img src={layCharacter} alt="logo" className="nav-logo" />
         </a>
-        <ul className="nav-ul header-navigation hidden">
-          <Link
-            to="/table"
-            id="nav-link-one"
-            className="nav-link"
-            onClick={() => {
-              toggleActive("table");
-            }}
-          >
-            Table
-          </Link>
-          <Link
-            to="/tree"
-            id="nav-link-two"
-            className="nav-link active"
-            onClick={() => {
-              toggleActive("tree");
-            }}
-          >
-            Tree
-          </Link>
-          <i
-            className="far fa-times-circle"
-            onClick={() => {
-              document.querySelector(".nav-ul").classList.toggle("visible");
-            }}
-          >
-            ☰
-          </i>
-        </ul>
+        <AdminNav toggleActive={toggleActive} />
       </div>
     </nav>
   );

@@ -7,11 +7,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { ToastContainer, toast } from "react-toastify";
 import { useCookies } from "react-cookie";
 import layCharacter from "../css/layCharacter.png";
+import loading from "../css/loading.gif";
 
 function SignUp(props) {
   const [user, setUser] = useState({});
   const [cookies, setCookie] = useCookies(["lay-access"]);
-
+const [isLoading, setIsLoading] = useState(false)
   var history = useHistory();
 
   function capitalize(str) {
@@ -64,14 +65,14 @@ function SignUp(props) {
 
   function setUserPrivileges(user) {
     props.setAuth(true);
-    console.log(cookies);
     setCookie("lay-email", user.email);
     setCookie("lay-password", user.password);
+    setCookie("lay-access", user.access);
   }
 
   const submit = () => {
     let valid = true;
-
+    console.log(cookies);
     for (const x of ["name", "email", "password"]) {
       if (!user[x]) {
         valid = false;
@@ -86,6 +87,7 @@ function SignUp(props) {
     if (passwordValidation() === false) valid = false;
 
     if (valid) {
+      setIsLoading(true)
       Axios.post("https://apilayfamilytree.com/api/signup", {
         userdetails: user,
       }).then((result) => {
@@ -157,7 +159,11 @@ function SignUp(props) {
           submit();
         }}
       >
-        Register
+        {isLoading ? (
+          <img style={{ height: "25px" }} src={loading} alt="loading"></img>
+        ) : (
+          "Register"
+        )}
       </button>
       <p className="forgot-password text-right">
         Already registered{" "}
@@ -172,12 +178,14 @@ function SignUp(props) {
 function Login(props) {
   const [user, setUser] = useState({});
   const [cookies, setCookie] = useCookies(["lay-access"]);
+  const [isLoading, SetisLoading] = useState(false);
   var history = useHistory();
 
   function setUserPrivileges(user) {
     props.setAuth(true);
     setCookie("lay-email", user.email);
     setCookie("lay-password", user.password);
+    setCookie("lay-access", user.access);
   }
 
   const checkChanges = (method) => {
@@ -188,6 +196,7 @@ function Login(props) {
 
   const submit = () => {
     let valid = true;
+
     //check for empty fields
     for (const x of ["email", "password"]) {
       if (!user[x]) {
@@ -196,17 +205,17 @@ function Login(props) {
       }
     }
 
-    if (valid)
-      Axios.post("https://apilayfamilytree.com/api/login", {
-        userdetails: user,
-      }).then((result) => {
-        const { msg, user } = result.data;
-        if (msg === "success") {
-          setUserPrivileges(user);
-          return history.push("/tree");
-        }
-        toast.error(msg);
-      });
+    if (valid) SetisLoading(true);
+    Axios.post("https://apilayfamilytree.com/api/login", {
+      userdetails: user,
+    }).then((result) => {
+      const { msg, user } = result.data;
+      if (msg === "success") {
+        setUserPrivileges(user);
+        return history.push("/tree");
+      }
+      toast.error(msg);
+    });
   };
 
   if (cookies["lay-email"] && cookies["lay-password"]) {
@@ -215,6 +224,7 @@ function Login(props) {
         const { access, msg } = response.data;
         if (access && msg === "user found") {
           props.setAuth(true);
+          setCookie("lay-access", access);
           return history.push("/tree");
         }
       }
@@ -269,10 +279,15 @@ function Login(props) {
 
       <button
         type="button"
+        id="sign-in-button"
         className="btn btn-dark btn-lg btn-block"
         onClick={() => submit()}
       >
-        Sign in
+        {isLoading ? (
+          <img style={{ height: "25px" }} src={loading} alt="loading"></img>
+        ) : (
+          "Sign in"
+        )}
       </button>
       <div className="etc-login-form">
         <p className="no-margin">
@@ -368,9 +383,14 @@ function LoginControl(props) {
   if (props.view === "reset") return <ResetPassword />;
   if (props.view === "login")
     return (
-      <Login setAuth={props.setAuth} ResetPassword={props.ResetPassword} setSignUp={props.setSignUp} />
+      <Login
+        setAuth={props.setAuth}
+        ResetPassword={props.ResetPassword}
+        setSignUp={props.setSignUp}
+      />
     );
-  if (props.view === "signup") return <SignUp setAuth={props.setAuth} setLogin={props.setLogin} />;
+  if (props.view === "signup")
+    return <SignUp setAuth={props.setAuth} setLogin={props.setLogin} />;
 
   return (
     <div>

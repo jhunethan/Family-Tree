@@ -19,6 +19,7 @@
   border-radius: 3px;
   filter: drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.273));
   padding: 35px;
+  padding-bottom: 10px;
 
   animation-name: fade-in;
   animation-duration: 1s;

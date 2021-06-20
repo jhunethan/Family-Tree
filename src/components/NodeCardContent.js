@@ -130,8 +130,7 @@ export function NodeCardDetails(props) {
           let output = props.node.extradetails.description.split("\n\n");
           let count = 0;
           return (
-            <section>
-              <h2>Greatest Achievement</h2>
+            <section style={{"marginTop":'20px'}}>
               <div>
                 {output.map((x) => {
                   count += 1;
@@ -259,7 +258,6 @@ export function ImmediateFamily(props) {
 
 export function MemberPhotos(props) {
   const [cookies] = useCookies(["author"]);
-
   const imageDelete = (e) => {
     Axios.post("https://apilayfamilytree.com/api/delete/image", {
       id: props.node.id,
@@ -329,14 +327,15 @@ export function MemberPhotos(props) {
 }
 
 export function AddPhoto(props) {
-
   useEffect(() => {
     //reset photo fields
     $(".file-input-button").css("display", "block");
   }, [props.node]);
 
   try {
-    if (props.node.extradetails.photo_id.split(",").length >= 3) return null;
+    if (props.node.extradetails.photo_id.split(",").length >= 3) {
+      return null;
+    }
   } catch (error) {}
 
   return (
@@ -350,11 +349,7 @@ export function AddPhoto(props) {
         className="file-input"
         accept="image/*"
         onChange={(event) => {
-          if (props.imageChangeHandler(event)) {
-            if (event.target.files[0].name) {
-              $(".file-input-button").css("display", "none");
-            }
-          }
+          props.imageChangeHandler(event);
         }}
       />
     </div>

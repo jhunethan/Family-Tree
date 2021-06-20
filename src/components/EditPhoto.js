@@ -192,9 +192,9 @@ export default class EditPhoto extends PureComponent {
     });
   }
 
-  uploadImage = () => {
+  uploadImage = (image) => {
     const formData = new FormData();
-    formData.append("file", this.state.image);
+    formData.append("file", image);
     formData.append("upload_preset", "oms6f6zi");
     formData.append("id", this.props.node.id);
 
@@ -255,11 +255,23 @@ export default class EditPhoto extends PureComponent {
               if (image) {
                 this.props.setImage(null);
                 this.props.closePopups();
-                this.uploadImage(image);
+                this.uploadImage(this.state.image);
               }
             }}
           >
-            Save
+            Save cropped
+          </button>
+          <button
+            className="image-editor-button"
+            onClick={() => {
+              if (image) {
+                this.props.setImage(null);
+                this.props.closePopups();
+                this.uploadImage(this.props.originalImage);
+              }
+            }}
+          >
+            Save as original
           </button>
         </div>
 

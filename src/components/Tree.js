@@ -9,11 +9,11 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useHistory } from "react-router-dom";
 
-
 import profile from "../css/person-placeholder.jpg";
 import loading from "../css/loading.gif";
 import layCharacter from "../css/layCharacter.png";
 
+import { EditPhotoCondition } from "./Table";
 import NodeCard from "./NodeCard";
 import Modal from "./Modal";
 import Edit from "./Edit";
@@ -41,12 +41,12 @@ function TreeNav(props) {
   }
 
   function logout() {
-    console.log(`${cookies['lay-email']} has been logged out`)
-    setCookies('lay-access','')
-    removeCookies('lay-email')
-    removeCookies('lay-password')
-    removeCookies('lay-access')
-    history.push('/')
+    console.log(`${cookies["lay-email"]} has been logged out`);
+    setCookies("lay-access", "");
+    removeCookies("lay-email");
+    removeCookies("lay-password");
+    removeCookies("lay-access");
+    history.push("/");
   }
 
   return (
@@ -83,6 +83,7 @@ export default function Tree(props) {
   const [radiochecked, setRadiochecked] = useState(true);
   //read/edit mode toggle
   const [editview, seteditView] = useState(false);
+  const [currentImage, setCurrentImage] = useState(undefined);
   //holds info about selected user
   const [InfoCard, setInfoCard] = useState({
     id: "",
@@ -132,18 +133,20 @@ export default function Tree(props) {
       }
     }, 500);
 
-    Axios.get("https://apilayfamilytree.com/api/familymembers").then((result) => {
-      setTableData(result.data);
-      if (result.data) {
-        let loadTime = (Date.now() - start) / 1000;
-        clearInterval(serverCheck);
-        toast.success(`Tree loaded in ${loadTime} s`, {
-          position: "top-center",
-          autoClose: 2500,
-          toastId: "TreeLoaded",
-        });
+    Axios.get("https://apilayfamilytree.com/api/familymembers").then(
+      (result) => {
+        setTableData(result.data);
+        if (result.data) {
+          let loadTime = (Date.now() - start) / 1000;
+          clearInterval(serverCheck);
+          toast.success(`Tree loaded in ${loadTime} s`, {
+            position: "top-center",
+            autoClose: 2500,
+            toastId: "TreeLoaded",
+          });
+        }
       }
-    });
+    );
   }, [update]);
 
   //update tree on tableData mutation
@@ -1219,7 +1222,7 @@ export default function Tree(props) {
         }}
       />
       <button
-        className="tree-nav-button tree-create-button"
+        className="tree-create-button"
         onClick={() => resetCreateFields()}
       >
         <span className="plus-symbol">+</span>
@@ -1240,6 +1243,10 @@ export default function Tree(props) {
         node={InfoCard}
         treeData={tableData}
         edit={() => openNode()}
+        editPhoto={(img) => {
+          setCurrentImage(img);
+        }}
+        closePopups={() => closePopups()}
       />
       <svg id="Tree"></svg>
       <Edit
@@ -1268,6 +1275,15 @@ export default function Tree(props) {
         position="top-center"
         autoClose={5000}
         limit={5}
+      />
+      <EditPhotoCondition
+        closePopups={() => closePopups()}
+        image={currentImage}
+        setImage={(obj) => setCurrentImage(obj)}
+        update={(obj) => {
+          dynamicUpdate(obj);
+        }}
+        node={InfoCard}
       />
     </div>
   );

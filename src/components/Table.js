@@ -14,12 +14,13 @@ import EditPhoto from "./EditPhoto";
 
 import { useCookies } from "react-cookie";
 
-function EditPhotoCondition(props) {
+export function EditPhotoCondition(props) {
   const [cookies] = useCookies(["author"]);
 
   if (props.image) {
     $("#Modal").css("display", "block");
     $(".image-editor-container").css("display", "block");
+    const originalImage = props.image;
     return (
       <EditPhoto
         closePopups={() => props.closePopups()}
@@ -29,6 +30,7 @@ function EditPhotoCondition(props) {
         }}
         setImage={(obj) => props.setImage(obj)}
         image={props.image}
+        originalImage={originalImage}
         cookies={cookies}
       />
     );
