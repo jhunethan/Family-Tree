@@ -193,6 +193,12 @@ export default function Table(props) {
 
   const resetCreateFields = () => {
     try {
+      for (const element of ['dd','mm','yyyy']) {
+        $(`#create-birthdate-${element}`).val('')        
+      }
+
+      $(`#create-birthdate-yyyy`).val('')  
+
       $(".radio-togglesC").css("display", "none");
       $("#parentSearchDataList").html("");
       $("#toggle-slide").checked = false;

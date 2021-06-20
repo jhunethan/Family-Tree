@@ -3,6 +3,7 @@ import "../css/Create.css";
 import Axios from "axios";
 import * as $ from "jquery";
 import { useCookies } from "react-cookie";
+import { toast } from "react-toastify";
 
 function Create(props) {
   const [cookies] = useCookies(["author"]);
@@ -19,6 +20,29 @@ function Create(props) {
   };
 
   const [sendNode, setsendNode] = useState(node);
+
+  const getValidBirthdate = () => {
+    const day = $("#create-birthdate-dd").val();
+    const month = $("#create-birthdate-mm").val();
+    const year = $("#create-birthdate-yyyy").val();
+
+    if (!day || !month || !year) return "";
+
+    if ((+day < 1 && +day > 31) || day.length > 2) {
+      toast.error("invalid birthdate: day must be a valid number");
+      return "";
+    }
+    if ((+month < 1 && +month > 12) || day.length > 2) {
+      toast.error("invalid birthdate: month must be a valid number");
+      return "";
+    }
+    if (+year < 1 || day.length > 4) {
+      toast.error("invalid birthdate: month must be a valid number");
+      return "";
+    }
+
+    return `${year}-${month}-${day}`;
+  };
 
   const populateDatalist = () => {
     //filter by input
@@ -97,11 +121,13 @@ function Create(props) {
 
     populateDatalist();
 
+    const birthdate = getValidBirthdate();
+
     setsendNode({
       id: id,
       generation: $("#genInputC").val(),
       name: $("#nameInputC").val(),
-      birthdate: $("#birthdateInputC").val(),
+      birthdate: birthdate,
       pid: pid,
       isPartner: isPartner,
       parent: node.parent,
@@ -203,21 +229,64 @@ function Create(props) {
               // Cancel the default action, if needed
               event.preventDefault();
               // Focus on next element
-              document.getElementById("birthdateInputC").focus();
+              document.getElementById("create-birthdate-dd").focus();
             }
           }}
         />
       </p>
-      <p type="Date of Birth" className="create-form-section">
+
+      <label htmlFor="create-birthdate">Date of Birth</label>
+
+      <div className="birthdate-input-container" name="create-birthdate">
         <input
-          autoComplete="off"
-          type="date"
-          id="birthdateInputC"
-          className="create-form-input"
+          className="birthdate-input"
+          type="number"
+          name="birthdate-dd"
+          id="create-birthdate-dd"
+          placeholder="dd"
+          min="1"
+          max="31"
           onChange={inputChangedHandler}
-          placeholder="YYYY-MM-DD"
           onKeyUp={(event) => {
-            if (event.key === "Enter") {
+            // Number 13 is the "Enter" key on the keyboard
+            if (event.key === "Enter" || event.target.value.length === 2) {
+              // Cancel the default action, if needed
+              event.preventDefault();
+              // Focus on next element
+              document.getElementById("create-birthdate-mm").focus();
+            }
+          }}
+        />
+        <input
+          className="birthdate-input"
+          type="number"
+          name="birthdate-mm"
+          min="1"
+          max="12"
+          id="create-birthdate-mm"
+          placeholder="mm"
+          onChange={inputChangedHandler}
+          onKeyUp={(event) => {
+            // Number 13 is the "Enter" key on the keyboard
+            if (event.key === "Enter" || event.target.value.length === 2) {
+              // Cancel the default action, if needed
+              event.preventDefault();
+              // Focus on next element
+              document.getElementById("create-birthdate-yyyy").focus();
+            }
+          }}
+        />
+        <input
+          className="birthdate-input"
+          type="number"
+          name="birthdate-yyyy"
+          id="create-birthdate-yyyy"
+          placeholder="yyyy"
+          min="1"
+          onChange={inputChangedHandler}
+          onKeyUp={(event) => {
+            // Number 13 is the "Enter" key on the keyboard
+            if (event.key === "Enter" || event.target.value.length === 4) {
               // Cancel the default action, if needed
               event.preventDefault();
               // Focus on next element
@@ -225,7 +294,7 @@ function Create(props) {
             }
           }}
         />
-      </p>
+      </div>
 
       {/* Search for parent autocomplete */}
 

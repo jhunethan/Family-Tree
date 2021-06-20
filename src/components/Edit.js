@@ -70,6 +70,29 @@ export default function Edit(props) {
     return arr;
   };
 
+  const getValidBirthdate = () => {
+    const day = $("#birthdate-dd").val();
+    const month = $("#birthdate-mm").val();
+    const year = $("#birthdate-yyyy").val();
+
+    if (!day || !month || !year) return "";
+
+    if ((+day < 1 && +day > 31) || day.length > 2) {
+      toast.error("invalid birthdate: day must be a valid number");
+      return "";
+    }
+    if ((+month < 1 && +month > 12) || day.length > 2) {
+      toast.error("invalid birthdate: month must be a valid number");
+      return "";
+    }
+    if (+year < 1 || day.length > 4) {
+      toast.error("invalid birthdate: month must be a valid number");
+      return "";
+    }
+
+    return `${year}-${month}-${day}`;
+  };
+
   var inputChangedHandler = () => {
     let {
       isPartner = false,
@@ -169,11 +192,12 @@ export default function Edit(props) {
       tempnode.maidenname = null;
     }
 
+    const birthdate = getValidBirthdate();
     const newObject = {
       id: props.nodedata.id,
       generation: $("#generation-input").val(),
       name: $("#name-input").val(),
-      birthdate: $("#birthdate-input").val(),
+      birthdate: birthdate,
       pid: pid,
       deathdate: deathdate,
       isPartner: isPartner,
@@ -192,7 +216,7 @@ export default function Edit(props) {
 
   function CheckInput() {
     let changesStack = [],
-      opStack = ["generation", "name", "birthdate"];
+      opStack = ["generation", "name"];
     let data = props.nodedata;
 
     setChanges("");
@@ -203,6 +227,13 @@ export default function Edit(props) {
         changesStack.push(x);
         setChanged(true);
       }
+    }
+
+    const birthdate = getValidBirthdate();
+
+    if (data["birthdate"] !== birthdate) {
+      changesStack.push("birthdate");
+      setChanged(true);
     }
 
     //deal with empty string compared to null type
@@ -246,11 +277,10 @@ export default function Edit(props) {
   function checkPartner() {
     const element = $("#parentInput");
 
-    console.log({ element: element.val() });
-
     for (let i = 0; i < props.data.length; i++) {
       let namecheck = props.data[i].generation + " " + props.data[i].name;
-      if (element.val() === namecheck || element.val() === props.data[i].name) return true;
+      if (element.val() === namecheck || element.val() === props.data[i].name)
+        return true;
     }
     if ($.trim(element.val()) === "") return true;
     element.css("border-bottom", "2px solid red");
@@ -502,66 +532,63 @@ export default function Edit(props) {
                 // Cancel the default action, if needed
                 event.preventDefault();
                 // Focus on next element
-                document.getElementById("birthdate-input").focus();
+                document.getElementById("birthdate-dd").focus();
               }
             }}
           />
         </p>
-        <div className="extranames-container">
-          <div>
-            <label htmlFor="extranames-input" className="extra-details-label">
-              Additional names
-            </label>
-            <input
-              autoComplete="off"
-              type="text"
-              name="extranames-input"
-              id="extranames-input"
-              className="extra-details-input"
-              onChange={inputChangedHandler}
-              onKeyUp={function (event) {
-                if (event.key === "Enter") {
-                  addOption("extranames");
-                  inputChangedHandler();
-                }
-              }}
-            />
-          </div>
-          <button
-            type="button"
-            className="edit-button"
-            onClick={() => {
-              addOption("extranames");
-              inputChangedHandler();
-            }}
-          >
-            Add
-          </button>
-          <ListDisplay
-            node={nodeInput}
-            method="extranames"
-            remove={(deleted) => {
-              let node = nodeInput;
-              try {
-                node.extradetails.extranames = node.extradetails.extranames
-                  .split(",")
-                  .filter((x) => x !== deleted)
-                  .join(",");
-                setNodeInput(node);
-              } catch {}
-              inputChangedHandler();
+        <label htmlFor="edit-birthdate">Date of Birth</label>
+
+        <div className="birthdate-input-container" name="edit-birthdate">
+          <input
+            className="birthdate-input"
+            type="number"
+            name="birthdate-dd"
+            id="birthdate-dd"
+            placeholder="dd"
+            min="1"
+            max="31"
+            onChange={inputChangedHandler}
+            onKeyUp={(event) => {
+              // Number 13 is the "Enter" key on the keyboard
+              if (event.key === "Enter" || event.target.value.length === 2) {
+                // Cancel the default action, if needed
+                event.preventDefault();
+                // Focus on next element
+                document.getElementById("birthdate-mm").focus();
+              }
             }}
           />
-        </div>
-        <p type="Date of Birth">
           <input
-            id="birthdate-input"
-            type="date"
-            className="extra-details-input"
+            className="birthdate-input"
+            type="number"
+            name="birthdate-mm"
+            min="1"
+            max="12"
+            id="birthdate-mm"
+            placeholder="mm"
             onChange={inputChangedHandler}
-            placeholder="YYYY-MM-DD"
             onKeyUp={(event) => {
-              if (event.key === "Enter") {
+              // Number 13 is the "Enter" key on the keyboard
+              if (event.key === "Enter" || event.target.value.length === 2) {
+                // Cancel the default action, if needed
+                event.preventDefault();
+                // Focus on next element
+                document.getElementById("birthdate-yyyy").focus();
+              }
+            }}
+          />
+          <input
+            className="birthdate-input"
+            type="number"
+            name="birthdate-yyyy"
+            id="birthdate-yyyy"
+            placeholder="yyyy"
+            min="1"
+            onChange={inputChangedHandler}
+            onKeyUp={(event) => {
+              // Number 13 is the "Enter" key on the keyboard
+              if (event.key === "Enter" || event.target.value.length === 4) {
                 // Cancel the default action, if needed
                 event.preventDefault();
                 // Focus on next element
@@ -569,7 +596,8 @@ export default function Edit(props) {
               }
             }}
           />
-        </p>
+        </div>
+
         <p type="Date of death">
           <label htmlFor="isDeceased">Has this person died?</label>
           <input
@@ -643,7 +671,8 @@ export default function Edit(props) {
             } catch {}
           }}
         ></ul>
-        <div className="radio-toggles">
+        <label htmlFor="edit-relationship">Relationship to this person</label>
+        <div className="radio-toggles" name="edit-relationship">
           <input
             autoComplete="off"
             onClick={(event) => props.switchRadio(event.target)}
@@ -754,7 +783,42 @@ export default function Edit(props) {
             }
           }}
         />
-
+        <div className="extranames-container">
+          <div>
+            <label htmlFor="extranames-input" className="extra-details-label">
+              Additional names
+            </label>
+            <input
+              autoComplete="off"
+              type="text"
+              name="extranames-input"
+              id="extranames-input"
+              className="extra-details-input"
+              onChange={inputChangedHandler}
+              onKeyUp={function (event) {
+                if (event.key === "Enter") {
+                  addOption("extranames");
+                  inputChangedHandler();
+                }
+              }}
+            />
+          </div>
+          <ListDisplay
+            node={nodeInput}
+            method="extranames"
+            remove={(deleted) => {
+              let node = nodeInput;
+              try {
+                node.extradetails.extranames = node.extradetails.extranames
+                  .split(",")
+                  .filter((x) => x !== deleted)
+                  .join(",");
+                setNodeInput(node);
+              } catch {}
+              inputChangedHandler();
+            }}
+          />
+        </div>
         <div className="extranames-container">
           <div>
             <label htmlFor="languages-input" className="extra-details-label">
@@ -775,16 +839,6 @@ export default function Edit(props) {
               }}
             />
           </div>
-          <button
-            type="button"
-            className="edit-button"
-            onClick={() => {
-              addOption("languages");
-              inputChangedHandler();
-            }}
-          >
-            Add
-          </button>
           <ListDisplay
             node={nodeInput}
             method="languages"

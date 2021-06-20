@@ -109,6 +109,18 @@ export function NodeCardDetails(props) {
         }
       } catch {}
       return null;
+    case "languages":
+      try {
+        if (props.node.extradetails.languages) {
+          return (
+            <section>
+              <h2>Languages Spoken</h2>
+              <p>{props.node.extradetails.languages}</p>
+            </section>
+          );
+        }
+      } catch {}
+      return null;
     case "fblink":
       try {
         if (
@@ -130,7 +142,7 @@ export function NodeCardDetails(props) {
           let output = props.node.extradetails.description.split("\n\n");
           let count = 0;
           return (
-            <section style={{"marginTop":'20px'}}>
+            <section style={{ marginTop: "20px" }}>
               <div>
                 {output.map((x) => {
                   count += 1;

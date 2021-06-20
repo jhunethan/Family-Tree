@@ -133,20 +133,18 @@ export default function Tree(props) {
       }
     }, 500);
 
-    Axios.get("https://apilayfamilytree.com/api/familymembers").then(
-      (result) => {
-        setTableData(result.data);
-        if (result.data) {
-          let loadTime = (Date.now() - start) / 1000;
-          clearInterval(serverCheck);
-          toast.success(`Tree loaded in ${loadTime} s`, {
-            position: "top-center",
-            autoClose: 2500,
-            toastId: "TreeLoaded",
-          });
-        }
+    Axios.get("https://apilayfamilytree.com/api/familymembers").then((result) => {
+      setTableData(result.data);
+      if (result.data) {
+        let loadTime = (Date.now() - start) / 1000;
+        clearInterval(serverCheck);
+        toast.success(`Tree loaded in ${loadTime} s`, {
+          position: "top-center",
+          autoClose: 2500,
+          toastId: "TreeLoaded",
+        });
       }
-    );
+    });
   }, [update]);
 
   //update tree on tableData mutation
@@ -171,6 +169,11 @@ export default function Tree(props) {
 
   const resetCreateFields = () => {
     try {
+      for (const element of ["dd", "mm", "yyyy"]) {
+        $(`#create-birthdate-${element}`).val("");
+      }
+
+      $("#editForm").css("display", "none");
       $(".radio-togglesC").css("display", "none");
       $("#parentSearchDataList").html("");
       $("#toggle-slide").checked = false;
@@ -240,9 +243,13 @@ export default function Tree(props) {
           if (data[i].id === obj.id) data[i] = obj;
           if (obj.isPartner) {
             if (data[i].id === obj.pid) data[i].partnerinfo = obj;
-            if (data[i].pid === obj.id && !data[i].isPartner) {
+            if (data[i].pid === obj.id) {
               data[i].pid = 0;
               data[i].parent = "";
+              if (data[i].isPartner) {
+                data[i].partner = "";
+                data[i].isPartner = 0;
+              }
             }
             try {
               if (data[i].partnerinfo.id === obj.id) {
@@ -1094,7 +1101,11 @@ export default function Tree(props) {
 
     $("#generation-input").val(node.generation);
     $("#name-input").val(node.name);
-    $("#birthdate-input").val(node.birthdate);
+
+    const birthdateArr = node.birthdate.split("-");
+    ["yyyy", "mm", "dd"].forEach((item, index) => {
+      $(`#birthdate-${item}`).val(birthdateArr[index]);
+    });
 
     $("#isDeceased").attr("checked", node.deathdate ? true : false);
 
@@ -1153,6 +1164,7 @@ export default function Tree(props) {
     $("#parentInput").css("border-bottom", "2px solid #bebed2");
     $("#parentInput").val("");
     $("#parentInput").attr("placeholder", "Parent/Partner");
+    $("#card-container").css("display", "none");
     let node;
     let str,
       id = "";

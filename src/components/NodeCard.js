@@ -140,6 +140,7 @@ export default function NodeCard(props) {
               <NodeCardDetails node={props.node} method="profession" />
               <NodeCardDetails node={props.node} method="location" />
               <NodeCardDetails node={props.node} method="extranames" />
+              <NodeCardDetails node={props.node} method="languages" />
               <NodeCardDetails node={props.node} method="fblink" />
             </div>
             <div className="card-description">

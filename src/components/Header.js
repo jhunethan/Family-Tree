@@ -30,14 +30,6 @@ function AdminNav(props) {
       >
         Tree
       </Link>
-      <i
-        className="far fa-times-circle"
-        onClick={() => {
-          document.querySelector(".nav-ul").classList.toggle("visible");
-        }}
-      >
-        ☰
-      </i>
     </ul>
   ) : null;
 }
@@ -53,15 +45,6 @@ export default function Header(props) {
   return (
     <nav>
       <div className="asidecontainer">
-        <i
-          className="fas fa-bars"
-          onClick={() => {
-            document.querySelector(".nav-ul").classList.toggle("visible");
-          }}
-        >
-          ☰
-        </i>
-
         <a href="/" className="nav-logo-container">
           <img src={layCharacter} alt="logo" className="nav-logo" />
         </a>

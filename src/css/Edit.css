@@ -20,9 +20,19 @@
   padding: 25px;
 }
 
-#parentSearchDataList{
+.birthdate-input-container {
+  display: flex;
   width: 100%;
-  transform: translate(-5px,625px);
+  flex-direction: row;
+  gap: 10px;
+}
+.birthdate-input{
+  width: 75px;
+}
+
+#parentSearchDataList {
+  width: 100%;
+  transform: translate(-5px, 625px);
 }
 
 .edit-header {
@@ -60,7 +70,7 @@
   margin: 10px;
   float: left;
   border: rgb(255, 100, 100) 2px double;
-  background-color:rgb(255, 130, 130);
+  background-color: rgb(255, 130, 130);
 }
 
 #deleteNode {
@@ -118,7 +128,7 @@
   position: relative;
 }
 
-.partner-radio-label{
+.partner-radio-label {
   width: 50%;
   text-align: center;
 }
@@ -195,8 +205,8 @@ input[type="radio"] {
   transition: all 0.3s;
 }
 
-.edit-button-container{
-  height:50px;
+.edit-button-container {
+  height: 50px;
 }
 
 .extranames-container {
@@ -229,7 +239,7 @@ input[type="radio"] {
 /* Responsive */
 
 @media screen and (max-width: 576px) {
-  .form{
-    left:5vw;
+  .form {
+    left: 5vw;
   }
 }
