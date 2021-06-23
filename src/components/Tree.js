@@ -958,13 +958,13 @@ export default function Tree(props) {
       .attr("d", function (d) {
         return (
           "M" +
-          d.source.x +
-          "," +
-          (d.source.y - 100) +
-          " v 125 H" +
           d.target.x +
+          "," +
+          (d.target.y - 100) +
+          " v -350 H" +
+          d.source.x +
           " V" +
-          (d.target.y - 100)
+          (d.source.y + 50)
         );
       })
       .attr("x1", function (d) {

@@ -19,6 +19,7 @@ function Create(props) {
     isPartner: 0,
   };
 
+  const [activeParentInput, setActiveParentInput] = useState(null)
   const [sendNode, setsendNode] = useState(node);
 
   const getValidBirthdate = () => {
@@ -49,15 +50,15 @@ function Create(props) {
     let list = $("#create-datalist").html(""),
       datalistcount = 0,
       filteredDatalist = [];
-
-    if ($.trim($("#create-parent-input").val())) {
+    const userInput = $(activeParentInput).val()
+    if ($.trim(userInput)) {
       for (const x of props.data) {
         if (x.name && datalistcount < 5) {
           filteredDatalist.push(`${x.generation} ${x.name}`);
         }
       }
 
-      let parsed = $.trim($("#create-parent-input").val().toLowerCase()).split(
+      let parsed = $.trim(userInput.toLowerCase()).split(
         " "
       );
       filteredDatalist = filteredDatalist.filter((x) => {
@@ -70,9 +71,10 @@ function Create(props) {
       for (const n of filteredDatalist) {
         if (datalistcount < 5) {
           list.append(`<li>${n}</li>`);
-          datalistcount += 1;
+          datalistcount ++;
         }
       }
+      if(datalistcount === 0) list.append('<li>No Results Found...</li>')
     }
   };
 
@@ -91,8 +93,9 @@ function Create(props) {
   };
 
   const inputChangedHandler = () => {
-    let parentInput = $("#create-parent-input").val();
-    let id = getUniqueID(props.data);
+    const parentInput = $("#create-parent-input").val();
+    const secondParentInput = $("#create-second-parent-input").val();
+    const id = getUniqueID(props.data);
     let isPartner = document.getElementById("toggle-slide").checked;
     let pid = null;
 
@@ -100,6 +103,7 @@ function Create(props) {
 
     if (!isPartner) {
       node.parent = parentInput;
+      node.secondPartner = secondParentInput;
       isPartner = 0;
     } else {
       node.partner = parentInput;
@@ -132,6 +136,7 @@ function Create(props) {
       isPartner: isPartner,
       parent: node.parent,
       partner: node.partner,
+      secondPartner: node.secondPartner
     });
   };
 
@@ -170,13 +175,13 @@ function Create(props) {
       check = false;
     }
 
-    if (!checkParent()) check = false;
-
+    if (!checkParent("#create-parent-input")) check = false;
+    if (!checkParent("#create-second-parent-input")) check = false;
     return check;
   };
 
-  function checkParent() {
-    let element = $("#create-parent-input");
+  function checkParent(id) {
+    let element = $(id);
     for (const x of props.data) {
       let namecheck = x.generation + " " + x.name;
       if (element.val() === namecheck) return true;
@@ -298,14 +303,36 @@ function Create(props) {
 
       {/* Search for parent autocomplete */}
 
-      <p type="Parent/Partner" className="create-form-section">
+      <p type="First Parent" className="create-form-section">
         <input
           autoComplete="off"
           id="create-parent-input"
           className="create-form-input"
-          placeholder="Name of Parent/ Partner"
-          onChange={inputChangedHandler}
-          onClick={inputChangedHandler}
+          placeholder="Full Name of First Parent"
+          onChange={()=>{inputChangedHandler();
+            setActiveParentInput("#create-parent-input")}}
+          onClick={()=>{inputChangedHandler();
+          setActiveParentInput("#create-parent-input")}}
+          onKeyUp={(event) => {
+            if (event.key === "Enter") {
+              // Cancel the default action, if needed
+              event.preventDefault();
+              // Focus on next element
+              document.getElementById("toggle-slide").focus();
+            }
+          }}
+        ></input>
+      </p>
+      <p type="Second Parent" className="create-form-section">
+        <input
+          autoComplete="off"
+          id="create-second-parent-input"
+          className="create-form-input"
+          placeholder="Full Name of Second Parent"
+          onChange={()=>{inputChangedHandler();
+            setActiveParentInput("#create-second-parent-input")}}
+          onClick={()=>{inputChangedHandler();
+          setActiveParentInput("#create-second-parent-input")}}
           onKeyUp={(event) => {
             if (event.key === "Enter") {
               // Cancel the default action, if needed
@@ -321,9 +348,9 @@ function Create(props) {
         id="create-datalist"
         onClick={(e) => {
           try {
-            $("#create-parent-input").val(
-              $.trim(e.target.closest("li").textContent)
-            );
+            const text = $.trim(e.target.closest("li").textContent)
+            if(text !== 'No Results Found...')
+            $(activeParentInput).val(text);
             inputChangedHandler();
           } catch {}
         }}
