@@ -956,16 +956,26 @@ export default function Tree(props) {
         return "link level-" + d.source.depth;
       })
       .attr("d", function (d) {
-        return (
+        const { data: parent } = d.source;
+        const { data: child } = d.target;
+        let path =
           "M" +
           d.target.x +
           "," +
-          (d.target.y - 100) +
-          " v -350 H" +
+          (d.target.y - 350) +
+          " v -300 H" +
           d.source.x +
           " V" +
-          (d.source.y + 50)
-        );
+          (d.source.y - 25);
+        if (parent.partnerinfo) {
+          if (child.parent.includes(parent.name)) {
+            path += " h-350";
+          } else {
+            path += " h350";
+          }
+          path += " v-200";
+        } else path += " v-200";
+        return path;
       })
       .attr("x1", function (d) {
         return d.source.x;
@@ -979,6 +989,83 @@ export default function Tree(props) {
       .attr("y2", function (d) {
         return d.target.y;
       });
+
+    function getSecondParent(parentId, data) {
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].data.id && data[i].data.id === parentId) {
+          return data[i];
+        }
+        try {
+          if (data[i].data.partnerinfo.id === parentId) {
+            const output = {
+              ...data[i],
+              id: data[i].data.partnerinfo.id,
+              x: data[i].x,
+              y: data[i].y,
+              data: data[i].data.partnerinfo,
+            };
+            return output;
+          }
+        } catch {}
+      }
+    }
+
+    const secondParentData = linksData.filter((d) => {
+      return d.target.data.secondPid;
+    });
+    const secondaryParentCoords = secondParentData.map((d) => {
+      const parent = getSecondParent(
+        d.target.data.secondPid,
+        treeData.descendants()
+      );
+      const data = {
+        source: parent,
+        target: d.target,
+      };
+      return data;
+    });
+
+    links
+    .enter()
+    .data(secondaryParentCoords)
+    .append("path")
+    .attr("class", function (d) {
+      return "link level-" + d.source.depth;
+    })
+    .attr("d", function (d) {
+      const { data: parent } = d.source;
+      const { data: child } = d.target;
+      let path =
+        "M" +
+        d.target.x +
+        "," +
+        (d.target.y - 350) +
+        " v -300 H" +
+        d.source.x +
+        " V" +
+        (d.source.y - 25);
+      if (parent.isPartner) {
+        if (child.parent.includes(parent.name)) {
+          path += " h-350";
+        } else {
+          path += " h350";
+        }
+        path += " v-200";
+      } else path += " v-200";
+      return path;
+    })
+    .attr("x1", function (d) {
+      return d.source.x;
+    })
+    .attr("y1", function (d) {
+      return d.source.y;
+    })
+    .attr("x2", function (d) {
+      return d.target.x;
+    })
+    .attr("y2", function (d) {
+      return d.target.y;
+    });
   };
 
   const populateDatalist = () => {

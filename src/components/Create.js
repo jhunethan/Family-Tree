@@ -103,7 +103,7 @@ function Create(props) {
 
     if (!isPartner) {
       node.parent = parentInput;
-      node.secondPartner = secondParentInput;
+      node.secondParent = secondParentInput;
       isPartner = 0;
     } else {
       node.partner = parentInput;
@@ -111,6 +111,7 @@ function Create(props) {
     }
 
     try {
+      if(node.secondParent) node.secondPid = props.getPID(secondParentInput)
       pid = props.getPID(parentInput);
     } catch {
       pid = 0;
@@ -136,7 +137,8 @@ function Create(props) {
       isPartner: isPartner,
       parent: node.parent,
       partner: node.partner,
-      secondPartner: node.secondPartner
+      secondPid: node.secondPid,
+      secondParent: node.secondParent
     });
   };
 
