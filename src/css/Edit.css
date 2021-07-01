@@ -32,7 +32,7 @@
 
 #parentSearchDataList {
   width: 100%;
-  transform: translate(-5px, 625px);
+  transform: translate(-40px, 0);
 }
 
 .edit-header {
@@ -41,6 +41,32 @@
   width: 180px;
   border-bottom: 3px solid #78788c;
   color: #000;
+}
+.dropdownmenu{
+  width: auto;
+  border: 1px solid rgb(201, 201, 201);
+  border-radius: 5px;
+  margin: 10px 0;
+
+  padding: 10px;
+}
+.dropdownmenu-info{
+  display: flex;
+  cursor: pointer;
+}
+.dropdownmenu-title{
+  width: 95%;
+  pointer-events:none;
+}
+.dropdownmenu-icon{
+  font-weight: bold;
+  user-select: none;
+  pointer-events:none;
+}
+.dropdownmenu-input-container{
+  display: none;
+  animation-name: fade-in;
+  animation-duration: 1s;
 }
 .extra-details-input {
   width: 100%;
