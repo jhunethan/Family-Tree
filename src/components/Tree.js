@@ -1197,7 +1197,6 @@ export default function Tree(props) {
     $("#isDeceased").attr("checked", node.deathdate ? true : false);
 
     $("#deathdate-input")
-      .css("display", node.deathdate ? "block" : "none")
       .val(node.deathdate ? node.deathdate : "");
 
     $("#parentInput").val(node.isPartner ? node.partner : node.parent);

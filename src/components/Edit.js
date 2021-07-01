@@ -6,22 +6,20 @@ import { useCookies } from "react-cookie";
 import { toast } from "react-toastify";
 
 function ListDisplay(props) {
+  const { node, method, remove } = props;
   try {
-    var names = props.node.extradetails[props.method];
+    var names = node.extradetails[props.method];
     return (
-      <div
-        className="flex-cards-display"
-        id={`flex-cards-display-${props.method}`}
-      >
+      <div className="flex-cards-display" id={`flex-cards-display-${method}`}>
         {names.split(",").map((x, index) => {
           if (x)
             return (
               <p
                 className="flex-cards-edit"
                 onClick={(event) => {
-                  props.remove(event.target.textContent);
+                  remove(event.target.textContent);
                 }}
-                key={`${props.method}` + index}
+                key={`${method}` + index}
               >
                 {x}
               </p>
@@ -93,6 +91,11 @@ export default function Edit(props) {
     return `${year}-${month}-${day}`;
   };
 
+  function getRadioVal(radio1, radio2) {
+    if (document.getElementById(radio1).checked === true) return "child";
+    if (document.getElementById(radio2).checked === true) return "partner";
+  }
+
   var inputChangedHandler = () => {
     let {
       isPartner = false,
@@ -153,7 +156,8 @@ export default function Edit(props) {
       }
     }
 
-    if ($("#isDeceased")[0].checked) deathdate = $("#deathdate-input").val();
+    deathdate = $("#deathdate-input").val();
+    console.log(deathdate)
 
     if (getRadioVal("option-1", "option-2") === "partner") {
       isPartner = 1;
@@ -209,11 +213,6 @@ export default function Edit(props) {
     setNodeInput(newObject);
   };
 
-  function getRadioVal(radio1, radio2) {
-    if (document.getElementById(radio1).checked === true) return "child";
-    if (document.getElementById(radio2).checked === true) return "partner";
-  }
-
   function CheckInput() {
     let changesStack = [],
       opStack = ["generation", "name"];
@@ -238,6 +237,7 @@ export default function Edit(props) {
 
     //deal with empty string compared to null type
     let deathdate = !data.deathdate ? "" : data.deathdate;
+    console.log({ input: $("#deathdate-input").val(), value: deathdate });
 
     if ($("#deathdate-input").val() !== deathdate) {
       setChanged(true);
@@ -309,9 +309,10 @@ export default function Edit(props) {
   }
 
   function saveEdit() {
+    console.log(nodeInput);
     if (changed && checkParent()) {
       //save
-      Axios.patch(process.env.REACT_APP_API+"api/familymembers", {
+      Axios.patch(process.env.REACT_APP_API + "api/familymembers", {
         input: nodeInput,
         name: props.nodedata.name,
         author: cookies.author,
@@ -320,7 +321,7 @@ export default function Edit(props) {
       closeEditMenu();
     }
     if (extrachanged) {
-      Axios.patch(process.env.REACT_APP_API+"api/extradetails", {
+      Axios.patch(process.env.REACT_APP_API + "api/extradetails", {
         id: props.nodedata.id,
         name: props.nodedata.name,
         input: nodeInput,
@@ -598,39 +599,33 @@ export default function Edit(props) {
           />
         </div>
 
-        <p type="Date of death">
-          <label htmlFor="isDeceased">Has this person died?</label>
-          <input
-            id="isDeceased"
-            type="checkbox"
-            name="isDeceased"
-            onClick={(e) => {
-              $("#deathdate-input").css(
-                "display",
-                e.target.checked ? "block" : "none"
-              );
-              $("#deathdate-input").val(
-                e.target.checked ? props.nodedata.deathdate : null
-              );
-              inputChangedHandler();
+        <section className="dropdownmenu">
+          <div
+            className="dropdownmenu-info"
+            onClick={() => {
+              const el = document.getElementById("dropdownmenu-container");
+              if (el.style.display === "block") el.style.display = "none";
+              else el.style.display = "block";
             }}
-          />
-          <input
-            id="deathdate-input"
-            type="date"
-            className="extra-details-input"
-            onChange={inputChangedHandler}
-            placeholder="YYYY-MM-DD"
-            onKeyUp={(event) => {
-              if (event.key === "Enter") {
-                // Cancel the default action, if needed
-                event.preventDefault();
-                // Focus on next element
-                document.getElementById("parentInput").focus();
-              }
-            }}
-          />
-        </p>
+          >
+            <label htmlFor="test" className="dropdownmenu-title">
+              Date of Death
+            </label>
+            <h2 className="dropdownmenu-icon">X</h2>
+          </div>
+          <div
+            id="dropdownmenu-container"
+            className="dropdownmenu-input-container"
+          >
+            <input
+              type="date"
+              id="deathdate-input"
+              className="extra-details-input"
+              onChange={inputChangedHandler}
+            />
+          </div>
+        </section>
+
         {/* Search for parent autocomplete */}
         <p type="Parent/Partner">
           <input
@@ -871,7 +866,7 @@ export default function Edit(props) {
               // Cancel the default action, if needed
               event.preventDefault();
               // Focus on next element
-              document.getElementsByClassName("profession-input")[0].focus();
+              document.getElementById("profession-input").focus();
             }
           }}
         />
