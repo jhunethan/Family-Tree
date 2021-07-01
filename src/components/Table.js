@@ -57,7 +57,7 @@ export default function Table(props) {
     return setRadiochecked(false);
   };
   useEffect(() => {
-    Axios.get("https://apilayfamilytree.com/api/familymembers").then((result) => {
+    Axios.get(process.env.REACT_APP_API+"api/familymembers").then((result) => {
       setTableData(result.data);
     });
   }, [update]);

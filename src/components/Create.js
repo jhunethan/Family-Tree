@@ -199,7 +199,7 @@ function Create(props) {
   const submit = () => {
     inputChangedHandler();
     if (validation()) {
-      Axios.post("https://apilayfamilytree.com/api/familymembers", {
+      Axios.post(process.env.REACT_APP_API+"api/familymembers", {
         input: sendNode,
         author: cookies.author,
       }).then(successAdd());

@@ -37,7 +37,7 @@ export default function NodeCard(props) {
     formData.append("upload_preset", "oms6f6zi");
     formData.append("id", props.node.id);
 
-    // Axios.post("https://apilayfamilytree.com/api/upload", formData);
+    // Axios.post(process.env.REACT_APP_API+"api/upload", formData);
 
     Axios.post(
       "https://api.cloudinary.com/v1_1/dqwu1p8fp/image/upload",
@@ -69,7 +69,7 @@ export default function NodeCard(props) {
       obj.extradetails.photo_id = photo_id_string;
       props.update(obj);
 
-      Axios.post("https://apilayfamilytree.com/api/image", {
+      Axios.post(process.env.REACT_APP_API+"api/image", {
         id: Number(props.node.id),
         name: props.node.name,
         photo_id: photo_id_string,

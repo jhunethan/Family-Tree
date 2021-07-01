@@ -133,7 +133,7 @@ export default function Tree(props) {
       }
     }, 500);
 
-    Axios.get("https://apilayfamilytree.com/api/familymembers").then((result) => {
+    Axios.get(process.env.REACT_APP_API+"api/familymembers").then((result) => {
       setTableData(result.data);
       if (result.data) {
         let loadTime = (Date.now() - start) / 1000;
@@ -346,7 +346,7 @@ export default function Tree(props) {
     if (!name || name === newData.name) return closePopups();
     if (newData.name === "" && name) {
       newData.name = name;
-      Axios.post("https://apilayfamilytree.com/api/familymembers", {
+      Axios.post(process.env.REACT_APP_API+"api/familymembers", {
         input: newData,
         author: cookies.author,
       });
@@ -356,7 +356,7 @@ export default function Tree(props) {
       //save
       newData.name = name;
 
-      Axios.patch("https://apilayfamilytree.com/api/familymembers", {
+      Axios.patch(process.env.REACT_APP_API+"api/familymembers", {
         input: newData,
         name: newData.name,
         author: cookies.author,
@@ -381,7 +381,7 @@ export default function Tree(props) {
       obj.parent = "";
       obj.partner = "";
       obj.isPartner = 0;
-      Axios.patch("https://apilayfamilytree.com/api/familymembers", {
+      Axios.patch(process.env.REACT_APP_API+"api/familymembers", {
         input: obj,
         name: obj.name,
         author: cookies.author,
@@ -410,7 +410,7 @@ export default function Tree(props) {
           obj.parent = "";
           obj.partner = parent.name;
           obj.isPartner = 1;
-          Axios.patch("https://apilayfamilytree.com/api/familymembers", {
+          Axios.patch(process.env.REACT_APP_API+"api/familymembers", {
             input: obj,
             name: obj.name,
             author: cookies.author,
@@ -439,7 +439,7 @@ export default function Tree(props) {
       obj.isPartner = 0;
       obj.partner = "";
 
-      Axios.patch("https://apilayfamilytree.com/api/familymembers", {
+      Axios.patch(process.env.REACT_APP_API+"api/familymembers", {
         input: obj,
         name: obj.name,
         author: cookies.author,
@@ -803,7 +803,7 @@ export default function Tree(props) {
         // try {
         //   if (d.data.extradetails.photo_id.length > 1) {
         //     console.log((d.data.extradetails.photo_id))
-        //     Axios.get("https://apilayfamilytree.com/api/get/photos/user", {
+        //     Axios.get(process.env.REACT_APP_API+"api/get/photos/user", {
         //       params: { id: d.data.id },
         //     }).then((res) => {
         //       console.log(res)
@@ -900,7 +900,7 @@ export default function Tree(props) {
         // try {
         //   if (d.data.extradetails.photo_id.length > 1) {
         //     console.log((d.data.extradetails.photo_id))
-        //     Axios.get("https://apilayfamilytree.com/api/get/photos/user", {
+        //     Axios.get(process.env.REACT_APP_API+"api/get/photos/user", {
         //       params: { id: d.data.id },
         //     }).then((res) => {
         //       console.log(res)

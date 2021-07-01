@@ -16,7 +16,7 @@ export default function App() {
   const [Auth, setAuth] = useState(false);
 
   //ping backend and check if database is working
-  Axios.get("https://apilayfamilytree.com/testconnection").then((result) => {
+  Axios.get(process.env.REACT_APP_API+"testconnection").then((result) => {
     console.log(result);
   });
 

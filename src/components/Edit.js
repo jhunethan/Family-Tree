@@ -311,7 +311,7 @@ export default function Edit(props) {
   function saveEdit() {
     if (changed && checkParent()) {
       //save
-      Axios.patch("https://apilayfamilytree.com/api/familymembers", {
+      Axios.patch(process.env.REACT_APP_API+"api/familymembers", {
         input: nodeInput,
         name: props.nodedata.name,
         author: cookies.author,
@@ -320,7 +320,7 @@ export default function Edit(props) {
       closeEditMenu();
     }
     if (extrachanged) {
-      Axios.patch("https://apilayfamilytree.com/api/extradetails", {
+      Axios.patch(process.env.REACT_APP_API+"api/extradetails", {
         id: props.nodedata.id,
         name: props.nodedata.name,
         input: nodeInput,
@@ -367,7 +367,7 @@ export default function Edit(props) {
     if (userValidation.val() === "confirm") {
       //delete node
       Axios.delete(
-        `https://apilayfamilytree.com/api/familymembers?id=${props.nodedata.id}&name=${props.nodedata.name}&author=${cookies.author}`
+        `http://localhost:5000/api/familymembers?id=${props.nodedata.id}&name=${props.nodedata.name}&author=${cookies.author}`
       );
 
       cancelDeleteConfirm();

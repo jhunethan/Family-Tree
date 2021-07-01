@@ -88,7 +88,7 @@ const [isLoading, setIsLoading] = useState(false)
 
     if (valid) {
       setIsLoading(true)
-      Axios.post("https://apilayfamilytree.com/api/signup", {
+      Axios.post(process.env.REACT_APP_API+"api/signup", {
         userdetails: user,
       }).then((result) => {
         if (result.data === "success") {
@@ -206,7 +206,7 @@ function Login(props) {
     }
 
     if (valid) SetisLoading(true);
-    Axios.post("https://apilayfamilytree.com/api/login", {
+    Axios.post(process.env.REACT_APP_API+"api/login", {
       userdetails: user,
     }).then((result) => {
       const { msg, user } = result.data;
@@ -219,7 +219,7 @@ function Login(props) {
   };
 
   if (cookies["lay-email"] && cookies["lay-password"]) {
-    Axios.post("https://apilayfamilytree.com/api/checkaccess", cookies).then(
+    Axios.post(process.env.REACT_APP_API+"api/checkaccess", cookies).then(
       (response) => {
         const { access, msg } = response.data;
         if (access && msg === "user found") {
@@ -319,7 +319,7 @@ function ResetPassword(props) {
 
   const resetPass = () => {
     if (email) {
-      return Axios.post("https://apilayfamilytree.com/api/login/resetpass", {
+      return Axios.post(process.env.REACT_APP_API+"api/login/resetpass", {
         email: email,
       }).then((result) => {
         if (result.data === "email not found")

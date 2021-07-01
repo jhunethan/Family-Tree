@@ -271,7 +271,7 @@ export function ImmediateFamily(props) {
 export function MemberPhotos(props) {
   const [cookies] = useCookies(["author"]);
   const imageDelete = (e) => {
-    Axios.post("https://apilayfamilytree.com/api/delete/image", {
+    Axios.post(process.env.REACT_APP_API+"api/delete/image", {
       id: props.node.id,
       name: props.node.name,
       author: cookies.author,
