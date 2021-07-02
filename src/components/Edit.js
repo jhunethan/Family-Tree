@@ -33,10 +33,8 @@ function ListDisplay(props) {
 }
 
 function EditDropdownInput(props) {
-  const { title, inputType, id, inputChangedHandler } = props;
-  const [input, setInput] = useState("");
-
-  console.log(input);
+  const { title, inputType, id, inputChangedHandler, data, field } = props;
+  const [input, setInput] = useState(data[field]);
 
   return (
     <section className="dropdownmenu">
@@ -44,14 +42,15 @@ function EditDropdownInput(props) {
         className="dropdownmenu-info"
         onClick={() => {
           const el = document.getElementById(`dropdownmenu-container-${id}`);
-          if (el.style.display === "flex") el.style.display = "none";
-          else el.style.display = "flex";
+          if (el.style.display === "flex") {
+            el.style.display = "none";
+          } else el.style.display = "flex";
         }}
       >
         <label htmlFor="test" className="dropdownmenu-title">
           {title}
         </label>
-        <h2 className="dropdownmenu-icon">X</h2>
+        <h2 className="dropdownmenu-icon">⌄</h2>
       </div>
       <div
         id={`dropdownmenu-container-${id}`}
@@ -66,7 +65,17 @@ function EditDropdownInput(props) {
             setInput(event.target.value);
           }}
         />
-        {input && <h2 className="dropdownmenu-cancel">X</h2>}
+        {input && (
+          <h2
+            className="dropdownmenu-cancel"
+            onClick={() => {
+              document.getElementById(id).value = "";
+              setInput("");
+            }}
+          >
+            X
+          </h2>
+        )}
       </div>
     </section>
   );
@@ -640,7 +649,9 @@ export default function Edit(props) {
           inputChangedHandler={inputChangedHandler}
           inputType="date"
           title="Date of Death"
+          field="deathdate"
           id="deathdate-input"
+          data={props.nodedata}
         />
 
         {/* Search for parent autocomplete */}

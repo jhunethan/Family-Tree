@@ -53,20 +53,27 @@
 .dropdownmenu-info{
   display: flex;
   cursor: pointer;
+  height: 20px;
 }
 .dropdownmenu-title{
   width: 95%;
   pointer-events:none;
 }
 .dropdownmenu-icon{
+  font-size: 30px;
+  transform: translateY(-12.5px);
+
   font-weight: bold;
   user-select: none;
   pointer-events:none;
 }
 .dropdownmenu-cancel{
   font-size: 26px;
+  height: 26px;
   margin: auto;
   cursor: pointer;
+  user-select: none;
+  padding: 5px 10px;
 }
 .dropdownmenu-input-container{
   display: none;
