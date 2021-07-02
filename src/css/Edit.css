@@ -63,13 +63,18 @@
   user-select: none;
   pointer-events:none;
 }
+.dropdownmenu-cancel{
+  font-size: 26px;
+  margin: auto;
+  cursor: pointer;
+}
 .dropdownmenu-input-container{
   display: none;
   animation-name: fade-in;
   animation-duration: 1s;
 }
 .extra-details-input {
-  width: 100%;
+  width: 90%;
   padding: 10px;
   font-size: 18px;
   box-sizing: border-box;

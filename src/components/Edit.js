@@ -32,6 +32,46 @@ function ListDisplay(props) {
   return <div id={`flex-cards-display-${props.method}`}></div>;
 }
 
+function EditDropdownInput(props) {
+  const { title, inputType, id, inputChangedHandler } = props;
+  const [input, setInput] = useState("");
+
+  console.log(input);
+
+  return (
+    <section className="dropdownmenu">
+      <div
+        className="dropdownmenu-info"
+        onClick={() => {
+          const el = document.getElementById(`dropdownmenu-container-${id}`);
+          if (el.style.display === "flex") el.style.display = "none";
+          else el.style.display = "flex";
+        }}
+      >
+        <label htmlFor="test" className="dropdownmenu-title">
+          {title}
+        </label>
+        <h2 className="dropdownmenu-icon">X</h2>
+      </div>
+      <div
+        id={`dropdownmenu-container-${id}`}
+        className="dropdownmenu-input-container"
+      >
+        <input
+          type={inputType}
+          id={id}
+          className="extra-details-input"
+          onChange={(event) => {
+            inputChangedHandler();
+            setInput(event.target.value);
+          }}
+        />
+        {input && <h2 className="dropdownmenu-cancel">X</h2>}
+      </div>
+    </section>
+  );
+}
+
 export default function Edit(props) {
   const [cookies] = useCookies(["author"]);
   const [changed, setChanged] = useState(false);
@@ -157,7 +197,6 @@ export default function Edit(props) {
     }
 
     deathdate = $("#deathdate-input").val();
-    console.log(deathdate)
 
     if (getRadioVal("option-1", "option-2") === "partner") {
       isPartner = 1;
@@ -237,7 +276,6 @@ export default function Edit(props) {
 
     //deal with empty string compared to null type
     let deathdate = !data.deathdate ? "" : data.deathdate;
-    console.log({ input: $("#deathdate-input").val(), value: deathdate });
 
     if ($("#deathdate-input").val() !== deathdate) {
       setChanged(true);
@@ -309,7 +347,6 @@ export default function Edit(props) {
   }
 
   function saveEdit() {
-    console.log(nodeInput);
     if (changed && checkParent()) {
       //save
       Axios.patch(process.env.REACT_APP_API + "api/familymembers", {
@@ -599,32 +636,12 @@ export default function Edit(props) {
           />
         </div>
 
-        <section className="dropdownmenu">
-          <div
-            className="dropdownmenu-info"
-            onClick={() => {
-              const el = document.getElementById("dropdownmenu-container");
-              if (el.style.display === "block") el.style.display = "none";
-              else el.style.display = "block";
-            }}
-          >
-            <label htmlFor="test" className="dropdownmenu-title">
-              Date of Death
-            </label>
-            <h2 className="dropdownmenu-icon">X</h2>
-          </div>
-          <div
-            id="dropdownmenu-container"
-            className="dropdownmenu-input-container"
-          >
-            <input
-              type="date"
-              id="deathdate-input"
-              className="extra-details-input"
-              onChange={inputChangedHandler}
-            />
-          </div>
-        </section>
+        <EditDropdownInput
+          inputChangedHandler={inputChangedHandler}
+          inputType="date"
+          title="Date of Death"
+          id="deathdate-input"
+        />
 
         {/* Search for parent autocomplete */}
         <p type="Parent/Partner">
