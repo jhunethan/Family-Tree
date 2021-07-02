@@ -34,7 +34,14 @@ function ListDisplay(props) {
 
 function EditDropdownInput(props) {
   const { title, inputType, id, inputChangedHandler, data, field } = props;
-  const [input, setInput] = useState(data[field]);
+  let currValue = "";
+
+  try {
+    if (data.extradetails[field]) currValue = data.extradetails[field];
+  } catch (error) {}
+  if (!currValue) currValue = data[field];
+
+  const [input, setInput] = useState("initialstate");
 
   return (
     <section className="dropdownmenu">
@@ -64,16 +71,21 @@ function EditDropdownInput(props) {
             inputChangedHandler();
             setInput(event.target.value);
           }}
+          onClick={(event) => {
+            inputChangedHandler();
+            setInput(event.target.value);
+          }}
         />
-        {input && (
+        {currValue && input && (
           <h2
             className="dropdownmenu-cancel"
             onClick={() => {
               document.getElementById(id).value = "";
-              setInput("");
+              inputChangedHandler();
+              setInput(null);
             }}
           >
-            X
+            <span aria-hidden="true">&times;</span>
           </h2>
         )}
       </div>
@@ -512,6 +524,7 @@ export default function Edit(props) {
         setExtrachanged(true);
       }
     }
+    console.log(arr);
     setExtrachanges(arr.join(","));
   };
 
@@ -768,43 +781,23 @@ export default function Edit(props) {
             }
           }}
         />
-        <label htmlFor="birthplace-input" className="extra-details-label">
-          Place of Birth
-        </label>
-        <input
-          autoComplete="off"
-          type="text"
-          name="birthplace-input"
+
+        <EditDropdownInput
+          inputChangedHandler={inputChangedHandler}
+          inputType="text"
+          title="Place of Birth"
           id="birthplace-input"
-          className="extra-details-input"
-          onChange={inputChangedHandler}
-          onKeyUp={(event) => {
-            if (event.key === "Enter") {
-              // Cancel the default action, if needed
-              event.preventDefault();
-              // Focus on next element
-              document.getElementById("location-input").focus();
-            }
-          }}
+          data={props.nodedata}
+          field="birthplace"
         />
-        <label htmlFor="location-input" className="extra-details-label">
-          Current Location
-        </label>
-        <input
-          autoComplete="off"
-          type="text"
-          name="location-input"
+
+        <EditDropdownInput
+          inputChangedHandler={inputChangedHandler}
+          inputType="text"
+          title="Currently Living in..."
           id="location-input"
-          className="extra-details-input"
-          onChange={inputChangedHandler}
-          onKeyUp={(event) => {
-            if (event.key === "Enter") {
-              // Cancel the default action, if needed
-              event.preventDefault();
-              // Focus on next element
-              document.getElementById("extranames-input").focus();
-            }
-          }}
+          data={props.nodedata}
+          field="location"
         />
         <div className="extranames-container">
           <div>
@@ -879,43 +872,21 @@ export default function Edit(props) {
           />
         </div>
 
-        <label htmlFor="fblink-input" className="extra-details-label">
-          Facebook Link
-        </label>
-        <input
-          autoComplete="off"
-          type="text"
-          name="fblink-input"
+        <EditDropdownInput
+          inputChangedHandler={inputChangedHandler}
+          inputType="text"
+          title="Facebook URL Link"
           id="fblink-input"
-          className="extra-details-input"
-          onChange={inputChangedHandler}
-          onKeyUp={(event) => {
-            if (event.key === "Enter") {
-              // Cancel the default action, if needed
-              event.preventDefault();
-              // Focus on next element
-              document.getElementById("profession-input").focus();
-            }
-          }}
+          data={props.nodedata}
+          field="fblink"
         />
-        <label htmlFor="profession-input" className="extra-details-label">
-          Profession
-        </label>
-        <input
-          autoComplete="off"
-          type="text"
-          name="profession-input"
+        <EditDropdownInput
+          inputChangedHandler={inputChangedHandler}
+          inputType="text"
+          title="Profession"
           id="profession-input"
-          className="extra-details-input"
-          onChange={inputChangedHandler}
-          onKeyUp={(event) => {
-            if (event.key === "Enter") {
-              // Cancel the default action, if needed
-              event.preventDefault();
-              // Focus on next element
-              document.getElementsByClassName("description-input")[0].focus();
-            }
-          }}
+          data={props.nodedata}
+          field="profession"
         />
         <label htmlFor="description-input" className="extra-details-label">
           Description ( {descriptionlimit}/250 words )

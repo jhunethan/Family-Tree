@@ -68,8 +68,8 @@
   pointer-events:none;
 }
 .dropdownmenu-cancel{
-  font-size: 26px;
-  height: 26px;
+  font-size: 36px;
+  font-weight: 600;
   margin: auto;
   cursor: pointer;
   user-select: none;
