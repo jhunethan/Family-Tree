@@ -33,7 +33,16 @@ function ListDisplay(props) {
 }
 
 function EditDropdownInput(props) {
-  const { title, inputType, id, inputChangedHandler, data, field } = props;
+  const {
+    title,
+    inputType,
+    id,
+    placeholder,
+    inputChangedHandler,
+    data,
+    field,
+    keyPress,
+  } = props;
   let currValue = "";
 
   try {
@@ -54,9 +63,7 @@ function EditDropdownInput(props) {
           } else el.style.display = "flex";
         }}
       >
-        <label htmlFor="test" className="dropdownmenu-title">
-          {title}
-        </label>
+        <label className="dropdownmenu-title">{title}</label>
         <h2 className="dropdownmenu-icon">⌄</h2>
       </div>
       <div
@@ -75,6 +82,8 @@ function EditDropdownInput(props) {
             inputChangedHandler();
             setInput(event.target.value);
           }}
+          placeholder={placeholder}
+          onKeyDown={keyPress}
         />
         {currValue && input && (
           <h2
@@ -152,11 +161,6 @@ export default function Edit(props) {
     return `${year}-${month}-${day}`;
   };
 
-  function getRadioVal(radio1, radio2) {
-    if (document.getElementById(radio1).checked === true) return "child";
-    if (document.getElementById(radio2).checked === true) return "partner";
-  }
-
   var inputChangedHandler = () => {
     let {
       isPartner = false,
@@ -219,15 +223,9 @@ export default function Edit(props) {
 
     deathdate = $("#deathdate-input").val();
 
-    if (getRadioVal("option-1", "option-2") === "partner") {
-      isPartner = 1;
-      partner = $("#parentInput").val();
-      parent = "";
-    } else {
-      isPartner = 0;
-      parent = $("#parentInput").val();
-      partner = "";
-    }
+    isPartner = 0;
+    parent = $("#parentInput").val();
+    partner = "";
 
     try {
       pid = props.getPID($("#parentInput").val());
@@ -302,33 +300,9 @@ export default function Edit(props) {
       setChanged(true);
       changesStack.push("deathdate");
     }
-    if (
-      $("#parentInput").val() !== props.nodedata.parent &&
-      !props.nodedata.partner
-    ) {
-      setChanged(true);
-      changesStack.push("partner");
-    }
-    if (
-      $("#parentInput").val() !== props.nodedata.partner &&
-      !props.nodedata.parent
-    ) {
+    if ($("#parentInput").val() !== props.nodedata.parent) {
       setChanged(true);
       changesStack.push("parent");
-    }
-    if (
-      getRadioVal("option-1", "option-2") === "partner" &&
-      props.nodedata.isPartner !== 1
-    ) {
-      setChanged(true);
-      changesStack.push("isPartner");
-    }
-    if (
-      getRadioVal("option-1", "option-2") === "child" &&
-      props.nodedata.isPartner !== 0
-    ) {
-      setChanged(true);
-      changesStack.push("isChild");
     }
     setChanges(changesStack.join(","));
   }
@@ -465,25 +439,6 @@ export default function Edit(props) {
     let data = props.nodedata.extradetails;
     setExtrachanged(false);
 
-    if (getRadioVal("option-1", "option-2") === "partner") {
-      opStack = [...opStack, "maidenname", "marriagedate"];
-      for (const n of [
-        "#maidenname-input",
-        "#marriagedate-input",
-        "label.spouse-info",
-      ]) {
-        $(`${n}`).css("display", "block");
-      }
-    } else {
-      for (const n of [
-        "#maidenname-input",
-        "#marriagedate-input",
-        "label.spouse-info",
-      ]) {
-        $(`${n}`).css("display", "none");
-      }
-    }
-
     try {
       for (const x of opStack) {
         if (data[x] !== $(`#${x}-input`).val()) {
@@ -524,34 +479,29 @@ export default function Edit(props) {
         setExtrachanged(true);
       }
     }
-    console.log(arr);
     setExtrachanges(arr.join(","));
   };
 
   function addOption(method) {
     let val = $(`#${method}-input`).val();
     if ($.trim(val)) {
-      if ($(`#flex-cards-display-${method}`).children().length < 3) {
-        let node = nodeInput,
-          names = [];
-        try {
-          names = node.extradetails[method].split(",");
-          if (!node.extradetails[method]) {
-            names[0] = val;
-          } else {
-            names.push($.trim(val));
-          }
-          node.extradetails[method] = names.join(",");
-          setNodeInput(node);
-        } catch {
-          node.extradetails[method] = $.trim(val);
-          setNodeInput(node);
+      let node = nodeInput,
+        names = [];
+      try {
+        names = node.extradetails[method].split(",");
+        if (!node.extradetails[method]) {
+          names[0] = val;
+        } else {
+          names.push($.trim(val));
         }
-
-        inputChangedHandler();
-      } else {
-        props.toast("maximum 3 names");
+        node.extradetails[method] = names.join(",");
+        setNodeInput(node);
+      } catch {
+        node.extradetails[method] = $.trim(val);
+        setNodeInput(node);
       }
+
+      inputChangedHandler();
     }
     $(`#${method}-input`).val("");
   }
@@ -658,22 +608,12 @@ export default function Edit(props) {
           />
         </div>
 
-        <EditDropdownInput
-          inputChangedHandler={inputChangedHandler}
-          inputType="date"
-          title="Date of Death"
-          field="deathdate"
-          id="deathdate-input"
-          data={props.nodedata}
-        />
-
-        {/* Search for parent autocomplete */}
-        <p type="Parent/Partner">
+        <p type="Add a parent (up to 2)">
           <input
             autoComplete="off"
             id="parentInput"
             className="extra-details-input"
-            placeholder="Name of Parent/ Partner"
+            placeholder="Name of Parent"
             onClick={inputChangedHandler}
             onChange={inputChangedHandler}
             onKeyUp={(event) => {
@@ -707,37 +647,17 @@ export default function Edit(props) {
             } catch {}
           }}
         ></ul>
-        <label htmlFor="edit-relationship">Relationship to this person</label>
-        <div className="radio-toggles" name="edit-relationship">
-          <input
-            autoComplete="off"
-            onClick={(event) => props.switchRadio(event.target)}
-            onChange={inputChangedHandler}
-            type="radio"
-            id="option-1"
-            name="radio-options"
-            checked={props.radiochecked}
-            value="child"
-          />
-          <label htmlFor="option-1" className="partner-radio-label">
-            Parent
-          </label>
-          <input
-            autoComplete="off"
-            onClick={(event) => props.switchRadio(event.target)}
-            onChange={inputChangedHandler}
-            type="radio"
-            id="option-2"
-            name="radio-options"
-            checked={!props.radiochecked}
-            value="partner"
-          />
-          <label htmlFor="option-2" className="partner-radio-label">
-            Partner
-          </label>
-          <div className="slide-item"></div>
-        </div>
-        <label
+
+        <EditDropdownInput
+          inputChangedHandler={inputChangedHandler}
+          inputType="date"
+          title="Date of Death"
+          field="deathdate"
+          id="deathdate-input"
+          data={props.nodedata}
+        />
+
+        {/* <label
           htmlFor="maidenname-input"
           className="extra-details-label spouse-info"
         >
@@ -780,7 +700,7 @@ export default function Edit(props) {
               document.getElementById("birthplace-input").focus();
             }
           }}
-        />
+        /> */}
 
         <EditDropdownInput
           inputChangedHandler={inputChangedHandler}
@@ -800,25 +720,39 @@ export default function Edit(props) {
           field="location"
         />
         <div className="extranames-container">
-          <div>
+          {/* <div>
             <label htmlFor="extranames-input" className="extra-details-label">
-              Additional names
+            Additional names
             </label>
             <input
-              autoComplete="off"
-              type="text"
-              name="extranames-input"
-              id="extranames-input"
-              className="extra-details-input"
-              onChange={inputChangedHandler}
-              onKeyUp={function (event) {
-                if (event.key === "Enter") {
-                  addOption("extranames");
-                  inputChangedHandler();
-                }
-              }}
+            autoComplete="off"
+            type="text"
+            name="extranames-input"
+            id="extranames-input"
+            className="extra-details-input"
+            onChange={inputChangedHandler}
+            onKeyUp={function (event) {
+              if (event.key === "Enter") {
+                addOption("extranames");
+                inputChangedHandler();
+              }
+            }}
             />
-          </div>
+          </div> */}
+          <EditDropdownInput
+            inputChangedHandler={inputChangedHandler}
+            inputType="text"
+            title="Additional Names..."
+            id="extranames-input"
+            data={props.nodedata}
+            field="extranames"
+            keyPress={function (event) {
+              if (event.key === "Enter") {
+                addOption("extranames");
+                inputChangedHandler();
+              }
+            }}
+          />
           <ListDisplay
             node={nodeInput}
             method="extranames"
@@ -836,25 +770,20 @@ export default function Edit(props) {
           />
         </div>
         <div className="extranames-container">
-          <div>
-            <label htmlFor="languages-input" className="extra-details-label">
-              Languages spoken
-            </label>
-            <input
-              autoComplete="off"
-              type="text"
-              name="languages-input"
-              id="languages-input"
-              className="extra-details-input"
-              onChange={inputChangedHandler}
-              onKeyUp={function (event) {
-                if (event.key === "Enter") {
-                  addOption("languages");
-                  inputChangedHandler();
-                }
-              }}
-            />
-          </div>
+          <EditDropdownInput
+            inputChangedHandler={inputChangedHandler}
+            inputType="text"
+            title="Languages Spoken..."
+            id="languages-input"
+            data={props.nodedata}
+            field="languages"
+            keyPress={function (event) {
+              if (event.key === "Enter") {
+                addOption("languages");
+                inputChangedHandler();
+              }
+            }}
+          />
           <ListDisplay
             node={nodeInput}
             method="languages"
