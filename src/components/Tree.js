@@ -1249,7 +1249,7 @@ export default function Tree(props) {
   const openNode = (obj) => {
     $("#parentInput").css("border-bottom", "2px solid #bebed2");
     $("#parentInput").val("");
-    $("#parentInput").attr("placeholder", "Parent/Partner");
+    $("#parentInput").attr("placeholder", "Name of Parent");
     $("#card-container").css("display", "none");
     let node;
     let str,

@@ -239,7 +239,7 @@ export default function Table(props) {
   const openNode = (row) => {
     $("#parentInput").css("border-bottom", "2px solid #bebed2");
     $("#parentInput").val("");
-    $("#parentInput").attr("placeholder", "Parent/Partner");
+    $("#parentInput").attr("placeholder", "Name of Parent");
     let str,
       id = "";
     let list = document.getElementById("parentSearchDataList");
