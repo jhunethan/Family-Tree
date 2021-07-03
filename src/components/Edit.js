@@ -32,6 +32,53 @@ function ListDisplay(props) {
   return <div id={`flex-cards-display-${props.method}`}></div>;
 }
 
+function getParentByName(parentName, data) {
+  if (!data) return;
+  for (const person of data) {
+    const fullname = `${person.generation} ${person.name}`;
+    if (parentName === fullname || parentName === person.name) {
+      if (person.id) return person;
+    }
+  }
+}
+
+function ParentDisplay(props) {
+  const { parents, currentPerson, data } = props;
+
+  let parentName;
+  if (currentPerson) {
+    parentName = currentPerson["parent"];
+    const firstParent = getParentByName(parentName, data);
+    parents[0] = firstParent;
+    if (currentPerson["secondParent"]) {
+      parentName = currentPerson['secondParent']
+      const secondParent = getParentByName(parentName, data);
+      parents[1] = secondParent;
+    }
+  }
+
+  if (parents[0] && parents.length) {
+    return (
+      <section className="editmenu-parents-display">
+        {parents.map((person, index) => {
+          return (
+            <div
+              key={`${parents} ${index}`}
+              className="editmenu-parents-display-child"
+            >
+              <h2>{person.generation}</h2>
+              <h3>{person.name}</h3>
+              <p>{person.birthdate}</p>
+            </div>
+          );
+        })}
+      </section>
+    );
+  }
+
+  return null;
+}
+
 function EditDropdownInput(props) {
   const {
     title,
@@ -128,6 +175,7 @@ export default function Edit(props) {
   const [extrachanges, setExtrachanges] = useState("");
   const [extrachanged, setExtrachanged] = useState(false);
   const [descriptionlimit, setdescriptionlimit] = useState(0);
+  const [parents, setParents] = useState([]);
   const [nodeInput, setNodeInput] = useState({
     id: props.nodedata.id,
     name: "",
@@ -525,6 +573,18 @@ export default function Edit(props) {
     $(`#${method}-input`).val("");
   }
 
+  function addParent(parentName) {
+    const { nodeInput: currentPerson } = props;
+
+    //get parent info
+    const parent = getParentByName(parentName, props.data);
+    //check if current person already has a parent
+    console.log(parent);
+    //else check if current person already has a second parent
+    //else cancel operation
+    //populate parent display
+  }
+
   return (
     <div id="Edit">
       <div id="editForm" className="form">
@@ -643,10 +703,12 @@ export default function Edit(props) {
                   const parentSuggestion = $.trim(
                     $("#parentSearchDataList").children()[0].textContent
                   );
-                  if (parentSuggestion === "No valid results") {
+                  if (
+                    parentSuggestion &&
+                    parentSuggestion !== "No valid results"
+                  ) {
                     $("#parentInput").val("");
-                  } else {
-                    $("#parentInput").val(parentSuggestion)
+                    addParent(parentSuggestion);
                   }
                   inputChangedHandler();
                 } catch {}
@@ -666,6 +728,12 @@ export default function Edit(props) {
             } catch {}
           }}
         ></ul>
+
+        <ParentDisplay
+          data={props.data}
+          parents={parents}
+          currentPerson={props.nodedata}
+        />
 
         <EditDropdownInput
           inputChangedHandler={inputChangedHandler}
