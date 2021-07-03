@@ -40,8 +40,10 @@ function EditDropdownInput(props) {
     placeholder,
     inputChangedHandler,
     data,
+    setData,
     field,
     keyPress,
+    list,
   } = props;
   let currValue = "";
 
@@ -96,6 +98,23 @@ function EditDropdownInput(props) {
           >
             <span aria-hidden="true">&times;</span>
           </h2>
+        )}
+        {list && (
+          <ListDisplay
+            node={data}
+            method={list}
+            remove={(deleted) => {
+              let node = data;
+              try {
+                node.extradetails[list] = node.extradetails[list]
+                  .split(",")
+                  .filter((x) => x !== deleted)
+                  .join(",");
+                setData(node);
+              } catch {}
+              inputChangedHandler();
+            }}
+          />
         )}
       </div>
     </section>
@@ -621,13 +640,13 @@ export default function Edit(props) {
                 // Cancel the default action, if needed
                 event.preventDefault();
                 try {
-                  let parentSuggestion = $.trim(
+                  const parentSuggestion = $.trim(
                     $("#parentSearchDataList").children()[0].textContent
                   );
                   if (parentSuggestion === "No valid results") {
                     $("#parentInput").val("");
                   } else {
-                    $("#parentInput").val($.trim(parentSuggestion));
+                    $("#parentInput").val(parentSuggestion)
                   }
                   inputChangedHandler();
                 } catch {}
@@ -719,87 +738,40 @@ export default function Edit(props) {
           data={props.nodedata}
           field="location"
         />
-        <div className="extranames-container">
-          {/* <div>
-            <label htmlFor="extranames-input" className="extra-details-label">
-            Additional names
-            </label>
-            <input
-            autoComplete="off"
-            type="text"
-            name="extranames-input"
-            id="extranames-input"
-            className="extra-details-input"
-            onChange={inputChangedHandler}
-            onKeyUp={function (event) {
-              if (event.key === "Enter") {
-                addOption("extranames");
-                inputChangedHandler();
-              }
-            }}
-            />
-          </div> */}
-          <EditDropdownInput
-            inputChangedHandler={inputChangedHandler}
-            inputType="text"
-            title="Additional Names..."
-            id="extranames-input"
-            data={props.nodedata}
-            field="extranames"
-            keyPress={function (event) {
-              if (event.key === "Enter") {
-                addOption("extranames");
-                inputChangedHandler();
-              }
-            }}
-          />
-          <ListDisplay
-            node={nodeInput}
-            method="extranames"
-            remove={(deleted) => {
-              let node = nodeInput;
-              try {
-                node.extradetails.extranames = node.extradetails.extranames
-                  .split(",")
-                  .filter((x) => x !== deleted)
-                  .join(",");
-                setNodeInput(node);
-              } catch {}
+
+        <EditDropdownInput
+          inputChangedHandler={inputChangedHandler}
+          inputType="text"
+          title="Additional Names"
+          id="extranames-input"
+          data={props.nodedata}
+          field="extranames"
+          keyPress={function (event) {
+            if (event.key === "Enter") {
+              addOption("extranames");
               inputChangedHandler();
-            }}
-          />
-        </div>
-        <div className="extranames-container">
-          <EditDropdownInput
-            inputChangedHandler={inputChangedHandler}
-            inputType="text"
-            title="Languages Spoken..."
-            id="languages-input"
-            data={props.nodedata}
-            field="languages"
-            keyPress={function (event) {
-              if (event.key === "Enter") {
-                addOption("languages");
-                inputChangedHandler();
-              }
-            }}
-          />
-          <ListDisplay
-            node={nodeInput}
-            method="languages"
-            remove={(deleted) => {
-              let node = nodeInput;
-              try {
-                node.extradetails.languages = node.extradetails.languages
-                  .split(",")
-                  .filter((x) => x !== deleted)
-                  .join(",");
-                setNodeInput(node);
-              } catch {}
+            }
+          }}
+          list="extranames"
+          setData={setNodeInput}
+        />
+
+        <EditDropdownInput
+          inputChangedHandler={inputChangedHandler}
+          inputType="text"
+          title="Languages Spoken"
+          id="languages-input"
+          data={props.nodedata}
+          field="languages"
+          keyPress={function (event) {
+            if (event.key === "Enter") {
+              addOption("languages");
               inputChangedHandler();
-            }}
-          />
-        </div>
+            }
+          }}
+          list="languages"
+          setData={setNodeInput}
+        />
 
         <EditDropdownInput
           inputChangedHandler={inputChangedHandler}

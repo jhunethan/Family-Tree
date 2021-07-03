@@ -77,11 +77,12 @@
 }
 .dropdownmenu-input-container{
   display: none;
+  flex-wrap: wrap;
   animation-name: fade-in;
   animation-duration: 1s;
 }
 .extra-details-input {
-  width: 90%;
+  width: 85%;
   padding: 10px;
   font-size: 18px;
   box-sizing: border-box;
