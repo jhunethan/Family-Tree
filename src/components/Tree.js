@@ -133,18 +133,20 @@ export default function Tree(props) {
       }
     }, 500);
 
-    Axios.get(process.env.REACT_APP_API+"api/familymembers").then((result) => {
-      setTableData(result.data);
-      if (result.data) {
-        let loadTime = (Date.now() - start) / 1000;
-        clearInterval(serverCheck);
-        toast.success(`Tree loaded in ${loadTime} s`, {
-          position: "top-center",
-          autoClose: 2500,
-          toastId: "TreeLoaded",
-        });
+    Axios.get(process.env.REACT_APP_API + "api/familymembers").then(
+      (result) => {
+        setTableData(result.data);
+        if (result.data) {
+          let loadTime = (Date.now() - start) / 1000;
+          clearInterval(serverCheck);
+          toast.success(`Tree loaded in ${loadTime} s`, {
+            position: "top-center",
+            autoClose: 2500,
+            toastId: "TreeLoaded",
+          });
+        }
       }
-    });
+    );
   }, [update]);
 
   //update tree on tableData mutation
@@ -346,7 +348,7 @@ export default function Tree(props) {
     if (!name || name === newData.name) return closePopups();
     if (newData.name === "" && name) {
       newData.name = name;
-      Axios.post(process.env.REACT_APP_API+"api/familymembers", {
+      Axios.post(process.env.REACT_APP_API + "api/familymembers", {
         input: newData,
         author: cookies.author,
       });
@@ -356,7 +358,7 @@ export default function Tree(props) {
       //save
       newData.name = name;
 
-      Axios.patch(process.env.REACT_APP_API+"api/familymembers", {
+      Axios.patch(process.env.REACT_APP_API + "api/familymembers", {
         input: newData,
         name: newData.name,
         author: cookies.author,
@@ -381,7 +383,7 @@ export default function Tree(props) {
       obj.parent = "";
       obj.partner = "";
       obj.isPartner = 0;
-      Axios.patch(process.env.REACT_APP_API+"api/familymembers", {
+      Axios.patch(process.env.REACT_APP_API + "api/familymembers", {
         input: obj,
         name: obj.name,
         author: cookies.author,
@@ -410,7 +412,7 @@ export default function Tree(props) {
           obj.parent = "";
           obj.partner = parent.name;
           obj.isPartner = 1;
-          Axios.patch(process.env.REACT_APP_API+"api/familymembers", {
+          Axios.patch(process.env.REACT_APP_API + "api/familymembers", {
             input: obj,
             name: obj.name,
             author: cookies.author,
@@ -439,7 +441,7 @@ export default function Tree(props) {
       obj.isPartner = 0;
       obj.partner = "";
 
-      Axios.patch(process.env.REACT_APP_API+"api/familymembers", {
+      Axios.patch(process.env.REACT_APP_API + "api/familymembers", {
         input: obj,
         name: obj.name,
         author: cookies.author,
@@ -1026,46 +1028,46 @@ export default function Tree(props) {
     });
 
     links
-    .enter()
-    .data(secondaryParentCoords)
-    .append("path")
-    .attr("class", function (d) {
-      return "link level-" + d.source.depth;
-    })
-    .attr("d", function (d) {
-      const { data: parent } = d.source;
-      const { data: child } = d.target;
-      let path =
-        "M" +
-        d.target.x +
-        "," +
-        (d.target.y - 350) +
-        " v -300 H" +
-        d.source.x +
-        " V" +
-        (d.source.y - 25);
-      if (parent.isPartner) {
-        if (child.parent.includes(parent.name)) {
-          path += " h-350";
-        } else {
-          path += " h350";
-        }
-        path += " v-200";
-      } else path += " v-200";
-      return path;
-    })
-    .attr("x1", function (d) {
-      return d.source.x;
-    })
-    .attr("y1", function (d) {
-      return d.source.y;
-    })
-    .attr("x2", function (d) {
-      return d.target.x;
-    })
-    .attr("y2", function (d) {
-      return d.target.y;
-    });
+      .enter()
+      .data(secondaryParentCoords)
+      .append("path")
+      .attr("class", function (d) {
+        return "link level-" + d.source.depth;
+      })
+      .attr("d", function (d) {
+        const { data: parent } = d.source;
+        const { data: child } = d.target;
+        let path =
+          "M" +
+          d.target.x +
+          "," +
+          (d.target.y - 350) +
+          " v -300 H" +
+          d.source.x +
+          " V" +
+          (d.source.y - 25);
+        if (parent.isPartner) {
+          if (child.parent.includes(parent.name)) {
+            path += " h-350";
+          } else {
+            path += " h350";
+          }
+          path += " v-200";
+        } else path += " v-200";
+        return path;
+      })
+      .attr("x1", function (d) {
+        return d.source.x;
+      })
+      .attr("y1", function (d) {
+        return d.source.y;
+      })
+      .attr("x2", function (d) {
+        return d.target.x;
+      })
+      .attr("y2", function (d) {
+        return d.target.y;
+      });
   };
 
   const populateDatalist = () => {
@@ -1196,26 +1198,9 @@ export default function Tree(props) {
 
     $("#isDeceased").attr("checked", node.deathdate ? true : false);
 
-    $("#deathdate-input")
-      .val(node.deathdate ? node.deathdate : "");
-
-    $("#parentInput").val(node.isPartner ? node.partner : node.parent);
-
+    $("#deathdate-input").val(node.deathdate ? node.deathdate : "");
+    $(`#parentInput`).val("");
     try {
-      if (node.isPartner) {
-        $("#maidenname-input").css("display", "block");
-        $("label.spouse-info").css("display", "block");
-        $("#marriagedate-input").css("display", "block");
-        try {
-          $("#maidenname-input").val(node.extradetails.maidenname);
-          $("#marriagedate-input").val(node.extradetails.marriagedate);
-        } catch {}
-      } else {
-        $("#maidenname-input").css("display", "none").val("");
-        $("#marriagedate-input").css("display", "none").val("");
-        $("label.spouse-info").css("display", "none");
-      }
-
       for (const x of opStack) {
         $(`#${x}-input`).val(node.extradetails[x]);
       }

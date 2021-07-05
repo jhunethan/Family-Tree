@@ -57,9 +57,11 @@ export default function Table(props) {
     return setRadiochecked(false);
   };
   useEffect(() => {
-    Axios.get(process.env.REACT_APP_API+"api/familymembers").then((result) => {
-      setTableData(result.data);
-    });
+    Axios.get(process.env.REACT_APP_API + "api/familymembers").then(
+      (result) => {
+        setTableData(result.data);
+      }
+    );
   }, [update]);
 
   const updateTable = () => {
@@ -141,26 +143,9 @@ export default function Table(props) {
 
     $("#isDeceased").attr("checked", node.deathdate ? true : false);
 
-    $("#deathdate-input")
-      .val(node.deathdate ? node.deathdate : "");
-
-    $("#parentInput").val(node.isPartner ? node.partner : node.parent);
-
+    $("#deathdate-input").val(node.deathdate ? node.deathdate : "");
+    $(`#parentInput`).val("");
     try {
-      if (node.isPartner) {
-        $("#maidenname-input").css("display", "block");
-        $("label.spouse-info").css("display", "block");
-        $("#marriagedate-input").css("display", "block");
-        try {
-          $("#maidenname-input").val(node.extradetails.maidenname);
-          $("#marriagedate-input").val(node.extradetails.marriagedate);
-        } catch {}
-      } else {
-        $("#maidenname-input").css("display", "none").val("");
-        $("#marriagedate-input").css("display", "none").val("");
-        $("label.spouse-info").css("display", "none");
-      }
-
       for (const x of opStack) {
         $(`#${x}-input`).val(node.extradetails[x]);
       }
@@ -192,11 +177,11 @@ export default function Table(props) {
 
   const resetCreateFields = () => {
     try {
-      for (const element of ['dd','mm','yyyy']) {
-        $(`#create-birthdate-${element}`).val('')        
+      for (const element of ["dd", "mm", "yyyy"]) {
+        $(`#create-birthdate-${element}`).val("");
       }
 
-      $(`#create-birthdate-yyyy`).val('')  
+      $(`#create-birthdate-yyyy`).val("");
 
       $(".radio-togglesC").css("display", "none");
       $("#parentSearchDataList").html("");
