@@ -43,7 +43,7 @@ function getParentByName(parentName, data) {
 }
 
 function ParentDisplay(props) {
-  const { currentPerson, data } = props;
+  const { currentPerson, data, setPerson } = props;
   const parents = [];
   let parentName;
   if (currentPerson) {
@@ -57,6 +57,32 @@ function ParentDisplay(props) {
     }
   }
 
+  function removeParent(event) {
+    const id = Number(event.target.id);
+    const newDetails = { ...currentPerson };
+    console.log({ id, newDetails });
+
+    if (newDetails.parent && newDetails.pid === id) {
+      if (currentPerson.secondParent) {
+        const secondParent = getParentByName(currentPerson.secondParent, data);
+        newDetails.parent = secondParent.name;
+        newDetails.pid = secondParent.id;
+        newDetails.secondParent = undefined;
+        newDetails.secondPid = undefined;
+      } else {
+        newDetails.parent = undefined;
+        newDetails.pid = 0;
+      }
+    } else if (newDetails.secondParent && newDetails.secondPid === id) {
+      newDetails.secondParent = undefined;
+      newDetails.secondPid = undefined;
+    }
+
+    setPerson((currObj) => {
+      return { ...currObj, ...newDetails };
+    });
+  }
+
   if (parents[0] && parents.length) {
     return (
       <section className="editmenu-parents-display">
@@ -66,7 +92,18 @@ function ParentDisplay(props) {
               key={`${parents} ${index}`}
               className="editmenu-parents-display-child"
             >
-              <p>Parent {index + 1}</p>
+              <div className="editmenu-parents-display-header">
+                <p>Parent {index + 1}</p>
+
+                <span
+                  className="editmenu-parents-cancel"
+                  id={person.id}
+                  aria-hidden="true"
+                  onClick={(event) => removeParent(event)}
+                >
+                  &times;
+                </span>
+              </div>
               <h2>{person.generation}</h2>
               <h2>{person.name}</h2>
               <h2>{person.birthdate}</h2>
@@ -230,9 +267,10 @@ export default function Edit(props) {
     return `${year}-${month}-${day}`;
   };
 
-  var inputChangedHandler = (obj) => {
-    let { isPartner = false, pid, deathdate = null } = props.nodedata;
-    const currentObject = obj.id ? obj : nodeInput;
+  const inputChangedHandler = () => {
+    let { isPartner = false, deathdate = null } = props.nodedata;
+    const currentObject = { ...nodeInput };
+
     const extraopStack = [
       "birthplace",
       "location",
@@ -240,9 +278,6 @@ export default function Edit(props) {
       "profession",
       "marriagedate",
     ];
-
-    CheckInput(obj);
-    checkExtraChanges();
 
     //if parent field, populate parent datalist autofill
     //filter by input
@@ -305,30 +340,26 @@ export default function Edit(props) {
       tempnode.maidenname = null;
     }
 
-    if (!currentObject.pid) pid = 0;
-
-    if (pid === 0 || !pid) isPartner = 0;
-
     const birthdate = getValidBirthdate();
     const newObject = {
       id: props.nodedata.id,
       generation: $("#generation-input").val(),
       name: $("#name-input").val(),
       birthdate: birthdate,
-      pid: pid,
       deathdate: deathdate,
       extradetails: tempnode,
     };
 
-    setNodeInput({
-      ...currentObject,
-      ...newObject,
+    setNodeInput((currObj) => {
+      CheckInput(currObj);
+      checkExtraChanges();
+      return { ...currObj, ...newObject };
     });
   };
 
   function CheckInput(obj) {
-    const currentObject = obj.id ? obj : nodeInput;
-    
+    const currentObject = obj && obj.id ? obj : nodeInput;
+
     let changesStack = [],
       opStack = ["generation", "name"];
     let data = props.nodedata;
@@ -568,7 +599,7 @@ export default function Edit(props) {
   }
 
   function addParent(parentName) {
-    let keys = {};
+    let tempObj = {};
 
     //check if current person already has a parent
     if (nodeInput.parent && nodeInput.secondParent) {
@@ -580,21 +611,15 @@ export default function Edit(props) {
     const parent = getParentByName(parentName, props.data);
 
     //decide appropriate key to edit
-    if (nodeInput.parent) {
-      keys.parent = "secondParent";
-      keys.pid = "secondPid";
+    if (nodeInput.pid) {
+      tempObj.secondParent = parentName;
+      tempObj.secondPid = parent.id;
     } else {
-      keys.parent = "parent";
-      keys.pid = "pid";
+      tempObj.parent = parentName;
+      tempObj.pid = parent.id;
     }
-
-    const tempObj = {
-      [keys.pid]: parent.id,
-      [keys.parent]: parentName,
-    };
     //add person as parent
     setNodeInput((currObj) => {
-      inputChangedHandler({ ...currObj, ...tempObj });
       return { ...currObj, ...tempObj };
     });
   }
@@ -743,7 +768,11 @@ export default function Edit(props) {
           }}
         ></ul>
 
-        <ParentDisplay data={props.data} currentPerson={nodeInput} />
+        <ParentDisplay
+          data={props.data}
+          currentPerson={nodeInput}
+          setPerson={setNodeInput}
+        />
 
         <EditDropdownInput
           inputChangedHandler={inputChangedHandler}
