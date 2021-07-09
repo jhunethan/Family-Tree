@@ -46,8 +46,12 @@
   transition: all 0.3s;
 }
 
-.card-nav > *:hover, #card-edit:hover {
+.card-nav > *:hover {
   background-color: #ff756e;
+}
+
+#card-edit:hover{
+  background-color: #0096e0;
 }
 
 #card-expand {
@@ -63,8 +67,9 @@
 #card-edit {
   background-color: #2789b9;
 
-  font-size: 50px;
+  font-size: 16px;
   font-weight: bold;
+  height: auto;
   padding: 0 20px;
 }
 

@@ -85,13 +85,7 @@ export default function Tree(props) {
   const [editview, seteditView] = useState(false);
   const [currentImage, setCurrentImage] = useState(undefined);
   //holds info about selected user
-  const [InfoCard, setInfoCard] = useState({
-    id: "",
-    name: "",
-    generation: "",
-    birthdate: "",
-    parent: "",
-  });
+  const [InfoCard, setInfoCard] = useState({});
   var dateFormat = require("dateformat");
   var height;
   var width;
@@ -493,7 +487,7 @@ export default function Tree(props) {
     dynamicUpdate(newChild);
   }
 
-  function nodeClick(el, type) {
+  function nodeClick(el, type, edit) {
     let child =
       el.classList[0] === "partnerNode" || type === "partner"
         ? el.__data__.data.partnerinfo
@@ -501,7 +495,7 @@ export default function Tree(props) {
     setInfoCard(child);
     //alternative function
     //show a edit menu for a node letting the user change the tree dynamically
-    if ($("button.changeview-button")[0].textContent === "Edit Mode") {
+    if (edit) {
       //remove other instances of edit menus
       $("foreignObject.edit-menu-container").remove();
       //open edit menu
@@ -771,7 +765,38 @@ export default function Tree(props) {
         userDetails += `${name}\n${birthdate}`;
         return userDetails;
       })
-      .on("click", (d) => nodeClick(d.target, ""));
+      .on("click", (d) => nodeClick(d.target, ""))
+      .on("mouseover", (d) => {
+        //show edit button
+        const { data } = d.target.__data__;
+
+        //remove other instances of edit menus
+        $("foreignObject.node-edit-menu-container").remove();
+        //open edit menu
+        d3.select("g.nodes")
+          .append("foreignObject")
+          .attr("class", "node-edit-menu-container")
+          .attr("x", function () {
+            return d.target.__data__.x + 200;
+          })
+          .attr("y", d.target.__data__.y - 500)
+          .attr("height", "100px")
+          .attr("width", "300px");
+
+        const menu = d3
+          .select("foreignObject.node-edit-menu-container")
+          .append("xhtml:div")
+          .attr("class", "node-edit-menu");
+
+        menu
+          .append("xhtml:button")
+          .attr("class", "node-edit-menu-button")
+          .html("Edit this person")
+          .attr("title","Edit")
+          .on("click", (d) => {
+            openNode(data.partnerinfo);
+          });
+      });
 
     partnerShapes
       .enter()
@@ -879,7 +904,7 @@ export default function Tree(props) {
       })
       .attr("y", function (d) {
         return d.y - 400;
-      });
+      })
 
     let body = container
       .append("xhtml:div")
@@ -892,7 +917,39 @@ export default function Tree(props) {
         userDetails += `${name}\n${birthdate}`;
         return userDetails;
       })
-      .on("click", (d) => nodeClick(d.target, ""));
+      .on("click", (d) => nodeClick(d.target, ""))
+      .on("mouseover", (d) => {
+        //show edit button
+        const { data } = d.target.__data__;
+
+        //remove other instances of edit menus
+        $("foreignObject.node-edit-menu-container").remove();
+        //open edit menu
+        d3.select("g.nodes")
+          .append("foreignObject")
+          .attr("class", "node-edit-menu-container")
+          .attr("x", function () {
+            if(data.partnerinfo) return d.target.__data__.x - 500 ;
+            return d.target.__data__.x - 150;
+          })
+          .attr("y", d.target.__data__.y - 500)
+          .attr("height", "100px")
+          .attr("width", "300px");
+
+        const menu = d3
+          .select("foreignObject.node-edit-menu-container")
+          .append("xhtml:div")
+          .attr("class", "node-edit-menu");
+
+        menu
+          .append("xhtml:button")
+          .attr("class", "node-edit-menu-button")
+          .html("Edit this person")
+          .on("click", (d) => {
+            openNode(data);
+          });
+      });
+
 
     let left = body.append("xhtml:div").attr("class", "tree-card-section left");
 

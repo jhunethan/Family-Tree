@@ -43,7 +43,7 @@ function getParentByName(parentName, data) {
 }
 
 function ParentDisplay(props) {
-  const { currentPerson, data, setPerson } = props;
+  const { currentPerson, data, setPerson, inputChangedHandler } = props;
   const parents = [];
   let parentName;
   if (currentPerson) {
@@ -60,7 +60,6 @@ function ParentDisplay(props) {
   function removeParent(event) {
     const id = Number(event.target.id);
     const newDetails = { ...currentPerson };
-    console.log({ id, newDetails });
 
     if (newDetails.parent && newDetails.pid === id) {
       if (currentPerson.secondParent) {
@@ -79,6 +78,7 @@ function ParentDisplay(props) {
     }
 
     setPerson((currObj) => {
+      inputChangedHandler();
       return { ...currObj, ...newDetails };
     });
   }
@@ -267,8 +267,10 @@ export default function Edit(props) {
     return `${year}-${month}-${day}`;
   };
 
-  const inputChangedHandler = () => {
-    let { isPartner = false, deathdate = null } = props.nodedata;
+  function inputChangedHandler() {
+    if (!nodeInput.id) return;
+
+    const { isPartner = false } = props.nodedata;
     const currentObject = { ...nodeInput };
 
     const extraopStack = [
@@ -319,8 +321,6 @@ export default function Edit(props) {
       }
     }
 
-    deathdate = $("#deathdate-input").val();
-
     let tempnode = {};
 
     tempnode.maidenname =
@@ -346,7 +346,7 @@ export default function Edit(props) {
       generation: $("#generation-input").val(),
       name: $("#name-input").val(),
       birthdate: birthdate,
-      deathdate: deathdate,
+      deathdate: $("#deathdate-input").val(),
       extradetails: tempnode,
     };
 
@@ -355,14 +355,22 @@ export default function Edit(props) {
       checkExtraChanges();
       return { ...currObj, ...newObject };
     });
-  };
+  }
 
   function CheckInput(obj) {
+    /*
+    - generation //
+    - name //
+    - parent 1 
+    - parent 2
+    - date of birth //
+    - date of death //
+    */
     const currentObject = obj && obj.id ? obj : nodeInput;
 
     let changesStack = [],
       opStack = ["generation", "name"];
-    let data = props.nodedata;
+    const data = props.nodedata;
 
     setChanges("");
     setChanged(false);
@@ -388,6 +396,7 @@ export default function Edit(props) {
       setChanged(true);
       changesStack.push("deathdate");
     }
+
     if (currentObject.parent !== props.nodedata.parent) {
       setChanged(true);
       changesStack.push("parent");
@@ -601,14 +610,19 @@ export default function Edit(props) {
   function addParent(parentName) {
     let tempObj = {};
 
-    //check if current person already has a parent
     if (nodeInput.parent && nodeInput.secondParent) {
+      //check if current person already has a parent
       toast.error("You can only add up to two parents");
       return false;
     }
 
     //get parent info
     const parent = getParentByName(parentName, props.data);
+
+    if (parent.id === nodeInput.pid) {
+      toast.error("You can't add the same parent twice");
+      return false;
+    }
 
     //decide appropriate key to edit
     if (nodeInput.pid) {
@@ -772,6 +786,7 @@ export default function Edit(props) {
           data={props.data}
           currentPerson={nodeInput}
           setPerson={setNodeInput}
+          inputChangedHandler={inputChangedHandler}
         />
 
         <EditDropdownInput
@@ -835,6 +850,7 @@ export default function Edit(props) {
           id="birthplace-input"
           data={props.nodedata}
           field="birthplace"
+          placeholder="City / Country"
         />
 
         <EditDropdownInput
@@ -844,6 +860,7 @@ export default function Edit(props) {
           id="location-input"
           data={props.nodedata}
           field="location"
+          placeholder="City / Country"
         />
 
         <EditDropdownInput
@@ -861,6 +878,7 @@ export default function Edit(props) {
           }}
           list="extranames"
           setData={setNodeInput}
+          placeholder="Enter any names..."
         />
 
         <EditDropdownInput
@@ -878,6 +896,7 @@ export default function Edit(props) {
           }}
           list="languages"
           setData={setNodeInput}
+          placeholder="Spoken Languages..."
         />
 
         <EditDropdownInput
@@ -887,6 +906,7 @@ export default function Edit(props) {
           id="fblink-input"
           data={props.nodedata}
           field="fblink"
+          placeholder="Facebook URL..."
         />
         <EditDropdownInput
           inputChangedHandler={inputChangedHandler}
@@ -895,6 +915,7 @@ export default function Edit(props) {
           id="profession-input"
           data={props.nodedata}
           field="profession"
+          placeholder="Profession..."
         />
         <label htmlFor="description-input" className="extra-details-label">
           Description ( {descriptionlimit}/250 words )

@@ -110,7 +110,7 @@ export default function NodeCard(props) {
         {"<>"}
         </button>
         <button id="card-edit" onClick={props.edit}>
-          •••
+          Edit
         </button>
       </div>
       <div className="card-main">
