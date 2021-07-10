@@ -11,7 +11,7 @@ export default function TreeSearch(props) {
           className="input"
           type="text"
           name="searchtree"
-          placeholder="Search by Name or Birthdate"
+          placeholder="Search..."
           list="datalist-ul"
           onChange={() => {
             props.filter();
@@ -29,6 +29,7 @@ export default function TreeSearch(props) {
         />
         <button
           id="datalistbutton"
+          className="btn btn-primary"
           onClick={(event) => {
             let id = $("#treeSearch-datalist-ul")[0].firstChild.dataset.id;
             if (!props.search(id))

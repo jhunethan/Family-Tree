@@ -154,7 +154,7 @@ const [isLoading, setIsLoading] = useState(false)
 
       <button
         type="button"
-        className="btn btn-dark btn-lg btn-block"
+        className="btn btn-primary btn-lg btn-block"
         onClick={() => {
           submit();
         }}
@@ -267,7 +267,7 @@ function Login(props) {
       <button
         type="button"
         id="sign-in-button"
-        className="btn btn-dark btn-lg btn-block"
+        className="btn btn-primary btn-lg btn-block"
         onClick={() => submit()}
       >
         {isLoading ? (
@@ -384,14 +384,14 @@ function LoginControl(props) {
       <div className="landing-buttons">
         <button
           type="button"
-          className="btn btn-dark btn-lg btn-block landing-button"
+          className="btn btn-primary btn-lg btn-block landing-button"
           onClick={props.setLogin}
         >
           Login
         </button>
         <button
           type="button"
-          className="btn btn-dark btn-lg btn-block landing-button"
+          className="btn btn-primary btn-lg btn-block landing-button"
           onClick={props.setSignUp}
         >
           Signup

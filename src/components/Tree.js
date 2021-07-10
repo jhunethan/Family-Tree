@@ -11,7 +11,7 @@ import { useHistory } from "react-router-dom";
 
 import profile from "../css/person-placeholder.jpg";
 import loading from "../css/loading.gif";
-import layCharacter from "../css/layCharacter.png";
+// import layCharacter from "../css/layCharacter.png";
 
 import { EditPhotoCondition } from "./Table";
 import NodeCard from "./NodeCard";
@@ -51,7 +51,7 @@ function TreeNav(props) {
 
   return (
     <div className="tree-nav">
-      <button className="tree-nav-toggle" onClick={toggle}>
+      <button className="tree-nav-toggle btn-primary" onClick={toggle}>
         <span></span>
         <span></span>
         <span></span>
@@ -204,6 +204,7 @@ export default function Tree(props) {
   };
 
   async function dynamicUpdate(obj) {
+    //optimistic rendering
     let data = tableData;
 
     if (!obj) {
@@ -217,9 +218,17 @@ export default function Tree(props) {
       case "delete":
         data = data.filter((x) => x.id !== obj.id);
         for (let i = 0; i < data.length; i++) {
-          if (data[i].pid === obj.id) data[i].pid = 0;
-          if (obj.isPartner && data[i].id === obj.pid)
+          if (data[i].pid === obj.id) {
+            data[i].pid = 0;
+            data[i].parent = "";
+          }
+          if (data[i].secondPid === obj.id) {
+            data[i].secondPid = 0;
+            data[i].secondParent = "";
+          }
+          if (obj.isPartner && data[i].id === obj.pid) {
             data[i].partnerinfo = undefined;
+          }
         }
         toast.success(`Removed ${obj.name}`);
         break;
@@ -252,7 +261,7 @@ export default function Tree(props) {
                 data[i].partnerinfo = null;
               }
             } catch {}
-          } else
+          } else {
             try {
               if (data[i].partnerinfo.id === obj.id)
                 data[i].partnerinfo = undefined;
@@ -260,6 +269,7 @@ export default function Tree(props) {
                 if (data[x].oldpid === obj.id) data[x].pid = obj.id;
               }
             } catch {}
+          }
         }
         toast.success(`Changes made to ${obj.name}`);
         break;
@@ -790,9 +800,9 @@ export default function Tree(props) {
 
         menu
           .append("xhtml:button")
-          .attr("class", "node-edit-menu-button")
+          .attr("class", "node-edit-menu-button btn btn-primary")
           .html("Edit this person")
-          .attr("title","Edit")
+          .attr("title", "Edit")
           .on("click", (d) => {
             openNode(data.partnerinfo);
           });
@@ -904,7 +914,7 @@ export default function Tree(props) {
       })
       .attr("y", function (d) {
         return d.y - 400;
-      })
+      });
 
     let body = container
       .append("xhtml:div")
@@ -929,7 +939,7 @@ export default function Tree(props) {
           .append("foreignObject")
           .attr("class", "node-edit-menu-container")
           .attr("x", function () {
-            if(data.partnerinfo) return d.target.__data__.x - 500 ;
+            if (data.partnerinfo) return d.target.__data__.x - 500;
             return d.target.__data__.x - 150;
           })
           .attr("y", d.target.__data__.y - 500)
@@ -943,13 +953,13 @@ export default function Tree(props) {
 
         menu
           .append("xhtml:button")
-          .attr("class", "node-edit-menu-button")
+          .attr("class", "node-edit-menu-button btn btn-primary")
           .html("Edit this person")
+          .attr("title", "Edit")
           .on("click", (d) => {
             openNode(data);
           });
       });
-
 
     let left = body.append("xhtml:div").attr("class", "tree-card-section left");
 
@@ -1362,7 +1372,7 @@ export default function Tree(props) {
         }}
       />
       <button
-        className="tree-create-button"
+        className="tree-create-button btn-primary"
         onClick={() => resetCreateFields()}
       >
         <span className="plus-symbol">+</span>
@@ -1430,72 +1440,66 @@ export default function Tree(props) {
 }
 
 function TreeWelcome(props) {
-  let personSelected = false;
+  // let personSelected = false;
 
   if (props.data) {
-    const randomSearch = () => {
-      try {
-        let arr = [],
-          data = props.data;
-        data.map((person) => {
-          if (person.id === 0) return null;
-          return arr.push(`${person.id}`);
-        });
+    // const randomSearch = () => {
+    //   try {
+    //     let arr = [],
+    //       data = props.data;
+    //     data.map((person) => {
+    //       if (person.id === 0) return null;
+    //       return arr.push(`${person.id}`);
+    //     });
 
-        let randomID = arr[Math.floor(Math.random() * arr.length)];
+    //     let randomID = arr[Math.floor(Math.random() * arr.length)];
 
-        props.search(randomID);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+    //     props.search(randomID);
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // };
 
-    try {
-      if (props.node.name) personSelected = true;
-    } catch {}
-    if (!personSelected && !props.welcome) {
-      return (
-        <div className="tree-welcome">
-          <a href="/" className="nav-logo-container">
-            <img src={layCharacter} alt="logo" className="landing-logo" />
-          </a>
-          <a href="/" className="nav-logo-container">
-            <h1 className="tree-welcome-title landing-title">
-              Lay Family Tree
-            </h1>
-          </a>
-          <p>Search for a family member to continue</p>
-          <div className="tree-welcome-modal" />
-          <TreeSearch
-            align={"auto"}
-            filter={() => props.filter()}
-            search={(val) => props.search(val)}
-          />
-          <div className="tree-welcome-search-container" />
-          <p>or</p>
-          <button id="datalistbutton" onClick={() => randomSearch()}>
-            Random family member
-          </button>
-        </div>
-      );
-    } else {
-      //fade out
-      $(".tree-welcome-modal").css(
-        "background-color",
-        "rgba(255, 255, 255, 0)"
-      );
-      //wait a second
+    // try {
+    //   if (props.node.name) personSelected = true;
+    // } catch {}
+    // return (
+    //   <div className="tree-welcome">
+    //     <a href="/" className="nav-logo-container">
+    //       <img src={layCharacter} alt="logo" className="landing-logo" />
+    //     </a>
+    //     <a href="/" className="nav-logo-container">
+    //       <h1 className="tree-welcome-title landing-title">
+    //         Lay Family Tree
+    //       </h1>
+    //     </a>
+    //     <p>Search for a family member to continue</p>
+    //     <div className="tree-welcome-modal" />
+    //     <TreeSearch
+    //       align={"auto"}
+    //       filter={() => props.filter()}
+    //       search={(val) => props.search(val)}
+    //     />
+    //     <div className="tree-welcome-search-container" />
+    //     <p>or</p>
+    //     <button id="datalistbutton" className="btn btn-primary margin-auto" onClick={() => randomSearch()}>
+    //       Random family member
+    //     </button>
+    //   </div>
+    // );
+    //fade out
+    $(".tree-welcome-modal").css("background-color", "rgba(255, 255, 255, 0)");
+    //wait a second
 
-      //continue
+    //continue
 
-      return (
-        <TreeSearch
-          align={0}
-          filter={() => props.filter()}
-          search={(val) => props.search(val)}
-        />
-      );
-    }
+    return (
+      <TreeSearch
+        align={0}
+        filter={() => props.filter()}
+        search={(val) => props.search(val)}
+      />
+    );
   } else {
     return (
       <div className="loading-container">
