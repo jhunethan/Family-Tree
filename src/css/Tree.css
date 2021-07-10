@@ -118,12 +118,12 @@ svg {
 .link {
   max-width: 150px;
   fill: none;
-  stroke: #ff756e;
+  stroke: #424242;
   stroke-width: 2.5px;
 }
 
 .node-edit-menu-button {
-  font-size: 32px;
+  font-size: 34px;
   font-weight: bold;
   
   position: absolute;
@@ -265,7 +265,7 @@ svg {
 }
 .input {
   padding: 10px;
-  width: 275px;
+  max-width: 35vw;
 }
 .datalist-ul {
   position: absolute;
@@ -290,25 +290,6 @@ svg {
 .datalist-ul > li:hover {
   background-color: rgb(207, 207, 207);
   cursor: pointer;
-}
-
-#datalistbutton {
-  letter-spacing: 0.05rem;
-  color: white;
-  background-color: #23272b;
-  border: rgba(0, 0, 0, 0) 1px solid;
-
-  cursor: pointer;
-  padding: 5px 10px;
-
-  transition: all 0.3s;
-}
-
-#datalistbutton:hover {
-  background-color: #000000;
-  color: white;
-  border-color: rgba(0, 0, 0, 0);
-  transition: all 0.3s;
 }
 
 .tree-nav {
@@ -345,10 +326,6 @@ svg {
   border-radius: 9px;
 }
 
-.tree-nav-toggle:hover,.tree-nav-button:hover{
-  background-color: #0090d8;
-}
-
 .tree-nav-button {
   animation: fade-in-from-right 0.5s;
 
@@ -366,8 +343,6 @@ svg {
   z-index: 10;
   transition: all 0.3s;
 
-  background-color: #0090d8;
-  border-left: solid #0090d8 1px;
   padding: 0;
   width: 50px;
   height:50px;

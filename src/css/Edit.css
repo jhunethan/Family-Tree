@@ -123,32 +123,8 @@
   color: #5a5a5a;
 }
 
-#save {
-  margin: 10px;
-  float: right;
-}
-#cancel {
-  margin: 10px;
-  float: left;
-  border: rgb(255, 100, 100) 2px double;
-  background-color: rgb(255, 130, 130);
-}
-
 #deleteNode {
   float: right;
-  padding: 8px 12px;
-  margin: 8px 0 0;
-  border: 2px solid#ff4242;
-  background: 0;
-  color: #ec5757;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-#deleteNode:hover,
-#cancel:hover {
-  background: #ff7474;
-  color: white;
 }
 
 /* delete confirmation menu */
@@ -260,14 +236,10 @@ input[type="radio"] {
   display: none;
 }
 
-.edit-button {
-  padding: 8px 12px;
-  margin: 10px;
-  transition: all 0.3s;
-}
-
 .edit-button-container {
   height: 50px;
+  margin: 25px auto 0 auto;
+  width: 90%;
 }
 
 .extranames-container {
