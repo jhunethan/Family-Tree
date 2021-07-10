@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 function Create(props) {
   const [cookies] = useCookies(["author"]);
 
-  var node = {
+  const node = {
     pid: 0,
     generation: "",
     name: "",
@@ -19,7 +19,7 @@ function Create(props) {
     isPartner: 0,
   };
 
-  const [activeParentInput, setActiveParentInput] = useState(null)
+  const [activeParentInput, setActiveParentInput] = useState(null);
   const [sendNode, setsendNode] = useState(node);
 
   const getValidBirthdate = () => {
@@ -45,12 +45,14 @@ function Create(props) {
     return `${year}-${month}-${day}`;
   };
 
-  const populateDatalist = () => {
+  const populateDatalist = (override) => {
+    const inputId = override ? override : activeParentInput;
+
     //filter by input
     let list = $("#create-datalist").html(""),
       datalistcount = 0,
       filteredDatalist = [];
-    const userInput = $(activeParentInput).val()
+    const userInput = $(inputId).val();
     if ($.trim(userInput)) {
       for (const x of props.data) {
         if (x.name && datalistcount < 5) {
@@ -58,9 +60,7 @@ function Create(props) {
         }
       }
 
-      let parsed = $.trim(userInput.toLowerCase()).split(
-        " "
-      );
+      let parsed = $.trim(userInput.toLowerCase()).split(" ");
       filteredDatalist = filteredDatalist.filter((x) => {
         for (const word of parsed) {
           if (!x.toLowerCase().includes(word)) return false;
@@ -71,10 +71,10 @@ function Create(props) {
       for (const n of filteredDatalist) {
         if (datalistcount < 5) {
           list.append(`<li>${n}</li>`);
-          datalistcount ++;
+          datalistcount++;
         }
       }
-      if(datalistcount === 0) list.append('<li>No Results Found...</li>')
+      if (datalistcount === 0) list.append("<li>No Results Found...</li>");
     }
   };
 
@@ -96,49 +96,44 @@ function Create(props) {
     const parentInput = $("#create-parent-input").val();
     const secondParentInput = $("#create-second-parent-input").val();
     const id = getUniqueID(props.data);
-    let isPartner = document.getElementById("toggle-slide").checked;
-    let pid = null;
 
-    if (!parentInput) isPartner = false;
-
-    if (!isPartner) {
-      node.parent = parentInput;
-      node.secondParent = secondParentInput;
-      isPartner = 0;
-    } else {
-      node.partner = parentInput;
-      isPartner = 1;
+    if (!parentInput) {
+      node.parent = "";
+      node.pid = 0;
     }
+
+    if (!secondParentInput) {
+      node.secondParent = undefined;
+      node.secondPid = undefined;
+    }
+
+    if (checkParent(parentInput)) node.parent = parentInput;
+    if (checkParent(secondParentInput)) node.secondParent = secondParentInput;
 
     try {
-      if(node.secondParent) node.secondPid = props.getPID(secondParentInput)
-      pid = props.getPID(parentInput);
-    } catch {
-      pid = 0;
-    }
-
-    //if parent field is populated, show relationship
-
-    $(".create-form-relationship").css(
-      "display",
-      $.trim($("#create-parent-input").val()) ? "flex" : "none"
-    );
+      if (node.parent) node.pid = props.getPID(parentInput);
+      if (node.secondParent) node.secondPid = props.getPID(secondParentInput);
+    } catch {}
 
     populateDatalist();
 
     const birthdate = getValidBirthdate();
 
+    if (!node.pid && node.secondPid) {
+      node.pid = node.secondPid;
+      node.parent = node.secondParent;
+      node.secondPid = null;
+      node.secondPid = null;
+    }
+
     setsendNode({
+      ...node,
       id: id,
       generation: $("#genInputC").val(),
       name: $("#nameInputC").val(),
       birthdate: birthdate,
-      pid: pid,
-      isPartner: isPartner,
-      parent: node.parent,
-      partner: node.partner,
-      secondPid: node.secondPid,
-      secondParent: node.secondParent
+
+      isPartner: false,
     });
   };
 
@@ -160,16 +155,8 @@ function Create(props) {
 
   const validation = () => {
     let nameinput = $("#nameInputC");
-    let parentInput = $("#create-parent-input");
     let check = true;
 
-    //check child or partner
-    if (document.getElementById("toggle-slide").checked) node.isPartner = 1;
-
-    if (node.isPartner && !whitespace(parentInput.val()).length) {
-      document.getElementById("toggle-slide").checked = false;
-      node.isPartner = 0;
-    }
     if (!whitespace(nameinput.val())) {
       //empty, apply error styles
       nameinput.css("border-bottom", "2px solid red");
@@ -199,7 +186,7 @@ function Create(props) {
   const submit = () => {
     inputChangedHandler();
     if (validation()) {
-      Axios.post(process.env.REACT_APP_API+"api/familymembers", {
+      Axios.post(process.env.REACT_APP_API + "api/familymembers", {
         input: sendNode,
         author: cookies.author,
       }).then(successAdd());
@@ -213,6 +200,7 @@ function Create(props) {
         <input
           autoComplete="off"
           id="genInputC"
+          placeholder="e.g. Hau"
           className="create-form-input"
           onChange={inputChangedHandler}
           onKeyUp={(event) => {
@@ -225,10 +213,11 @@ function Create(props) {
           }}
         />
       </p>
-      <p type="Name:" className="create-form-section">
+      <p type="Name (required)" className="create-form-section">
         <input
           autoComplete="off"
           id="nameInputC"
+          placeholder="Full Name Here"
           className="create-form-input"
           onChange={inputChangedHandler}
           onKeyUp={(event) => {
@@ -311,16 +300,32 @@ function Create(props) {
           id="create-parent-input"
           className="create-form-input"
           placeholder="Full Name of First Parent"
-          onChange={()=>{inputChangedHandler();
-            setActiveParentInput("#create-parent-input")}}
-          onClick={()=>{inputChangedHandler();
-          setActiveParentInput("#create-parent-input")}}
+          onChange={() => {
+            inputChangedHandler();
+            setActiveParentInput("#create-parent-input");
+          }}
+          onClick={() => {
+            inputChangedHandler();
+            setActiveParentInput("#create-parent-input");
+          }}
           onKeyUp={(event) => {
             if (event.key === "Enter") {
               // Cancel the default action, if needed
               event.preventDefault();
               // Focus on next element
-              document.getElementById("toggle-slide").focus();
+              const suggestion =
+                $("#create-datalist")[0].childNodes[0].textContent;
+
+              const text = $.trim(suggestion);
+              if (text !== "No Results Found...") {
+                $(activeParentInput).val(text);
+                document.getElementById("create-second-parent-input").focus();
+                setActiveParentInput(() => {
+                  inputChangedHandler();
+                  populateDatalist("#create-second-parent-input");
+                  return "#create-second-parent-input";
+                });
+              }
             }
           }}
         ></input>
@@ -331,16 +336,33 @@ function Create(props) {
           id="create-second-parent-input"
           className="create-form-input"
           placeholder="Full Name of Second Parent"
-          onChange={()=>{inputChangedHandler();
-            setActiveParentInput("#create-second-parent-input")}}
-          onClick={()=>{inputChangedHandler();
-          setActiveParentInput("#create-second-parent-input")}}
+          onChange={() => {
+            inputChangedHandler();
+            setActiveParentInput("#create-second-parent-input");
+          }}
+          onClick={() => {
+            inputChangedHandler();
+            setActiveParentInput("#create-second-parent-input");
+          }}
           onKeyUp={(event) => {
             if (event.key === "Enter") {
               // Cancel the default action, if needed
               event.preventDefault();
               // Focus on next element
-              document.getElementById("toggle-slide").focus();
+              const suggestion = $("#create-datalist")[0].childNodes.length
+                ? $("#create-datalist")[0].childNodes[0].textContent
+                : "No Results Found...";
+
+              const text = $.trim(suggestion);
+              if (text !== "No Results Found...") {
+                $(activeParentInput).val(text);
+
+                document.getElementById("create-second-parent-input").blur();
+                document.getElementById(
+                  "create-second-parent-input"
+                ).innerHTML = "";
+              }
+              inputChangedHandler();
             }
           }}
         ></input>
@@ -350,49 +372,37 @@ function Create(props) {
         id="create-datalist"
         onClick={(e) => {
           try {
-            const text = $.trim(e.target.closest("li").textContent)
-            if(text !== 'No Results Found...')
-            $(activeParentInput).val(text);
+            const text = $.trim(e.target.closest("li").textContent);
+            if (text !== "No Results Found...") $(activeParentInput).val(text);
             inputChangedHandler();
           } catch {}
         }}
       ></ul>
-      <div className="create-form-relationship">
-        <p className="create-form-radio-option">Parent</p>
-        <input
-          type="checkbox"
-          className="create-form-checkbox"
-          id="toggle-slide"
-          onChange={() => {
-            inputChangedHandler();
+      <div className="two-button-container">
+        <button
+          type="button"
+          id="cancel"
+          className="btn btn-outline-primary"
+          onClick={() => {
+            try {
+              $(".create-form").css("display", "none");
+              $("#Modal").css("display", "none");
+            } catch (err) {
+              console.log(err);
+            }
           }}
-          name="radio-optionsC"
-        />
-        <p className="create-form-radio-option">Partner</p>
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          id="save"
+          className="btn btn-primary float-right"
+          onClick={submit}
+        >
+          Save Changes
+        </button>
       </div>
-      <button
-        type="button"
-        id="save"
-        className="create-form-button"
-        onClick={submit}
-      >
-        Save Changes
-      </button>
-      <button
-        type="button"
-        id="cancel"
-        className="create-form-button"
-        onClick={() => {
-          try {
-            $(".create-form").css("display", "none");
-            $("#Modal").css("display", "none");
-          } catch (err) {
-            console.log(err);
-          }
-        }}
-      >
-        Cancel
-      </button>
     </div>
   );
 }

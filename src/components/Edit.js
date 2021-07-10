@@ -209,7 +209,7 @@ function EditDropdownInput(props) {
 }
 
 export default function Edit(props) {
-  const [cookies] = useCookies(["author"]);
+  const [cookies] = useCookies(["layaccess"]);
   const [changed, setChanged] = useState(false);
   const [changes, setChanges] = useState("");
   const [extrachanges, setExtrachanges] = useState("");
@@ -448,7 +448,7 @@ export default function Edit(props) {
       Axios.patch(process.env.REACT_APP_API + "api/familymembers", {
         input: nodeInput,
         name: props.nodedata.name,
-        author: cookies.author,
+        author: cookies["lay-email"],
         changes: changes,
       });
       closeEditMenu();
@@ -458,7 +458,7 @@ export default function Edit(props) {
         id: props.nodedata.id,
         name: props.nodedata.name,
         input: nodeInput,
-        author: cookies.author,
+        author: cookies["lay-email"],
         changes: extrachanges,
       });
       closeEditMenu();
@@ -495,22 +495,18 @@ export default function Edit(props) {
   }
 
   function confirmDeletion() {
-    let userValidation = $("#deleteTextbox");
-    let node = props.nodedata;
-    node.method = "delete";
-    if (userValidation.val() === "confirm") {
-      //delete node
-      Axios.delete(
-        `http://localhost:5000/api/familymembers?id=${props.nodedata.id}&name=${props.nodedata.name}&author=${cookies.author}`
-      );
+    //optimistic rendering
 
-      cancelDeleteConfirm();
-      closeEditMenu();
-    } else {
-      userValidation.css("border-bottom", "2px solid red");
-      userValidation.val("");
-      userValidation.attr("placeholder", "input doesn't match, try again");
-    }
+    const tempNode = { ...props.nodedata, method: "delete" };
+    props.update(tempNode);
+
+    //delete node
+    Axios.delete(
+      `http://localhost:5000/api/familymembers?id=${props.nodedata.id}&name=${props.nodedata.name}&author=${cookies["lay-email"]}`
+    );
+
+    cancelDeleteConfirm();
+    closeEditMenu();
   }
 
   var deleteNode = () => {
@@ -642,9 +638,17 @@ export default function Edit(props) {
     <div id="Edit">
       <div id="editForm" className="form">
         <h2 className="edit-header">Edit Details</h2>
-        <button type="submit" id="deleteNode" onClick={deleteNode}>
-          Delete
-        </button>
+        {cookies && cookies["lay-access"] === "admin" && (
+          <button
+            type="submit"
+            id="deleteNode"
+            className="btn btn-danger"
+            onClick={deleteNode}
+          >
+            Delete
+          </button>
+        )}
+
         <p type="Generation Name">
           <input
             autoComplete="off"
@@ -931,19 +935,19 @@ export default function Edit(props) {
         <div className="edit-button-container">
           <button
             type="button"
-            id="save"
-            className="edit-button"
-            onClick={saveEdit}
-          >
-            Save Changes
-          </button>
-          <button
-            type="button"
             id="cancel"
-            className="edit-button"
+            className="btn btn-outline-primary"
             onClick={() => closeEditMenu("unsave")}
           >
             Cancel
+          </button>
+          <button
+            type="button"
+            id="save"
+            className="btn btn-primary float-right"
+            onClick={saveEdit}
+          >
+            Save Changes
           </button>
         </div>
       </div>
@@ -953,21 +957,6 @@ export default function Edit(props) {
           Are you Sure? <br />
           Type "confirm" below to delete
         </div>
-        <input
-          type="text"
-          autoComplete="off"
-          id="deleteTextbox"
-          placeholder="type here"
-          onKeyUp={(event) => {
-            // Number 13 is the "Enter" key on the keyboard
-            if (event.key === "Enter") {
-              // Cancel the default action, if needed
-              event.preventDefault();
-              // Trigger the button element with a click
-              confirmDeletion();
-            }
-          }}
-        ></input>
         <div id="deleteButtonContainer">
           <button
             type="button"
