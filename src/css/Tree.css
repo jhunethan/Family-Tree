@@ -41,7 +41,7 @@ svg {
   transition: all 0.3s;
 }
 
-.marriage-date{
+.marriage-date {
   z-index: 10;
   font-size: 100;
   fill: black;
@@ -125,7 +125,7 @@ svg {
 .node-edit-menu-button {
   font-size: 34px;
   font-weight: bold;
-  
+
   position: absolute;
   right: 0;
   width: 300px;
@@ -133,12 +133,8 @@ svg {
 
   animation-name: fade-in-from-right;
   animation-duration: 0.25s;
-  
-  transition: all 0.3s;
-}
 
-.node-edit-menu-button:hover{
-  background-color: #0f1866;
+  transition: all 0.3s;
 }
 
 /* Edit Menu */
@@ -152,101 +148,23 @@ svg {
   display: flex;
   flex-direction: column;
 
-  height: 400px;
-  width: 600px;
-
-  padding-top: 100px;
-
-  transform: translate(400px, 400px);
   filter: drop-shadow(5px 5px 5px rgba(65, 65, 65, 0.322));
 }
 
-.edit-menu > * {
+.edit-menu-option {
+  height: 135px;
+  padding: 30px 50px;
   font-size: 52px;
   width: auto;
+  border-bottom: 1px solid grey;
+  
+  user-select: none;
+  cursor: pointer;
+  transition: all 0.3s;
 }
 
-.edit-menu-nav {
-  display: flex;
-  padding: 50px 20px 0 20px;
-  gap: 25px;
-  height: 150px;
-}
-
-.edit-menu-details {
-  width: 300px;
-  height: 100px;
-  margin: 20px;
-  padding: 10px;
-
-  transform: translate(375px, -100px);
-
-  margin-left: 275px;
-}
-
-.edit-menu > input {
-  margin: 0 100px;
-  padding: 10px;
-  text-align: center;
-}
-
-.edit-menu-nav > button {
-  margin: 20px 0;
-  flex-grow: 1;
-  font-size: 50px;
-  padding: 5px 10px;
-  height: 100px;
-
-  border: 1px solid black;
-}
-
-.edit-menu-button {
-  position: absolute;
-  width: 300px;
-  height: 100px;
-}
-
-
-
-.sibling,
-.child,
-.parent,
-.delete-parent,
-.partner,
-.edit-menu-details {
-  animation-name: edit-menu-button;
-  animation-duration: 0.5s;
-}
-
-.sibling {
-  transform: translate(650px, 50px);
-}
-
-.child {
-  transform: translate(150px, 350px);
-}
-
-.parent,
-.delete-parent {
-  width: 400px;
-
-  transform: translate(100px, -250px);
-}
-
-.delete-parent {
-  width: 400px;
-
-  transform: translate(100px, -400px);
-}
-
-.partner {
-  transform: translate(-350px, 50px);
-}
-
-.cancel {
-  height: 200px;
-  margin-bottom: 20px;
-  border: none;
+.edit-menu-option:hover{
+  background-color: rgb(202, 202, 202);
 }
 
 /*                 */
@@ -311,17 +229,17 @@ svg {
   background-color: #06aafe;
   width: 75px;
   height: 50px;
-  border:none;
+  border: none;
   padding: 10px 15px;
   border-left: solid #0090d8 1px;
   transition: all 0.3s;
 }
 
-.tree-nav-toggle > span{
+.tree-nav-toggle > span {
   display: block;
-  margin:2px;
+  margin: 2px;
   height: 6px;
-  width:40px;
+  width: 40px;
   background: #fff;
   border-radius: 9px;
 }
@@ -335,7 +253,7 @@ svg {
   padding: 10px;
 }
 
-.tree-create-button{
+.tree-create-button {
   position: absolute;
   right: 75px;
   top: 0;
@@ -345,13 +263,13 @@ svg {
 
   padding: 0;
   width: 50px;
-  height:50px;
+  height: 50px;
 }
 
-.plus-symbol{
+.plus-symbol {
   font-size: 50px;
   position: fixed;
-  transform: translate(-15px,-35px);
+  transform: translate(-15px, -35px);
 }
 
 .tree-welcome {

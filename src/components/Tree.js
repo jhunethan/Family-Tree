@@ -70,8 +70,6 @@ function TreeNav(props) {
 }
 
 export default function Tree(props) {
-  //stores users name
-  const [cookies] = useCookies(["author"]);
   const [welcome, setWelcome] = useState(false);
   //triggers server data fetch and page rerender
   const [update, setUpdate] = useState(false);
@@ -83,6 +81,7 @@ export default function Tree(props) {
   const [radiochecked, setRadiochecked] = useState(true);
   //read/edit mode toggle
   const [editview, seteditView] = useState(false);
+  const [create, setCreate] = useState();
   const [currentImage, setCurrentImage] = useState(undefined);
   //holds info about selected user
   const [InfoCard, setInfoCard] = useState({});
@@ -196,21 +195,29 @@ export default function Tree(props) {
     }
   };
 
-  const normalise = (text) => {
-    text = text.toLowerCase();
-    return $.trim(text).replace(/\w\S*/g, (w) =>
-      w.replace(/^\w/, (c) => c.toUpperCase())
-    );
-  };
+  // const normalise = (text) => {
+  //   text = text.toLowerCase();
+  //   return $.trim(text).replace(/\w\S*/g, (w) =>
+  //     w.replace(/^\w/, (c) => c.toUpperCase())
+  //   );
+  // };
 
-  async function dynamicUpdate(obj) {
+  async function dynamicUpdate(input) {
     //optimistic rendering
     let data = tableData;
 
-    if (!obj) {
+    console.log(input);
+
+    if (!input) {
       await setTableData([]);
       await setTableData(data);
       return;
+    }
+
+    let obj = input;
+
+    if (Array.isArray(input) && input.length) {
+      obj = input[0];
     }
 
     //update an edited node
@@ -278,10 +285,17 @@ export default function Tree(props) {
     setTimeout(() => {
       setTableData(data);
     }, 150);
-    if (obj.method !== "delete")
+
+    if (obj.id || obj.method !== "delete")
       setTimeout(() => {
         search(obj.id);
-      }, 500);
+      }, 1000);
+
+    if (Array.isArray(input) && input.length > 1) {
+      for (let i = 1; i <= input.length; i++) {
+        dynamicUpdate(input[i]);
+      }
+    }
   }
 
   const closePopups = () => {
@@ -343,349 +357,252 @@ export default function Tree(props) {
 
   var svg = d3.select("#Tree");
 
-  function editName(el) {
-    let name = normalise($("input.edit-menu-input").val());
-    let newData =
-      el.classList[0] === "partnernode"
-        ? el.__data__.data.partnerinfo
-        : el.__data__.data;
-    if (!name || name === newData.name) return closePopups();
-    if (newData.name === "" && name) {
-      newData.name = name;
-      Axios.post(process.env.REACT_APP_API + "api/familymembers", {
-        input: newData,
-        author: cookies.author,
-      });
-      toast.success(`${name} added to tree`);
-      dynamicUpdate(newData);
-    } else if (name !== newData.name && name) {
-      //save
-      newData.name = name;
+  // function editName(el) {
+  //   let name = normalise($("input.edit-menu-input").val());
+  //   let newData =
+  //     el.classList[0] === "partnernode"
+  //       ? el.__data__.data.partnerinfo
+  //       : el.__data__.data;
+  //   if (!name || name === newData.name) return closePopups();
+  //   if (newData.name === "" && name) {
+  //     newData.name = name;
+  //     Axios.post(process.env.REACT_APP_API + "api/familymembers", {
+  //       input: newData,
+  //       author: cookies.author,
+  //     });
+  //     toast.success(`${name} added to tree`);
+  //     dynamicUpdate(newData);
+  //   } else if (name !== newData.name && name) {
+  //     //save
+  //     newData.name = name;
 
-      Axios.patch(process.env.REACT_APP_API + "api/familymembers", {
-        input: newData,
-        name: newData.name,
-        author: cookies.author,
-        changes: "name",
-      });
-      toast.success(`Name updated to ${name}`);
-      dynamicUpdate(newData);
-    }
-  }
+  //     Axios.patch(process.env.REACT_APP_API + "api/familymembers", {
+  //       input: newData,
+  //       name: newData.name,
+  //       author: cookies.author,
+  //       changes: "name",
+  //     });
+  //     toast.success(`Name updated to ${name}`);
+  //     dynamicUpdate(newData);
+  //   }
+  // }
 
-  function addParent(child, parent, partner) {
-    //delete parent
+  // function connectParent(child, parent, partner) {
+  //   //delete parent
 
-    if (parent === "delete") {
-      let obj = child.__data__.data;
+  //   if (parent === "delete") {
+  //     let obj = child.__data__.data;
 
-      if (partner) {
-        obj = obj.partnerinfo;
-      }
+  //     if (partner) {
+  //       obj = obj.partnerinfo;
+  //     }
 
-      obj.pid = 0;
-      obj.parent = "";
-      obj.partner = "";
-      obj.isPartner = 0;
-      Axios.patch(process.env.REACT_APP_API + "api/familymembers", {
-        input: obj,
-        name: obj.name,
-        author: cookies.author,
-        changes: "removed parent",
-      });
-      dynamicUpdate(obj);
-      return;
-    }
+  //     obj.pid = 0;
+  //     obj.parent = "";
+  //     obj.partner = "";
+  //     obj.isPartner = 0;
+  //     Axios.patch(process.env.REACT_APP_API + "api/familymembers", {
+  //       input: obj,
+  //       name: obj.name,
+  //       author: cookies.author,
+  //       changes: "removed parent",
+  //     });
+  //     dynamicUpdate(obj);
+  //     return;
+  //   }
 
-    if (partner) {
-      //make sure parent is valid
+  //   if (partner) {
+  //     //make sure parent is valid
 
-      let obj = child.__data__.data;
-      obj = child["classList"][0] === "partnernode" ? obj.partnerinfo : obj;
+  //     let obj = child.__data__.data;
+  //     obj = child["classList"][0] === "partnernode" ? obj.partnerinfo : obj;
 
-      function checkValidPartner() {
-        if (parent.id === obj.id) return false;
-        if (parent.partnerinfo) return false;
-        if (parent.isPartner) return false;
-        return true;
-      }
+  //     function checkValidPartner() {
+  //       if (parent.id === obj.id) return false;
+  //       if (parent.partnerinfo) return false;
+  //       if (parent.isPartner) return false;
+  //       return true;
+  //     }
 
-      if (checkValidPartner()) {
-        if (obj.name) {
-          obj.pid = parent.id;
-          obj.parent = "";
-          obj.partner = parent.name;
-          obj.isPartner = 1;
-          Axios.patch(process.env.REACT_APP_API + "api/familymembers", {
-            input: obj,
-            name: obj.name,
-            author: cookies.author,
-            changes: "partner,isPartner",
-          });
-          dynamicUpdate(obj);
-        } else {
-          toast.error("Please set name before setting as partner");
-        }
-      } else {
-        toast.error("Invalid partner, try again");
-        nodeClick(child);
-      }
+  //     if (checkValidPartner()) {
+  //       if (obj.name) {
+  //         obj.pid = parent.id;
+  //         obj.parent = "";
+  //         obj.partner = parent.name;
+  //         obj.isPartner = 1;
+  //         Axios.patch(process.env.REACT_APP_API + "api/familymembers", {
+  //           input: obj,
+  //           name: obj.name,
+  //           author: cookies.author,
+  //           changes: "partner,isPartner",
+  //         });
+  //         dynamicUpdate(obj);
+  //       } else {
+  //         toast.error("Please set name before setting as partner");
+  //       }
+  //     } else {
+  //       toast.error("Invalid partner, try again");
+  //     }
 
-      return;
-    }
+  //     return;
+  //   }
 
-    //make sure parent is valid
-    let arr = filterChildren(Number(child.__data__.data.id), tableData);
+  //   //make sure parent is valid
+  //   let arr = filterChildren(Number(child.__data__.data.id), tableData);
 
-    if (arr.includes(parent)) {
-      let obj = child.__data__.data;
-      obj = child["classList"][0] === "partnernode" ? obj.partnerinfo : obj;
-      obj.pid = Number(parent.id);
-      obj.parent = parent.name;
-      obj.isPartner = 0;
-      obj.partner = "";
+  //   if (arr.includes(parent)) {
+  //     let obj = child.__data__.data;
+  //     obj = child["classList"][0] === "partnernode" ? obj.partnerinfo : obj;
+  //     obj.pid = Number(parent.id);
+  //     obj.parent = parent.name;
+  //     obj.isPartner = 0;
+  //     obj.partner = "";
 
-      Axios.patch(process.env.REACT_APP_API + "api/familymembers", {
-        input: obj,
-        name: obj.name,
-        author: cookies.author,
-        changes: "parent,isPartner",
-      });
-      dynamicUpdate(obj);
-    } else {
-      toast.error("Invalid parent, try again");
-      nodeClick(child);
-    }
-  }
+  //     Axios.patch(process.env.REACT_APP_API + "api/familymembers", {
+  //       input: obj,
+  //       name: obj.name,
+  //       author: cookies.author,
+  //       changes: "parent,isPartner",
+  //     });
+  //     dynamicUpdate(obj);
+  //   } else {
+  //     toast.error("Invalid parent, try again");
+  //   }
+  // }
 
   function addNode(el, method) {
+    const { __data__: metadata } = el;
     //new child
-    let node;
+    let node = metadata.data;
     switch (method) {
       case "child":
-        node = el.__data__;
-        toast.success(`Child Added to ${node.data.name}`);
+        toast.success(`Child Added to ${node.name}`);
         break;
       case "sibling":
-        node = el.__data__.parent;
-        toast.success(`Child Added to ${node.data.name}`);
+        node = metadata.parent;
+        toast.success(`Sibling Added to ${node.name}`);
+        break;
+      case "parent":
+        node = { id: 0, name: "" };
         break;
       default:
-        node = el.__data__;
-        break;
     }
+
     //set unique insert ID
     let idArray = [],
-      id = 1;
+      newId = 1;
 
     for (let i = 0; i < tableData.length; i++) {
       idArray.push(tableData[i].id);
     }
-    while (idArray.includes(id)) id += 1;
+    while (idArray.includes(newId)) newId += 1;
     //new child default values
     let newChild = {
-      id: id,
+      id: newId,
       birthdate: "",
       generation: "",
       name: "",
       deathdate: null,
-      pid: node.data.id,
+      pid: node.id,
       isPartner: 0,
-      parent: node.data.name,
+      parent: node.name,
       method: "create",
     };
-    dynamicUpdate(newChild);
+
+    resetCreateFields();
+    setCreate({ type: method, origin: el.__data__.data.name });
+    if (method === "parent")
+      return dynamicUpdate([newChild, { ...metadata.data, pid: newId }]);
+    return dynamicUpdate(newChild);
   }
 
-  function nodeClick(el, type, edit) {
-    let child =
-      el.classList[0] === "partnerNode" || type === "partner"
-        ? el.__data__.data.partnerinfo
-        : el.__data__.data;
-    setInfoCard(child);
+  function nodeClick(event, isPartner, edit) {
+    const { target: el } = event;
+    const metadata = el.__data__;
+    let data = isPartner ? el.__data__.data.partnerinfo : el.__data__.data;
+    setInfoCard(data);
+
     //alternative function
     //show a edit menu for a node letting the user change the tree dynamically
     if (edit) {
       //remove other instances of edit menus
+      $("#card-container").css("display", "none");
       $("foreignObject.edit-menu-container").remove();
       //open edit menu
       d3.select("g.nodes")
         .append("foreignObject")
         .attr("class", "edit-menu-container")
         .attr("x", function () {
-          if (child.isPartner) return el.__data__.x - 352.5;
-          if (child.partnerinfo) {
-            return el.__data__.x - 1062.5;
-          }
-          return el.__data__.x - 700;
+          if (data.partnerinfo) return metadata.x - 650;
+          if (data.isPartner) return metadata.x + 50;
+          return metadata.x - 300;
         })
-        .attr("y", el.__data__.y - 900)
-        .attr("height", "1200px")
-        .attr("width", "1400px");
+        .attr("y", () => metadata.y - 75)
+        .attr("height", "600px")
+        .attr("width", "600px");
 
       let menu = d3
         .select("foreignObject.edit-menu-container")
-        .append("xhtml:div")
+        .append("xhtml:main")
         .attr("class", "edit-menu")
         .call(d3.zoom());
 
       menu
-        .append("input")
-        .attr("value", child.name)
-        .attr("class", "edit-menu-input")
-        .attr("placeholder", "full name");
-      let nav = menu.append("div").attr("class", "edit-menu-nav");
-
-      nav
-        .append("button")
-        .text("cancel")
+        .append("xhtml:div")
+        .attr("class", "edit-menu-option")
+        .html("Add new person...")
+        .attr("title", "Add new person...")
         .on("click", () => {
-          if (!child.name) {
-            let obj = child;
-            obj.method = "delete";
-            dynamicUpdate(obj);
-          }
-          closePopups();
-        });
-      nav
-        .append("button")
-        .text("save")
-        .on("click", () => {
-          editName(el);
-        });
+          $("main.edit-menu").html("");
 
-      //buttons
-      if (child.parent || child.partner)
-        menu
-          .append("button")
-          .attr("class", "edit-menu-button delete-parent")
-          .text("detach parent")
-          .on("click", () => {
-            addParent(el, "delete", child.isPartner);
-          });
+          let menu = d3.select("main.edit-menu");
+          menu
+            .append("xhtml:div")
+            .attr("class", "edit-menu-option")
+            .html("<< Back")
+            .attr("title", "<< Back")
+            .on("click", () => nodeClick(event, isPartner, edit));
+          menu
+            .append("xhtml:div")
+            .attr("class", "edit-menu-option")
+            .html("Child")
+            .attr("title", "Child")
+            .on("click", () => addNode(el, "child"));
+          menu
+            .append("xhtml:div")
+            .attr("class", "edit-menu-option")
+            .html("Parent")
+            .attr("title", "Parent")
+            .on("click", () => addNode(el, "parent"));
 
-      menu
-        .append("button")
-        .text("edit details")
-        .attr("class", "edit-menu-button edit-menu-details")
-        .on("click", () => {
-          if (child.name) return openNode(child);
-          if ($("input.edit-menu-input").val()) {
-            editName(el);
-            return openNode(child);
-          }
-          toast.error("Set name before editing this person.");
+          menu
+            .append("xhtml:div")
+            .attr("class", "edit-menu-option")
+            .html("Sibling")
+            .attr("title", "Sibling")
+            .on("click", () => addNode(el, "sibling"));
         });
 
       menu
-        .append("button")
-        .attr("class", "edit-menu-button partner")
-        .text("set partner")
-        .on("click", () => {
-          editName(el);
-          toast.info(`Click person to set as partner`, {
-            autoClose: false,
-            position: "top-right",
-            toastId: "selectError",
-          });
-          //add listener for next click
-          $(window).on("click", function (event) {
-            let classes = event.target.classList;
-            if (classes[0] !== "edit-menu-button") {
-              if (
-                event.target.classList[0] === "node" ||
-                event.target.classList[0] === "partnernode"
-              ) {
-                addParent(el, event.target.__data__.data, true);
-              } else {
-                toast.error("No partner selected");
-                nodeClick(el);
-              }
-              toast.dismiss("selectError");
-              $(window).off("click");
-              //default
-              $(window).on("click", function (event) {
-                //Hide the menus if visible
-                try {
-                  if (event.target !== $("#datalist-input")[0])
-                    $("ul.datalist-ul").html("");
-                } catch {}
-              });
-            }
-          });
-        });
-
+        .append("xhtml:div")
+        .attr("class", "edit-menu-option")
+        .html("New relationship...")
+        .attr("title", "Add new relationship...");
       menu
-        .append("button")
-        .attr("class", "edit-menu-button parent")
-        .text("set parent")
-        .on("click", () => {
-          editName(el);
-          toast.info(`Click on person to set as parent`, {
-            autoClose: false,
-            position: "top-right",
-            toastId: "selectError",
-          });
-          //add listener for next click
-          $(window).on("click", function (event) {
-            let classes = event.target.classList;
-            if (classes[0] !== "edit-menu-button") {
-              if (
-                event.target.classList[0] === "node" ||
-                event.target.classList[0] === "partnernode"
-              ) {
-                addParent(el, event.target.__data__.data);
-              } else {
-                toast.error("No parent selected");
-                nodeClick(el);
-              }
-              toast.dismiss("selectError");
-              $(window).off("click");
-              //default
-              $(window).on("click", function (event) {
-                //Hide the menus if visible
-                try {
-                  if (event.target !== $("#datalist-input")[0])
-                    $("ul.datalist-ul").html("");
-                } catch {}
-              });
-            }
-          });
-          // addParent(el);
-        });
+        .append("xhtml:div")
+        .attr("class", "edit-menu-option")
+        .html("Edit this person...")
+        .attr("title", "Edit this person...")
+        .on("click", () => openNode(data));
 
-      menu
-        .append("button")
-        .attr("class", "edit-menu-button child")
-        .text("child")
-        .on("click", () => {
-          if (child.name) {
-            editName(el);
-            return addNode(el, "child");
-          }
-          toast.error(`Please set name before adding children`);
-        });
-
-      menu
-        .append("button")
-        .attr("class", "edit-menu-button sibling")
-        .text("sibling")
-        .on("click", () => {
-          editName(el);
-          addNode(el, "sibling");
-        });
-      $("input.edit-menu-input").trigger("focus");
+      return;
     }
     //normal click node function - pan and zoom to clicked node
     else $("#card-container").css("display", "block");
 
     document.getElementsByClassName("card-main")[0].scrollTop = 0;
 
-    let data =
-      type === "partner" ? el.__data__.data.partnerinfo : el.__data__.data;
-
     zoom.scaleTo(svg.transition().duration(500), 0.35);
-    setInfoCard(data);
     zoom.translateTo(
       svg.transition().duration(500),
       el.__data__.x + 250,
@@ -762,7 +679,7 @@ export default function Tree(props) {
       .attr("class", function (d) {
         return "partnernode level-" + d.depth;
       })
-      .on("click", (d) => nodeClick(d.target, "partner"));
+      .on("click", (d) => nodeClick(d, "partner"));
 
     let partnerBody = partnerContainer
       .append("xhtml:div")
@@ -775,39 +692,13 @@ export default function Tree(props) {
         userDetails += `${name}\n${birthdate}`;
         return userDetails;
       })
-      .on("click", (d) => nodeClick(d.target, ""))
-      .on("mouseover", (d) => {
-        //show edit button
-        const { data } = d.target.__data__;
-
+      .on("click", (d) => nodeClick(d, ""))
+      .on("contextmenu", function (d, i) {
+        d.preventDefault();
+        // react on right-clicking
         //remove other instances of edit menus
-        $("foreignObject.node-edit-menu-container").remove();
-        //open edit menu
-        d3.select("g.nodes")
-          .append("foreignObject")
-          .attr("class", "node-edit-menu-container")
-          .attr("x", function () {
-            return d.target.__data__.x + 200;
-          })
-          .attr("y", d.target.__data__.y - 500)
-          .attr("height", "100px")
-          .attr("width", "300px");
-
-        const menu = d3
-          .select("foreignObject.node-edit-menu-container")
-          .append("xhtml:div")
-          .attr("class", "node-edit-menu");
-
-        menu
-          .append("xhtml:button")
-          .attr("class", "node-edit-menu-button btn btn-primary")
-          .html("Edit this person")
-          .attr("title", "Edit")
-          .on("click", (d) => {
-            openNode(data.partnerinfo);
-          });
+        nodeClick(d, "partner", true);
       });
-
     partnerShapes
       .enter()
       .append("text")
@@ -927,38 +818,12 @@ export default function Tree(props) {
         userDetails += `${name}\n${birthdate}`;
         return userDetails;
       })
-      .on("click", (d) => nodeClick(d.target, ""))
-      .on("mouseover", (d) => {
-        //show edit button
-        const { data } = d.target.__data__;
-
+      .on("click", (d) => nodeClick(d, ""))
+      .on("contextmenu", function (d, i) {
+        d.preventDefault();
+        // react on right-clicking
         //remove other instances of edit menus
-        $("foreignObject.node-edit-menu-container").remove();
-        //open edit menu
-        d3.select("g.nodes")
-          .append("foreignObject")
-          .attr("class", "node-edit-menu-container")
-          .attr("x", function () {
-            if (data.partnerinfo) return d.target.__data__.x - 500;
-            return d.target.__data__.x - 150;
-          })
-          .attr("y", d.target.__data__.y - 500)
-          .attr("height", "100px")
-          .attr("width", "300px");
-
-        const menu = d3
-          .select("foreignObject.node-edit-menu-container")
-          .append("xhtml:div")
-          .attr("class", "node-edit-menu");
-
-        menu
-          .append("xhtml:button")
-          .attr("class", "node-edit-menu-button btn btn-primary")
-          .html("Edit this person")
-          .attr("title", "Edit")
-          .on("click", (d) => {
-            openNode(data);
-          });
+        nodeClick(d, "", true);
       });
 
     let left = body.append("xhtml:div").attr("class", "tree-card-section left");
@@ -1139,7 +1004,7 @@ export default function Tree(props) {
 
   const populateDatalist = () => {
     $("#datalist-input").css("border", "1px solid black");
-    $("#datalist-input").attr("placeholder", "Search by Name or Birthdate");
+    $("#datalist-input").attr("placeholder", "Search...");
 
     let str = "";
     datalistarr = [];
@@ -1189,9 +1054,7 @@ export default function Tree(props) {
   };
 
   const resetDatalistCSS = () => {
-    return $("#datalist-input")
-      .val("")
-      .attr("placeholder", "Search by Name or Birthdate");
+    return $("#datalist-input").val("").attr("placeholder", "Search...");
   };
 
   const search = (input) => {
@@ -1354,6 +1217,22 @@ export default function Tree(props) {
   $(window).on("click", function (event) {
     //Hide the menus if visible
     try {
+      if (![...event.target.classList].includes("edit-menu-option"))
+        $("foreignObject.edit-menu-container").remove();
+      if (event.target !== $("#datalist-input")[0])
+        $("ul.datalist-ul").html("");
+    } catch {}
+  });
+
+  $(window).on("contextmenu", function (event) {
+    event.preventDefault();
+    //Hide the menus if visible
+    try {
+      if (
+        ![...event.target.classList].includes("edit-menu-option") &&
+        ![...event.target.classList].includes("tree-card")
+      )
+        $("foreignObject.edit-menu-container").remove();
       if (event.target !== $("#datalist-input")[0])
         $("ul.datalist-ul").html("");
     } catch {}
@@ -1381,7 +1260,6 @@ export default function Tree(props) {
         resetCreateFields={() => resetCreateFields()}
         changeView={() => changeView()}
       />
-
       <NodeCard
         show={(obj) => {
           setInfoCard(obj);
@@ -1413,13 +1291,25 @@ export default function Tree(props) {
         }}
       />
       <Modal close={closePopups} />
-      <Create
-        data={tableData}
-        getPID={(data) => getPID(data)}
-        update={(obj) => {
-          dynamicUpdate(obj);
-        }}
-      />
+      {create ? (
+        <Create
+          data={tableData}
+          getPID={(data) => getPID(data)}
+          update={(obj) => {
+            dynamicUpdate(obj);
+          }}
+          relationship={create}
+        />
+      ) : (
+        <Create
+          data={tableData}
+          getPID={(data) => getPID(data)}
+          update={(obj) => {
+            dynamicUpdate(obj);
+          }}
+        />
+      )}
+
       <ToastContainer
         hideProgressBar={true}
         position="top-center"

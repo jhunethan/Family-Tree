@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 
 function Create(props) {
   const [cookies] = useCookies(["author"]);
+  const { relationship } = props;
 
   const node = {
     pid: 0,
@@ -195,7 +196,13 @@ function Create(props) {
 
   return (
     <div className="create-form">
-      <h2 className="create-form-title">Add New</h2>
+      {relationship ? (
+        <h2>
+          Adding a new {relationship.type} to {relationship.origin}
+        </h2>
+      ) : (
+        <h2 className="create-form-title">Add New</h2>
+      )}
       <p type="Generation Name" className="create-form-section">
         <input
           autoComplete="off"
@@ -293,91 +300,100 @@ function Create(props) {
       </div>
 
       {/* Search for parent autocomplete */}
+      {relationship ? null : (
+        <section>
+          <p type="First Parent" className="create-form-section">
+            <input
+              autoComplete="off"
+              id="create-parent-input"
+              className="create-form-input"
+              placeholder="Full Name of First Parent"
+              onChange={() => {
+                inputChangedHandler();
+                setActiveParentInput("#create-parent-input");
+              }}
+              onClick={() => {
+                inputChangedHandler();
+                setActiveParentInput("#create-parent-input");
+              }}
+              onKeyUp={(event) => {
+                if (event.key === "Enter") {
+                  // Cancel the default action, if needed
+                  event.preventDefault();
+                  // Focus on next element
+                  const suggestion =
+                    $("#create-datalist")[0].childNodes[0].textContent;
 
-      <p type="First Parent" className="create-form-section">
-        <input
-          autoComplete="off"
-          id="create-parent-input"
-          className="create-form-input"
-          placeholder="Full Name of First Parent"
-          onChange={() => {
-            inputChangedHandler();
-            setActiveParentInput("#create-parent-input");
-          }}
-          onClick={() => {
-            inputChangedHandler();
-            setActiveParentInput("#create-parent-input");
-          }}
-          onKeyUp={(event) => {
-            if (event.key === "Enter") {
-              // Cancel the default action, if needed
-              event.preventDefault();
-              // Focus on next element
-              const suggestion =
-                $("#create-datalist")[0].childNodes[0].textContent;
+                  const text = $.trim(suggestion);
+                  if (text !== "No Results Found...") {
+                    $(activeParentInput).val(text);
+                    document
+                      .getElementById("create-second-parent-input")
+                      .focus();
+                    setActiveParentInput(() => {
+                      inputChangedHandler();
+                      populateDatalist("#create-second-parent-input");
+                      return "#create-second-parent-input";
+                    });
+                  }
+                }
+              }}
+            ></input>
+          </p>
+          <p type="Second Parent" className="create-form-section">
+            <input
+              autoComplete="off"
+              id="create-second-parent-input"
+              className="create-form-input"
+              placeholder="Full Name of Second Parent"
+              onChange={() => {
+                inputChangedHandler();
+                setActiveParentInput("#create-second-parent-input");
+              }}
+              onClick={() => {
+                inputChangedHandler();
+                setActiveParentInput("#create-second-parent-input");
+              }}
+              onKeyUp={(event) => {
+                if (event.key === "Enter") {
+                  // Cancel the default action, if needed
+                  event.preventDefault();
+                  // Focus on next element
+                  const suggestion = $("#create-datalist")[0].childNodes.length
+                    ? $("#create-datalist")[0].childNodes[0].textContent
+                    : "No Results Found...";
 
-              const text = $.trim(suggestion);
-              if (text !== "No Results Found...") {
-                $(activeParentInput).val(text);
-                document.getElementById("create-second-parent-input").focus();
-                setActiveParentInput(() => {
+                  const text = $.trim(suggestion);
+                  if (text !== "No Results Found...") {
+                    $(activeParentInput).val(text);
+
+                    document
+                      .getElementById("create-second-parent-input")
+                      .blur();
+                    document.getElementById(
+                      "create-second-parent-input"
+                    ).innerHTML = "";
+                  }
                   inputChangedHandler();
-                  populateDatalist("#create-second-parent-input");
-                  return "#create-second-parent-input";
-                });
-              }
-            }
-          }}
-        ></input>
-      </p>
-      <p type="Second Parent" className="create-form-section">
-        <input
-          autoComplete="off"
-          id="create-second-parent-input"
-          className="create-form-input"
-          placeholder="Full Name of Second Parent"
-          onChange={() => {
-            inputChangedHandler();
-            setActiveParentInput("#create-second-parent-input");
-          }}
-          onClick={() => {
-            inputChangedHandler();
-            setActiveParentInput("#create-second-parent-input");
-          }}
-          onKeyUp={(event) => {
-            if (event.key === "Enter") {
-              // Cancel the default action, if needed
-              event.preventDefault();
-              // Focus on next element
-              const suggestion = $("#create-datalist")[0].childNodes.length
-                ? $("#create-datalist")[0].childNodes[0].textContent
-                : "No Results Found...";
+                }
+              }}
+            ></input>
+          </p>
+          <ul
+            className="datalist-ul"
+            id="create-datalist"
+            onClick={(e) => {
+              try {
+                const text = $.trim(e.target.closest("li").textContent);
+                if (text !== "No Results Found...")
+                  $(activeParentInput).val(text);
+                inputChangedHandler();
+              } catch {}
+            }}
+          ></ul>
+        </section>
+      )}
 
-              const text = $.trim(suggestion);
-              if (text !== "No Results Found...") {
-                $(activeParentInput).val(text);
-
-                document.getElementById("create-second-parent-input").blur();
-                document.getElementById(
-                  "create-second-parent-input"
-                ).innerHTML = "";
-              }
-              inputChangedHandler();
-            }
-          }}
-        ></input>
-      </p>
-      <ul
-        className="datalist-ul"
-        id="create-datalist"
-        onClick={(e) => {
-          try {
-            const text = $.trim(e.target.closest("li").textContent);
-            if (text !== "No Results Found...") $(activeParentInput).val(text);
-            inputChangedHandler();
-          } catch {}
-        }}
-      ></ul>
       <div className="two-button-container">
         <button
           type="button"
