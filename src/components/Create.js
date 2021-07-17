@@ -6,8 +6,8 @@ import { useCookies } from "react-cookie";
 import { toast } from "react-toastify";
 
 function Create(props) {
-  const [cookies] = useCookies(["author"]);
-  const { relationship } = props;
+  const [cookies] = useCookies(["lay-access"]);
+  const { relationship, closePopups, cancelNew, submitNew } = props;
 
   const node = {
     pid: 0,
@@ -293,14 +293,48 @@ function Create(props) {
               // Cancel the default action, if needed
               event.preventDefault();
               // Focus on next element
-              document.getElementById("create-parent-input").focus();
+              try {
+                document.getElementById("create-parent-input").focus();
+              } catch {}
             }
           }}
         />
       </div>
 
       {/* Search for parent autocomplete */}
-      {relationship ? null : (
+      {relationship ? (
+        <section>
+          <div className="two-button-container">
+            <button
+              type="button"
+              id="cancel"
+              className="btn btn-outline-primary"
+              onClick={() => cancelNew(relationship.newInfo)}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              id="save"
+              className="btn btn-primary float-right"
+              onClick={() => {
+                const metadata = relationship.newInfo;
+                const newPerson = {
+                  ...sendNode,
+                  id: metadata.id,
+                  pid: metadata.pid,
+                  parent: metadata.parent,
+                };
+                if (validation()) {
+                  submitNew(newPerson);
+                }
+              }}
+            >
+              Save Changes
+            </button>
+          </div>
+        </section>
+      ) : (
         <section>
           <p type="First Parent" className="create-form-section">
             <input
@@ -391,34 +425,26 @@ function Create(props) {
               } catch {}
             }}
           ></ul>
+          <div className="two-button-container">
+            <button
+              type="button"
+              id="cancel"
+              className="btn btn-outline-primary"
+              onClick={closePopups}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              id="save"
+              className="btn btn-primary float-right"
+              onClick={submit}
+            >
+              Save Changes
+            </button>
+          </div>
         </section>
       )}
-
-      <div className="two-button-container">
-        <button
-          type="button"
-          id="cancel"
-          className="btn btn-outline-primary"
-          onClick={() => {
-            try {
-              $(".create-form").css("display", "none");
-              $("#Modal").css("display", "none");
-            } catch (err) {
-              console.log(err);
-            }
-          }}
-        >
-          Cancel
-        </button>
-        <button
-          type="button"
-          id="save"
-          className="btn btn-primary float-right"
-          onClick={submit}
-        >
-          Save Changes
-        </button>
-      </div>
     </div>
   );
 }

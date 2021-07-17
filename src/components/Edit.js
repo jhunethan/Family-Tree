@@ -506,7 +506,7 @@ export default function Edit(props) {
     );
 
     cancelDeleteConfirm();
-    closeEditMenu();
+    props.closePopups()
   }
 
   var deleteNode = () => {

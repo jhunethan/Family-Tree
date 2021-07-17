@@ -70,6 +70,7 @@ function TreeNav(props) {
 }
 
 export default function Tree(props) {
+  const [cookies] = useCookies(["lay-family"]);
   const [welcome, setWelcome] = useState(false);
   //triggers server data fetch and page rerender
   const [update, setUpdate] = useState(false);
@@ -206,8 +207,6 @@ export default function Tree(props) {
     //optimistic rendering
     let data = tableData;
 
-    console.log(input);
-
     if (!input) {
       await setTableData([]);
       await setTableData(data);
@@ -221,75 +220,92 @@ export default function Tree(props) {
     }
 
     //update an edited node
-    switch (obj.method) {
-      case "delete":
-        data = data.filter((x) => x.id !== obj.id);
-        for (let i = 0; i < data.length; i++) {
+    if (obj.method === "delete") {
+      data = data.filter((x) => x.id !== obj.id);
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].prevPid) {
+          data[i].pid = data[i].prevPid;
+          data[i].parent = data[i].prevParent;
+          delete data[i].prevPid;
+          delete data[i].prevParent;
+        }
+        if (data[i].pid === obj.id) {
+          data[i].pid = 0;
+          data[i].parent = "";
+        }
+        if (data[i].secondPid === obj.id) {
+          data[i].secondPid = 0;
+          data[i].secondParent = "";
+        }
+        if (obj.isPartner && data[i].id === obj.pid) {
+          data[i].partnerinfo = undefined;
+        }
+      }
+      toast.error(`Removed ${obj.name}`);
+
+      await setTableData([]);
+      setTimeout(() => {
+        setTableData(data);
+      }, 150);
+
+      if (Array.isArray(input) && input.length > 1) {
+        for (let i = 1; i <= input.length; i++) {
+          dynamicUpdate(input[i]);
+        }
+      }
+      return;
+    } else if (obj.method === "create") {
+      for (let i = 0; i < data.length; i++) {
+        if (obj.id === data[i].id) return false;
+        if (obj.isPartner) {
+          if (data[i].id === obj.pid) data[i].partnerinfo = obj;
+        }
+      }
+      obj.method = undefined;
+      data.push(obj);
+      if (obj.name) {
+        toast.success(`Added ${obj.name}`);
+      }
+    } else {
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].id === obj.id) data[i] = obj;
+        if (obj.isPartner) {
+          if (data[i].id === obj.pid) data[i].partnerinfo = obj;
           if (data[i].pid === obj.id) {
             data[i].pid = 0;
             data[i].parent = "";
-          }
-          if (data[i].secondPid === obj.id) {
-            data[i].secondPid = 0;
-            data[i].secondParent = "";
-          }
-          if (obj.isPartner && data[i].id === obj.pid) {
-            data[i].partnerinfo = undefined;
-          }
-        }
-        toast.success(`Removed ${obj.name}`);
-        break;
-      case "create":
-        for (let i = 0; i < data.length; i++) {
-          if (obj.id === data[i].id) return false;
-          if (obj.isPartner) {
-            if (data[i].id === obj.pid) data[i].partnerinfo = obj;
-          }
-        }
-        obj.method = undefined;
-        data.push(obj);
-        if (obj.name) toast.success(`Added ${obj.name}`);
-        break;
-      default:
-        for (let i = 0; i < data.length; i++) {
-          if (data[i].id === obj.id) data[i] = obj;
-          if (obj.isPartner) {
-            if (data[i].id === obj.pid) data[i].partnerinfo = obj;
-            if (data[i].pid === obj.id) {
-              data[i].pid = 0;
-              data[i].parent = "";
-              if (data[i].isPartner) {
-                data[i].partner = "";
-                data[i].isPartner = 0;
-              }
+            if (data[i].isPartner) {
+              data[i].partner = "";
+              data[i].isPartner = 0;
             }
-            try {
-              if (data[i].partnerinfo.id === obj.id) {
-                data[i].partnerinfo = null;
-              }
-            } catch {}
-          } else {
-            try {
-              if (data[i].partnerinfo.id === obj.id)
-                data[i].partnerinfo = undefined;
-              for (let x = 0; x < data.length; x++) {
-                if (data[x].oldpid === obj.id) data[x].pid = obj.id;
-              }
-            } catch {}
           }
+          try {
+            if (data[i].partnerinfo.id === obj.id) {
+              data[i].partnerinfo = null;
+            }
+          } catch {}
+        } else {
+          try {
+            if (data[i].partnerinfo.id === obj.id)
+              data[i].partnerinfo = undefined;
+            for (let x = 0; x < data.length; x++) {
+              if (data[x].oldpid === obj.id) data[x].pid = obj.id;
+            }
+          } catch {}
         }
-        toast.success(`Changes made to ${obj.name}`);
-        break;
+      }
+      toast.success(`Changes made to ${obj.name}`);
     }
+
+    if (obj.id)
+      setTimeout(() => {
+        search(obj.id);
+      }, 1000);
+
     await setTableData([]);
     setTimeout(() => {
       setTableData(data);
     }, 150);
-
-    if (obj.id || obj.method !== "delete")
-      setTimeout(() => {
-        search(obj.id);
-      }, 1000);
 
     if (Array.isArray(input) && input.length > 1) {
       for (let i = 1; i <= input.length; i++) {
@@ -356,36 +372,6 @@ export default function Tree(props) {
     .on("zoom", zoomed);
 
   var svg = d3.select("#Tree");
-
-  // function editName(el) {
-  //   let name = normalise($("input.edit-menu-input").val());
-  //   let newData =
-  //     el.classList[0] === "partnernode"
-  //       ? el.__data__.data.partnerinfo
-  //       : el.__data__.data;
-  //   if (!name || name === newData.name) return closePopups();
-  //   if (newData.name === "" && name) {
-  //     newData.name = name;
-  //     Axios.post(process.env.REACT_APP_API + "api/familymembers", {
-  //       input: newData,
-  //       author: cookies.author,
-  //     });
-  //     toast.success(`${name} added to tree`);
-  //     dynamicUpdate(newData);
-  //   } else if (name !== newData.name && name) {
-  //     //save
-  //     newData.name = name;
-
-  //     Axios.patch(process.env.REACT_APP_API + "api/familymembers", {
-  //       input: newData,
-  //       name: newData.name,
-  //       author: cookies.author,
-  //       changes: "name",
-  //     });
-  //     toast.success(`Name updated to ${name}`);
-  //     dynamicUpdate(newData);
-  //   }
-  // }
 
   // function connectParent(child, parent, partner) {
   //   //delete parent
@@ -510,9 +496,22 @@ export default function Tree(props) {
     };
 
     resetCreateFields();
-    setCreate({ type: method, origin: el.__data__.data.name });
+    setCreate({
+      type: method,
+      origin: el.__data__.data.name,
+      id: newId,
+      newInfo: newChild,
+    });
     if (method === "parent")
-      return dynamicUpdate([newChild, { ...metadata.data, pid: newId }]);
+      return dynamicUpdate([
+        newChild,
+        {
+          ...metadata.data,
+          pid: newId,
+          prevPid: metadata.data.pid,
+          prevParent: metadata.data.parent,
+        },
+      ]);
     return dynamicUpdate(newChild);
   }
 
@@ -881,7 +880,6 @@ export default function Tree(props) {
         if (d.data.birthdate) return `${startdate} - ${enddate}`;
         return "???? - ????";
       });
-    console.log(linksData);
     links = d3.select("svg g.links").selectAll("path").data(linksData);
     links
       .enter()
@@ -1291,10 +1289,39 @@ export default function Tree(props) {
         update={(obj) => {
           dynamicUpdate(obj);
         }}
+        closePopups={closePopups}
       />
       <Modal close={closePopups} />
       {create ? (
         <Create
+          closePopups={closePopups}
+          submitNew={(newPerson) => {
+            //set locally
+            dynamicUpdate(newPerson);
+            //axios post
+            Axios.post(process.env.REACT_APP_API + "api/familymembers", {
+              input: newPerson,
+              author: cookies["lay-emai"],
+            }).then(() => toast.success(`${newPerson.name} Added!`));
+            //update any children
+            for (const person of tableData) {
+              if (person.pid === newPerson.id) {
+                Axios.patch(process.env.REACT_APP_API + "api/familymembers", {
+                  id: newPerson.id,
+                  name: newPerson.name,
+                  input: newPerson,
+                  author: cookies["lay-email"],
+                  changes: "pid,parent",
+                });
+              }
+            }
+
+            closePopups();
+          }}
+          cancelNew={(data) => {
+            closePopups();
+            dynamicUpdate({ ...data, method: "delete" });
+          }}
           data={tableData}
           getPID={(data) => getPID(data)}
           update={(obj) => {
@@ -1304,6 +1331,7 @@ export default function Tree(props) {
         />
       ) : (
         <Create
+          closePopups={closePopups}
           data={tableData}
           getPID={(data) => getPID(data)}
           update={(obj) => {
