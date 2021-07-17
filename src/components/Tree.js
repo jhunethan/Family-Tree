@@ -881,7 +881,7 @@ export default function Tree(props) {
         if (d.data.birthdate) return `${startdate} - ${enddate}`;
         return "???? - ????";
       });
-
+    console.log(linksData);
     links = d3.select("svg g.links").selectAll("path").data(linksData);
     links
       .enter()
@@ -901,14 +901,16 @@ export default function Tree(props) {
           d.source.x +
           " V" +
           (d.source.y - 25);
+
         if (parent.partnerinfo) {
-          if (child.parent.includes(parent.name)) {
+          if (child.parent && child.parent.includes(parent.name)) {
             path += " h-350";
           } else {
             path += " h350";
           }
           path += " v-200";
         } else path += " v-200";
+
         return path;
       })
       .attr("x1", function (d) {
